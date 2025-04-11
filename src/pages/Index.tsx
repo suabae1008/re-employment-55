@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, School, Calendar } from 'lucide-react';
+import { Search, MapPin, Briefcase, School, Calendar, BookOpen, Heart, Medal, Coffee, Clock } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
@@ -11,6 +11,7 @@ import BottomNavigation from '../components/BottomNavigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs } from '../services/jobService';
 import { Job } from '../components/JobList';
+import { toast } from 'sonner';
 import { 
   Carousel,
   CarouselContent,
@@ -18,6 +19,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
@@ -112,6 +121,66 @@ const Index = () => {
     },
   ];
 
+  // Senior-focused resources and programs
+  const seniorResources = [
+    {
+      title: "시니어 디지털 교육",
+      description: "스마트폰 활용법부터 컴퓨터 기초까지 배우는 무료 교육",
+      icon: BookOpen,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      title: "건강 및 복지 서비스",
+      description: "노인 건강검진 및 복지 프로그램 안내",
+      icon: Heart,
+      color: "bg-red-100 text-red-600",
+    },
+    {
+      title: "재취업 지원 프로그램",
+      description: "50대 이상 맞춤형 취업 상담 및 연계 서비스",
+      icon: Briefcase,
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      title: "여가활동 프로그램",
+      description: "문화체험 및 취미활동 지원",
+      icon: Coffee,
+      color: "bg-amber-100 text-amber-600",
+    }
+  ];
+
+  // Popular job categories for seniors
+  const popularCategories = [
+    {
+      title: "요양보호사",
+      count: "52개 공고",
+      icon: Heart,
+      color: "bg-pink-100",
+    },
+    {
+      title: "간호조무사",
+      count: "38개 공고",
+      icon: Medal,
+      color: "bg-purple-100",
+    },
+    {
+      title: "매장관리",
+      count: "45개 공고",
+      icon: Briefcase,
+      color: "bg-blue-100",
+    },
+    {
+      title: "경비원",
+      count: "29개 공고",
+      icon: Clock,
+      color: "bg-green-100",
+    }
+  ];
+
+  const handleResourceClick = (title: string) => {
+    toast(`${title} 정보를 확인합니다.`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
@@ -130,10 +199,11 @@ const Index = () => {
       <main className="px-4 py-6">
         {activeTab === 'recommended' && (
           <>
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">{userName}님을 위한</h2>
+            {/* Welcome Section with Animation */}
+            <div className="mb-8 bg-gradient-to-r from-app-light-blue to-blue-100 rounded-xl p-6 animate-fade-in">
+              <h2 className="text-2xl font-bold mb-2">{userName}님, 반갑습니다!</h2>
               <h2 className="text-2xl font-bold mb-4">오늘의 추천 구직 공고</h2>
-              <p className="text-gray-600 mb-4">내 이력과 적합한 공고를 확인해보세요.</p>
+              <p className="text-gray-700 mb-4">내 이력과 적합한 공고를 확인해보세요.</p>
               
               {/* Recommended Jobs */}
               <div className="space-y-4">
@@ -151,8 +221,53 @@ const Index = () => {
               </div>
             </div>
 
+            {/* Senior Resources Section */}
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4">시니어를 위한 유용한 정보</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {seniorResources.map((resource, index) => (
+                  <Card 
+                    key={index} 
+                    className="cursor-pointer hover:shadow-md transition-shadow duration-200 hover:scale-105"
+                    onClick={() => handleResourceClick(resource.title)}
+                  >
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <div className={`w-12 h-12 rounded-full ${resource.color} flex items-center justify-center mb-3 mt-3`}>
+                        <resource.icon size={24} />
+                      </div>
+                      <h4 className="font-semibold mb-1">{resource.title}</h4>
+                      <p className="text-xs text-gray-600">{resource.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Popular Job Categories */}
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4">인기 있는 시니어 일자리</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {popularCategories.map((category, index) => (
+                  <Card 
+                    key={index} 
+                    className="cursor-pointer hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="p-4 flex items-center">
+                      <div className={`w-10 h-10 rounded-full ${category.color} flex items-center justify-center mr-3`}>
+                        <category.icon size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">{category.title}</h4>
+                        <p className="text-xs text-gray-600">{category.count}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
             {/* Recent Public Job Information - Carousel */}
-            <div className="mb-6">
+            <div className="mb-8">
               <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
                 <Search className="text-app-blue mr-2" size={20} />
                 <span className="font-medium">최근 올라온 공공 일자리 정보</span>
