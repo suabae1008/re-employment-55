@@ -1,28 +1,34 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 
 interface CategoryCardProps {
   title: string;
   icon: LucideIcon;
   backgroundColor?: string;
-  onClick?: () => void;
+  to?: string;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
-  title,
-  icon: Icon,
-  backgroundColor = 'bg-app-light-blue',
-  onClick,
+const CategoryCard: React.FC<CategoryCardProps> = ({ 
+  title, 
+  icon: Icon, 
+  backgroundColor = "bg-blue-100",
+  to
 }) => {
-  return (
-    <div 
-      className={`${backgroundColor} p-4 rounded-lg flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity`}
-      onClick={onClick}
-    >
-      <Icon className="text-app-blue" size={24} />
+  const cardContent = (
+    <div className={`${backgroundColor} p-4 rounded-lg flex items-center`}>
+      <Icon className="text-gray-700 mr-2" size={20} />
       <span className="font-medium">{title}</span>
     </div>
+  );
+
+  return to ? (
+    <Link to={to}>
+      {cardContent}
+    </Link>
+  ) : (
+    cardContent
   );
 };
 

@@ -12,6 +12,9 @@ import Apply from "./pages/Apply";
 import Resume from "./pages/Resume";
 import CoverLetter from "./pages/CoverLetter";
 import JobDetail from "./pages/JobDetail";
+import PartTimeJobs from "./pages/PartTimeJobs";
+import NearbyJobs from "./pages/NearbyJobs";
+import EducationInfo from "./pages/EducationInfo";
 import NotFound from "./pages/NotFound";
 
 // Create a client
@@ -32,6 +35,9 @@ const App: React.FC = () => {
             <Route path="/resume" element={<Resume />} />
             <Route path="/cover-letter" element={<CoverLetter />} />
             <Route path="/job/:id" element={<JobDetail />} />
+            <Route path="/jobs/part-time" element={<PartTimeJobs />} />
+            <Route path="/jobs/nearby" element={<NearbyJobs />} />
+            <Route path="/education" element={<EducationInfo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
