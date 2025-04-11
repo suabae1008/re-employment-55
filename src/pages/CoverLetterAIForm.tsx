@@ -42,7 +42,7 @@ const CoverLetterAIForm = () => {
   const navigate = useNavigate();
   
   // For speech recognition (SpeechRecognition API)
-  const recognitionRefs = useRef<SpeechRecognition[]>([null, null, null]);
+  const recognitionRefs = useRef<(SpeechRecognition | null)[]>([null, null, null]);
   
   const handleKeywordClick = (id: string) => {
     const selectedCount = keywords.filter(k => k.selected).length;
@@ -113,14 +113,14 @@ const CoverLetterAIForm = () => {
   const startRecording = (index: number) => {
     try {
       // Check if SpeechRecognition is available
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       
-      if (!SpeechRecognition) {
+      if (!SpeechRecognitionAPI) {
         toast.error("음성 인식이 지원되지 않는 브라우저입니다.");
         return;
       }
       
-      const recognition = new SpeechRecognition();
+      const recognition = new SpeechRecognitionAPI();
       recognition.lang = 'ko-KR';
       recognition.continuous = false;
       recognition.interimResults = true;
