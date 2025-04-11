@@ -96,6 +96,15 @@ const Resume = () => {
                 </CardContent>
               </Card>
             ))}
+            <div className="mt-8 flex justify-center">
+              <Button 
+                onClick={handleCreateResume}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
+              >
+                <Plus size={20} className="mr-2" />
+                새 이력서 작성하기
+              </Button>
+            </div>
           </div>
         )}
       </main>

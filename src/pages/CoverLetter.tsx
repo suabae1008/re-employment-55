@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Download, Plus, Edit2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowLeft, Download, Plus, Edit2, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BottomNavigation from '../components/BottomNavigation';
@@ -17,6 +17,7 @@ interface CoverLetter {
 const CoverLetter = () => {
   const [coverLetters, setCoverLetters] = useState<CoverLetter[]>([]);
   const [showEmptyState, setShowEmptyState] = useState(true);
+  const navigate = useNavigate();
 
   // In a real app, this would fetch from a backend
   // Here we're just simulating for the UI demonstration
@@ -51,6 +52,12 @@ const CoverLetter = () => {
     }]);
   };
 
+  const handleCreateAICoverLetter = () => {
+    // Navigate to AI cover letter creation page (to be implemented)
+    // For now, just show a toast
+    alert("AI 자기소개서 작성 기능은 개발 중입니다.");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
@@ -72,13 +79,23 @@ const CoverLetter = () => {
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 자기소개서가 없습니다.</p>
-            <Button 
-              onClick={handleCreateCoverLetter}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
-            >
-              <Plus size={20} className="mr-2" />
-              자기소개서 작성하기
-            </Button>
+            <div className="space-y-4 w-full max-w-md">
+              <Button 
+                onClick={handleCreateCoverLetter}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center w-full justify-center"
+              >
+                <Plus size={20} className="mr-2" />
+                자기소개서 작성하기
+              </Button>
+              
+              <Button 
+                onClick={handleCreateAICoverLetter}
+                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full justify-center"
+              >
+                <Sparkles size={20} className="mr-2" />
+                AI 자기소개서 작성하기
+              </Button>
+            </div>
           </div>
         ) : (
           <div>
@@ -108,13 +125,21 @@ const CoverLetter = () => {
                 </CardContent>
               </Card>
             ))}
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 space-y-4 flex flex-col items-center">
               <Button 
                 onClick={handleCreateCoverLetter}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
               >
                 <Plus size={20} className="mr-2" />
-                새로 자기소개서 작성
+                새 자기소개서 작성하기
+              </Button>
+              
+              <Button 
+                onClick={handleCreateAICoverLetter}
+                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
+              >
+                <Sparkles size={20} className="mr-2" />
+                AI 자기소개서 작성하기
               </Button>
             </div>
           </div>
