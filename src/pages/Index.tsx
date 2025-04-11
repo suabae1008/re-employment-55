@@ -1,27 +1,62 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Briefcase, School, LightbulbIcon, Calendar } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
+import JobFilters from '../components/JobFilters';
 import JobCard from '../components/JobCard';
 import CategoryCard from '../components/CategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs } from '../services/jobService';
+import { Job } from '../components/JobList';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [filters, setFilters] = useState({
+    jobType: 'all',
+    region: 'all'
+  });
   
   const { data: jobs, isLoading } = useQuery({
     queryKey: ['jobs'],
     queryFn: fetchJobs,
   });
 
-  // Filter jobs by category for different sections
+  // Filter jobs based on selected filters
+  useEffect(() => {
+    if (!jobs) {
+      setFilteredJobs([]);
+      return;
+    }
+
+    let result = [...jobs];
+    
+    if (filters.jobType !== 'all') {
+      result = result.filter(job => job.category?.includes(filters.jobType));
+    }
+    
+    if (filters.region !== 'all') {
+      result = result.filter(job => job.location?.includes(filters.region));
+    }
+    
+    setFilteredJobs(result);
+  }, [jobs, filters]);
+
+  // Part-time jobs and nearby jobs for recommended tab
   const partTimeJobs = jobs?.filter(job => job.employmentType === '파트타임') || [];
   const recentJobs = jobs?.slice(0, 3) || [];
   const nearbyJobs = jobs?.filter(job => job.location?.includes('서울')) || [];
+
+  // Handle filter changes
+  const handleFilterChange = (filterType: 'jobType' | 'region', value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
 
   // Sample data for the recommended jobs
   const recommendedJobs = [
@@ -55,6 +90,9 @@ const Index = () => {
         </div>
         <SearchBar placeholder="공고를 검색해주세요." />
         <JobToggle activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === 'all' && (
+          <JobFilters onFilterChange={handleFilterChange} />
+        )}
       </header>
 
       {/* Main Content */}
@@ -82,6 +120,61 @@ const Index = () => {
                 ))}
               </div>
             </div>
+
+            {/* Recent Public Job Information */}
+            <div className="mb-6">
+              <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
+                <Search className="text-app-blue mr-2" size={20} />
+                <span className="font-medium">최근 올라온 공공 일자리 정보</span>
+              </div>
+              
+              <div className="space-y-4">
+                {recentJobs.map((job) => (
+                  <JobCard 
+                    key={job.id}
+                    id={job.id}
+                    title={job.title}
+                    company={job.company}
+                    location={job.location}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Categories */}
+            <div className="grid grid-cols-1 gap-4 mb-6">
+              {/* Part-time Job Postings */}
+              <CategoryCard 
+                title="파트 타임 모집 공고" 
+                icon={Briefcase}
+                backgroundColor="bg-yellow-100"
+                to="/jobs/part-time" 
+              />
+              
+              {/* Job Postings Near Me */}
+              <CategoryCard 
+                title="집에서 가까운 모집 공고" 
+                icon={MapPin} 
+                backgroundColor="bg-green-100"
+                to="/jobs/nearby"
+              />
+              
+              {/* Job Preparation Education */}
+              <CategoryCard 
+                title="취업 준비 교육 정보" 
+                icon={School}
+                backgroundColor="bg-purple-100"
+                to="/education" 
+              />
+
+              {/* Educational Program */}
+              <CategoryCard 
+                title="교육생 모집" 
+                icon={LightbulbIcon}
+                backgroundColor="bg-blue-100"
+                to="/programs" 
+              />
+            </div>
           </>
         )}
 
@@ -92,74 +185,25 @@ const Index = () => {
               <p>로딩 중...</p>
             ) : (
               <div className="space-y-4">
-                {jobs?.map((job) => (
-                  <JobCard 
-                    key={job.id}
-                    id={job.id}
-                    title={job.title}
-                    company={job.company}
-                    location={job.location}
-                  />
-                ))}
+                {filteredJobs.length > 0 ? (
+                  filteredJobs.map((job) => (
+                    <JobCard 
+                      key={job.id}
+                      id={job.id}
+                      title={job.title}
+                      company={job.company}
+                      location={job.location}
+                      category={job.category}
+                      highlight={job.highlight}
+                    />
+                  ))
+                ) : (
+                  <p className="text-center py-4">해당 조건의 구직 공고가 없습니다.</p>
+                )}
               </div>
             )}
           </div>
         )}
-
-        {/* Recent Public Job Information */}
-        <div className="mb-6">
-          <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
-            <Search className="text-app-blue mr-2" size={20} />
-            <span className="font-medium">최근 올라온 공공 일자리 정보</span>
-          </div>
-          
-          <div className="space-y-4">
-            {recentJobs.map((job) => (
-              <JobCard 
-                key={job.id}
-                id={job.id}
-                title={job.title}
-                company={job.company}
-                location={job.location}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="grid grid-cols-1 gap-4 mb-6">
-          {/* Part-time Job Postings */}
-          <CategoryCard 
-            title="파트 타임 모집 공고" 
-            icon={Briefcase}
-            backgroundColor="bg-yellow-100"
-            to="/jobs/part-time" 
-          />
-          
-          {/* Job Postings Near Me */}
-          <CategoryCard 
-            title="집에서 가까운 모집 공고" 
-            icon={MapPin} 
-            backgroundColor="bg-green-100"
-            to="/jobs/nearby"
-          />
-          
-          {/* Job Preparation Education */}
-          <CategoryCard 
-            title="취업 준비 교육 정보" 
-            icon={School}
-            backgroundColor="bg-purple-100"
-            to="/education" 
-          />
-
-          {/* Educational Program */}
-          <CategoryCard 
-            title="교육생 모집" 
-            icon={LightbulbIcon}
-            backgroundColor="bg-blue-100"
-            to="/programs" 
-          />
-        </div>
       </main>
 
       {/* Bottom Navigation */}

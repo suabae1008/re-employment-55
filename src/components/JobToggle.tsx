@@ -9,10 +9,10 @@ interface JobToggleProps {
 
 const JobToggle: React.FC<JobToggleProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="flex gap-2 mx-auto max-w-xl my-4">
+    <div className="flex w-full max-w-xl mx-auto my-4">
       <button
         onClick={() => setActiveTab('recommended')}
-        className={`flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium ${
+        className={`flex items-center justify-center gap-2 py-2 flex-1 rounded-l-full text-sm font-medium ${
           activeTab === 'recommended'
             ? 'bg-app-blue text-white'
             : 'bg-gray-100 text-gray-700'
@@ -23,7 +23,7 @@ const JobToggle: React.FC<JobToggleProps> = ({ activeTab, setActiveTab }) => {
       </button>
       <button
         onClick={() => setActiveTab('all')}
-        className={`flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium ${
+        className={`flex items-center justify-center gap-2 py-2 flex-1 rounded-r-full text-sm font-medium ${
           activeTab === 'all'
             ? 'bg-app-blue text-white'
             : 'bg-gray-100 text-gray-700'
