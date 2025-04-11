@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Star, StarOff, MapPin, Calendar, Building, Briefcase, BarChart2 } from 'lucide-react';
 import { Job } from '../components/JobList';
 import { getJobById, toggleFavoriteJob } from '../services/jobService';
@@ -14,10 +14,15 @@ import MatchScoreGauge from '../components/MatchScoreGauge';
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [showMatchingAnalysis, setShowMatchingAnalysis] = useState(false);
   const [matchScore, setMatchScore] = useState(0);
+  const [showMatchScore, setShowMatchScore] = useState(false);
+  
+  // Check if we navigated from the favorites page
+  const fromFavorites = location.state?.fromFavorites || false;
 
   useEffect(() => {
     if (id) {
@@ -25,13 +30,18 @@ const JobDetail: React.FC = () => {
       const fetchedJob = getJobById(id);
       setJob(fetchedJob);
       
-      // Fetch match analysis data
-      const analysis = getMockMatchAnalysis(id);
-      setMatchScore(analysis.totalScore);
+      // Only fetch match analysis if coming from favorites
+      if (fromFavorites) {
+        const analysis = getMockMatchAnalysis(id);
+        setMatchScore(analysis.totalScore);
+        setShowMatchScore(true);
+      } else {
+        setShowMatchScore(false);
+      }
       
       setLoading(false);
     }
-  }, [id]);
+  }, [id, fromFavorites]);
 
   const handleToggleFavorite = () => {
     if (job) {
@@ -71,7 +81,7 @@ const JobDetail: React.FC = () => {
     );
   }
 
-  if (showMatchingAnalysis) {
+  if (showMatchingAnalysis && showMatchScore) {
     return (
       <div className="min-h-screen bg-white pb-20 px-4 py-4">
         <MatchingAnalysis 
@@ -109,23 +119,25 @@ const JobDetail: React.FC = () => {
 
       {/* Main Content */}
       <main className="px-4 py-6">
-        {/* Match Score Card */}
-        <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
-          <div className="text-center mb-2">
-            <h3 className="text-lg font-semibold">맞춤형 공고 분석</h3>
-            <p className="text-sm text-gray-600 mt-1 mb-3">나와 잘 맞는 공고인지 알아보세요</p>
-            <MatchScoreGauge score={matchScore} />
+        {/* Match Score Card - Only show if coming from favorites */}
+        {showMatchScore && (
+          <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
+            <div className="text-center mb-2">
+              <h3 className="text-lg font-semibold">맞춤형 공고 분석</h3>
+              <p className="text-sm text-gray-600 mt-1 mb-3">나와 잘 맞는 공고인지 알아보세요</p>
+              <MatchScoreGauge score={matchScore} />
+            </div>
+            
+            <Button 
+              variant="outline" 
+              className="w-full mt-4 border-dashed border-gray-300"
+              onClick={() => setShowMatchingAnalysis(true)}
+            >
+              <BarChart2 size={16} className="mr-2" />
+              자세히 분석 보기
+            </Button>
           </div>
-          
-          <Button 
-            variant="outline" 
-            className="w-full mt-4 border-dashed border-gray-300"
-            onClick={() => setShowMatchingAnalysis(true)}
-          >
-            <BarChart2 size={16} className="mr-2" />
-            자세히 분석 보기
-          </Button>
-        </div>
+        )}
         
         {/* Job Header Info */}
         <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">

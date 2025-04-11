@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Star, StarOff } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -21,9 +22,10 @@ export interface Job {
 interface JobListProps {
   jobs: Job[];
   onToggleFavorite: (jobId: string | number) => void;
+  fromFavorites?: boolean;
 }
 
-const JobList: React.FC<JobListProps> = ({ jobs, onToggleFavorite }) => {
+const JobList: React.FC<JobListProps> = ({ jobs, onToggleFavorite, fromFavorites = false }) => {
   const handleFavoriteToggle = (jobId: string | number, isFavorite: boolean) => {
     onToggleFavorite(jobId);
     toast(isFavorite ? '관심 공고에서 제거되었습니다' : '관심 공고에 추가되었습니다');
@@ -44,6 +46,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, onToggleFavorite }) => {
                 <TableHead>기관명</TableHead>
                 <TableHead>지역</TableHead>
                 <TableHead>마감일</TableHead>
+                {fromFavorites && <TableHead>매칭</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -62,13 +65,26 @@ const JobList: React.FC<JobListProps> = ({ jobs, onToggleFavorite }) => {
                     </button>
                   </TableCell>
                   <TableCell className="font-medium">
-                    <Link to={`/job/${job.id}`} className="hover:text-app-blue hover:underline">
+                    <Link 
+                      to={`/job/${job.id}`} 
+                      state={{ fromFavorites: fromFavorites }}
+                      className="hover:text-app-blue hover:underline"
+                    >
                       {job.title}
                     </Link>
                   </TableCell>
                   <TableCell>{job.company}</TableCell>
                   <TableCell>{job.location || '-'}</TableCell>
                   <TableCell>{job.deadline || '상시채용'}</TableCell>
+                  {fromFavorites && (
+                    <TableCell>
+                      {job.highlight && (
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                          {job.highlight}
+                        </span>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
