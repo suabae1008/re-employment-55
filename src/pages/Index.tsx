@@ -7,6 +7,7 @@ import JobToggle from '../components/JobToggle';
 import JobCard from '../components/JobCard';
 import CategoryCard from '../components/CategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
+import { fetchJobs } from '../services/jobService';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
@@ -60,6 +61,7 @@ const Index = () => {
                 {recommendedJobs.map((job) => (
                   <JobCard 
                     key={job.id}
+                    id={job.id}
                     title={job.title}
                     company={job.company}
                     location={job.location}
@@ -81,6 +83,7 @@ const Index = () => {
           </div>
           
           <JobCard 
+            id={3}
             title="서울특별시어린이병원 기간제 노동자 채용 공고"
             company="서울특별시어린이병원"
             imageUrl="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1053&q=80"

@@ -4,6 +4,7 @@ import { Star, StarOff } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 export interface Job {
   id: string | number;
@@ -13,6 +14,7 @@ export interface Job {
   deadline?: string;
   category?: string;
   description?: string;
+  employmentType?: string;
   isFavorite?: boolean;
 }
 
@@ -59,7 +61,11 @@ const JobList: React.FC<JobListProps> = ({ jobs, onToggleFavorite }) => {
                       )}
                     </button>
                   </TableCell>
-                  <TableCell className="font-medium">{job.title}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link to={`/job/${job.id}`} className="hover:text-app-blue hover:underline">
+                      {job.title}
+                    </Link>
+                  </TableCell>
                   <TableCell>{job.company}</TableCell>
                   <TableCell>{job.location || '-'}</TableCell>
                   <TableCell>{job.deadline || '상시채용'}</TableCell>

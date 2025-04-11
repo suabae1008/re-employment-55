@@ -1,8 +1,10 @@
 
 import React from 'react';
 import { MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface JobCardProps {
+  id?: string | number;
   title: string;
   company: string;
   location?: string;
@@ -12,6 +14,7 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({
+  id,
   title,
   company,
   location,
@@ -19,8 +22,8 @@ const JobCard: React.FC<JobCardProps> = ({
   category,
   highlight,
 }) => {
-  return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md mb-4 hover:shadow-lg transition-shadow">
+  const cardContent = (
+    <>
       {imageUrl && (
         <div className="w-full h-48 overflow-hidden">
           <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
@@ -46,6 +49,18 @@ const JobCard: React.FC<JobCardProps> = ({
           </div>
         )}
       </div>
+    </>
+  );
+
+  return (
+    <div className="bg-white rounded-lg overflow-hidden shadow-md mb-4 hover:shadow-lg transition-shadow">
+      {id ? (
+        <Link to={`/job/${id}`}>
+          {cardContent}
+        </Link>
+      ) : (
+        cardContent
+      )}
     </div>
   );
 };
