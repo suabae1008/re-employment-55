@@ -1,12 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, School, Calendar, BookOpen, Heart, Medal, Coffee, Clock } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
 import JobFilters from '../components/JobFilters';
 import JobCard from '../components/JobCard';
-import CategoryCard from '../components/CategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs } from '../services/jobService';
@@ -86,9 +85,9 @@ const Index = () => {
     setFilteredJobs(result);
   }, [jobs, filters]);
 
-  // Part-time jobs and nearby jobs for recommended tab
+  // Job categories for the recommended tab
   const partTimeJobs = jobs?.filter(job => job.employmentType === '파트타임') || [];
-  const recentJobs = jobs?.slice(0, 3) || [];
+  const recentJobs = jobs?.slice(0, 5) || [];
   const nearbyJobs = jobs?.filter(job => job.location?.includes('서울')) || [];
 
   // Handle filter changes
@@ -121,65 +120,33 @@ const Index = () => {
     },
   ];
 
-  // Senior-focused resources and programs
-  const seniorResources = [
-    {
-      title: "시니어 디지털 교육",
-      description: "스마트폰 활용법부터 컴퓨터 기초까지 배우는 무료 교육",
-      icon: BookOpen,
-      color: "bg-blue-100 text-blue-600",
+  // Categories for job types
+  const jobCategories = [
+    { 
+      name: '요양보호사', 
+      count: '52', 
+      icon: <Heart className="text-pink-500" size={24} />,
+      color: 'bg-pink-100'
     },
-    {
-      title: "건강 및 복지 서비스",
-      description: "노인 건강검진 및 복지 프로그램 안내",
-      icon: Heart,
-      color: "bg-red-100 text-red-600",
+    { 
+      name: '간호조무사', 
+      count: '38', 
+      icon: <Star className="text-purple-500" size={24} />,
+      color: 'bg-purple-100'
     },
-    {
-      title: "재취업 지원 프로그램",
-      description: "50대 이상 맞춤형 취업 상담 및 연계 서비스",
-      icon: Briefcase,
-      color: "bg-green-100 text-green-600",
+    { 
+      name: '매장관리', 
+      count: '45', 
+      icon: <Briefcase className="text-blue-500" size={24} />,
+      color: 'bg-blue-100'
     },
-    {
-      title: "여가활동 프로그램",
-      description: "문화체험 및 취미활동 지원",
-      icon: Coffee,
-      color: "bg-amber-100 text-amber-600",
+    { 
+      name: '경비원', 
+      count: '29', 
+      icon: <Clock className="text-green-500" size={24} />,
+      color: 'bg-green-100'
     }
   ];
-
-  // Popular job categories for seniors
-  const popularCategories = [
-    {
-      title: "요양보호사",
-      count: "52개 공고",
-      icon: Heart,
-      color: "bg-pink-100",
-    },
-    {
-      title: "간호조무사",
-      count: "38개 공고",
-      icon: Medal,
-      color: "bg-purple-100",
-    },
-    {
-      title: "매장관리",
-      count: "45개 공고",
-      icon: Briefcase,
-      color: "bg-blue-100",
-    },
-    {
-      title: "경비원",
-      count: "29개 공고",
-      icon: Clock,
-      color: "bg-green-100",
-    }
-  ];
-
-  const handleResourceClick = (title: string) => {
-    toast(`${title} 정보를 확인합니다.`);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -199,13 +166,12 @@ const Index = () => {
       <main className="px-4 py-6">
         {activeTab === 'recommended' && (
           <>
-            {/* Welcome Section with Animation */}
-            <div className="mb-8 bg-gradient-to-r from-app-light-blue to-blue-100 rounded-xl p-6 animate-fade-in">
+            {/* Welcome Section */}
+            <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 shadow-sm">
               <h2 className="text-2xl font-bold mb-2">{userName}님, 반갑습니다!</h2>
-              <h2 className="text-2xl font-bold mb-4">오늘의 추천 구직 공고</h2>
-              <p className="text-gray-700 mb-4">내 이력과 적합한 공고를 확인해보세요.</p>
+              <h2 className="text-xl font-bold mb-4">오늘의 추천 구직 공고</h2>
               
-              {/* Recommended Jobs */}
+              {/* Featured Job Cards - Enhanced Visual */}
               <div className="space-y-4">
                 {recommendedJobs.map((job) => (
                   <JobCard 
@@ -221,44 +187,27 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Senior Resources Section */}
+            {/* Job Categories Cards */}
             <div className="mb-8">
-              <h3 className="text-xl font-bold mb-4">시니어를 위한 유용한 정보</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {seniorResources.map((resource, index) => (
-                  <Card 
-                    key={index} 
-                    className="cursor-pointer hover:shadow-md transition-shadow duration-200 hover:scale-105"
-                    onClick={() => handleResourceClick(resource.title)}
-                  >
-                    <CardContent className="p-4 flex flex-col items-center text-center">
-                      <div className={`w-12 h-12 rounded-full ${resource.color} flex items-center justify-center mb-3 mt-3`}>
-                        <resource.icon size={24} />
-                      </div>
-                      <h4 className="font-semibold mb-1">{resource.title}</h4>
-                      <p className="text-xs text-gray-600">{resource.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="flex items-center mb-4">
+                <Filter size={20} className="text-app-blue mr-2" />
+                <h3 className="font-semibold text-lg">일자리 분류</h3>
               </div>
-            </div>
-
-            {/* Popular Job Categories */}
-            <div className="mb-8">
-              <h3 className="text-xl font-bold mb-4">인기 있는 시니어 일자리</h3>
               <div className="grid grid-cols-2 gap-3">
-                {popularCategories.map((category, index) => (
+                {jobCategories.map((category, index) => (
                   <Card 
-                    key={index} 
-                    className="cursor-pointer hover:shadow-md transition-shadow"
+                    key={index}
+                    className="cursor-pointer hover:shadow-md transition-shadow hover:scale-105 duration-200"
                   >
-                    <CardContent className="p-4 flex items-center">
-                      <div className={`w-10 h-10 rounded-full ${category.color} flex items-center justify-center mr-3`}>
-                        <category.icon size={20} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">{category.title}</h4>
-                        <p className="text-xs text-gray-600">{category.count}</p>
+                    <CardContent className="p-4">
+                      <div className="flex items-center">
+                        <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center mr-3`}>
+                          {category.icon}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold">{category.name}</h4>
+                          <p className="text-xs text-gray-600">{category.count}개 공고</p>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -266,86 +215,111 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Recent Public Job Information - Carousel */}
+            {/* Interactive Public Job Information Carousel */}
             <div className="mb-8">
               <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
-                <Search className="text-app-blue mr-2" size={20} />
+                <Calendar className="text-app-blue mr-2" size={20} />
                 <span className="font-medium">최근 올라온 공공 일자리 정보</span>
               </div>
               
-              <Carousel className="w-full">
+              <Carousel 
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
                 <CarouselContent>
                   {recentJobs.map((job) => (
-                    <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
-                      <JobCard 
-                        id={job.id}
-                        title={job.title}
-                        company={job.company}
-                        location={job.location}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-1" />
-                <CarouselNext className="right-1" />
-              </Carousel>
-            </div>
-
-            {/* Categories as Horizontal Scrolling Cards */}
-            <div className="grid grid-cols-1 gap-4 mb-6">
-              {/* Part-time Job Postings */}
-              <div className="mb-4">
-                <h3 className="text-lg font-medium mb-3">파트 타임 모집 공고</h3>
-                <Carousel className="w-full">
-                  <CarouselContent>
-                    {partTimeJobs.map((job) => (
-                      <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                      <div className="h-full p-1">
                         <JobCard 
                           id={job.id}
                           title={job.title}
                           company={job.company}
                           location={job.location}
                           category={job.category}
+                          highlight={job.highlight}
                         />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <div className="flex justify-center mt-4">
+                  <CarouselPrevious className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                  <CarouselNext className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                </div>
+              </Carousel>
+            </div>
+
+            {/* Job Categories as Cards */}
+            <div className="grid grid-cols-1 gap-6 mb-6">
+              {/* Part-time Job Postings */}
+              <div className="mb-6">
+                <div className="flex items-center mb-4">
+                  <Clock className="text-app-blue mr-2" size={20} />
+                  <h3 className="font-medium">파트 타임 모집 공고</h3>
+                </div>
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent>
+                    {partTimeJobs.map((job) => (
+                      <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                        <div className="h-full p-1">
+                          <JobCard 
+                            id={job.id}
+                            title={job.title}
+                            company={job.company}
+                            location={job.location}
+                            category={job.category}
+                          />
+                        </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="left-1" />
-                  <CarouselNext className="right-1" />
+                  <div className="flex justify-center mt-4">
+                    <CarouselPrevious className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                    <CarouselNext className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                  </div>
                 </Carousel>
               </div>
               
               {/* Job Postings Near Me */}
               <div className="mb-4">
-                <h3 className="text-lg font-medium mb-3">집에서 가까운 모집 공고</h3>
-                <Carousel className="w-full">
+                <div className="flex items-center mb-4">
+                  <MapPin className="text-app-blue mr-2" size={20} />
+                  <h3 className="font-medium">집에서 가까운 모집 공고</h3>
+                </div>
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
                   <CarouselContent>
                     {nearbyJobs.map((job) => (
-                      <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
-                        <JobCard 
-                          id={job.id}
-                          title={job.title}
-                          company={job.company}
-                          location={job.location}
-                          category={job.category}
-                        />
+                      <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                        <div className="h-full p-1">
+                          <JobCard 
+                            id={job.id}
+                            title={job.title}
+                            company={job.company}
+                            location={job.location}
+                            category={job.category}
+                          />
+                        </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="left-1" />
-                  <CarouselNext className="right-1" />
+                  <div className="flex justify-center mt-4">
+                    <CarouselPrevious className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                    <CarouselNext className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                  </div>
                 </Carousel>
-              </div>
-              
-              {/* Job Preparation Education */}
-              <div>
-                <h3 className="text-lg font-medium mb-3">취업 준비 교육 정보</h3>
-                <CategoryCard 
-                  title="취업 준비 교육 정보" 
-                  icon={School}
-                  backgroundColor="bg-purple-100"
-                  to="/education" 
-                />
               </div>
             </div>
           </>
