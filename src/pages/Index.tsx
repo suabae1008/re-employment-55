@@ -120,34 +120,6 @@ const Index = () => {
     },
   ];
 
-  // Categories for job types
-  const jobCategories = [
-    { 
-      name: '요양보호사', 
-      count: '52', 
-      icon: <Heart className="text-pink-500" size={24} />,
-      color: 'bg-pink-100'
-    },
-    { 
-      name: '간호조무사', 
-      count: '38', 
-      icon: <Star className="text-purple-500" size={24} />,
-      color: 'bg-purple-100'
-    },
-    { 
-      name: '매장관리', 
-      count: '45', 
-      icon: <Briefcase className="text-blue-500" size={24} />,
-      color: 'bg-blue-100'
-    },
-    { 
-      name: '경비원', 
-      count: '29', 
-      icon: <Clock className="text-green-500" size={24} />,
-      color: 'bg-green-100'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
@@ -183,34 +155,6 @@ const Index = () => {
                     category={job.category}
                     highlight={job.highlight}
                   />
-                ))}
-              </div>
-            </div>
-
-            {/* Job Categories Cards */}
-            <div className="mb-8">
-              <div className="flex items-center mb-4">
-                <Filter size={20} className="text-app-blue mr-2" />
-                <h3 className="font-semibold text-lg">일자리 분류</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {jobCategories.map((category, index) => (
-                  <Card 
-                    key={index}
-                    className="cursor-pointer hover:shadow-md transition-shadow hover:scale-105 duration-200"
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center">
-                        <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center mr-3`}>
-                          {category.icon}
-                        </div>
-                        <div>
-                          <h4 className="font-semibold">{category.name}</h4>
-                          <p className="text-xs text-gray-600">{category.count}개 공고</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 ))}
               </div>
             </div>

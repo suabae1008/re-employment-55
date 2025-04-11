@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Apply from "./pages/Apply";
 import Resume from "./pages/Resume";
 import CoverLetter from "./pages/CoverLetter";
+import CoverLetterAIForm from "./pages/CoverLetterAIForm";
 import JobDetail from "./pages/JobDetail";
 import PartTimeJobs from "./pages/PartTimeJobs";
 import NearbyJobs from "./pages/NearbyJobs";
@@ -37,6 +38,9 @@ const App: React.FC = () => {
             <Route path="/resume/create" element={<ResumeForm />} />
             <Route path="/resume/edit/:id" element={<ResumeForm />} />
             <Route path="/cover-letter" element={<CoverLetter />} />
+            <Route path="/cover-letter/ai-create" element={<CoverLetterAIForm />} />
+            <Route path="/cover-letter/create" element={<ResumeForm />} /> {/* Reusing ResumeForm for now */}
+            <Route path="/cover-letter/edit/:id" element={<ResumeForm />} /> {/* Reusing ResumeForm for now */}
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/jobs/part-time" element={<PartTimeJobs />} />
             <Route path="/jobs/nearby" element={<NearbyJobs />} />

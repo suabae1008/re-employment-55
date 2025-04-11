@@ -1,9 +1,21 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Download, Plus, Edit2 } from 'lucide-react';
+import { ArrowLeft, Download, Plus, Edit2, Trash } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import BottomNavigation from '../components/BottomNavigation';
 
 interface Resume {
@@ -39,6 +51,19 @@ const Resume = () => {
   const handleCreateResume = () => {
     // Navigate to the resume form page
     navigate('/resume/create');
+  };
+  
+  const handleDeleteResume = (id: string) => {
+    // Remove the resume from the state
+    setResumes(prev => prev.filter(resume => resume.id !== id));
+    
+    // If no resumes left, update the empty state and localStorage
+    if (resumes.length <= 1) {
+      localStorage.setItem('hasResumes', 'false');
+      setShowEmptyState(true);
+    }
+    
+    toast.success("이력서가 삭제되었습니다.");
   };
 
   return (
@@ -77,9 +102,35 @@ const Resume = () => {
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center">
                     <h3 className="font-semibold text-lg">{resume.title}</h3>
-                    <Button variant="ghost" size="icon">
-                      <Download size={20} className="text-blue-500" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="icon">
+                        <Download size={20} className="text-blue-500" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash size={20} className="text-red-500" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>이력서 삭제</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              이 이력서를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>취소</AlertDialogCancel>
+                            <AlertDialogAction 
+                              className="bg-red-500 hover:bg-red-600"
+                              onClick={() => handleDeleteResume(resume.id)}
+                            >
+                              삭제
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                   <p className="text-sm text-gray-500">{resume.date}</p>
                   <div className="flex justify-end mt-4">

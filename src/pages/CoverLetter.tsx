@@ -1,9 +1,21 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Download, Plus, Edit2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Download, Plus, Edit2, Trash, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import BottomNavigation from '../components/BottomNavigation';
 
 interface CoverLetter {
@@ -39,23 +51,26 @@ const CoverLetter = () => {
   }, []);
 
   const handleCreateCoverLetter = () => {
-    // In a real app, this would navigate to a cover letter creation form
-    // For demo purposes, we'll just toggle the state
-    localStorage.setItem('hasCoverLetters', 'true');
-    setShowEmptyState(false);
-    setCoverLetters([{
-      id: '1',
-      company: '방문간호사',
-      position: '주식회사웰페어스테이션',
-      title: '방문간호사 모집 공고 (파트 타임)',
-      date: '2025.03.26 작성'
-    }]);
+    // Navigate to cover letter creation form
+    navigate('/cover-letter/create');
   };
 
   const handleCreateAICoverLetter = () => {
-    // Navigate to AI cover letter creation page (to be implemented)
-    // For now, just show a toast
-    alert("AI 자기소개서 작성 기능은 개발 중입니다.");
+    // Navigate to AI cover letter creation page
+    navigate('/cover-letter/ai-create');
+  };
+  
+  const handleDeleteCoverLetter = (id: string) => {
+    // Remove the cover letter from the state
+    setCoverLetters(prev => prev.filter(letter => letter.id !== id));
+    
+    // If no cover letters left, update the empty state and localStorage
+    if (coverLetters.length <= 1) {
+      localStorage.setItem('hasCoverLetters', 'false');
+      setShowEmptyState(true);
+    }
+    
+    toast.success("자기소개서가 삭제되었습니다.");
   };
 
   return (
@@ -107,9 +122,35 @@ const CoverLetter = () => {
                       <div className="text-sm text-gray-500">{letter.position}</div>
                       <h3 className="font-semibold text-lg">{letter.title}</h3>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <Download size={20} className="text-blue-500" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="icon">
+                        <Download size={20} className="text-blue-500" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash size={20} className="text-red-500" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>자기소개서 삭제</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              이 자기소개서를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>취소</AlertDialogCancel>
+                            <AlertDialogAction 
+                              className="bg-red-500 hover:bg-red-600"
+                              onClick={() => handleDeleteCoverLetter(letter.id)}
+                            >
+                              삭제
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">{letter.date}</p>
                   <div className="flex justify-end mt-4">
@@ -117,6 +158,7 @@ const CoverLetter = () => {
                       variant="outline" 
                       size="sm" 
                       className="flex items-center"
+                      onClick={() => navigate(`/cover-letter/edit/${letter.id}`)}
                     >
                       <Edit2 size={16} className="mr-1" />
                       수정
