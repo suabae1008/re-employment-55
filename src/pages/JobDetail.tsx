@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Star, StarOff, MapPin, Calendar, Building, Briefcase, BarChart2 } from 'lucide-react';
@@ -21,7 +20,6 @@ const JobDetail: React.FC = () => {
   const [matchScore, setMatchScore] = useState(0);
   const [showMatchScore, setShowMatchScore] = useState(false);
   
-  // Check if we navigated from the favorites page
   const fromFavorites = location.state?.fromFavorites || false;
 
   useEffect(() => {
@@ -30,7 +28,6 @@ const JobDetail: React.FC = () => {
       const fetchedJob = getJobById(id);
       setJob(fetchedJob);
       
-      // Only fetch match analysis if coming from favorites
       if (fromFavorites) {
         const analysis = getMockMatchAnalysis(id);
         setMatchScore(analysis.totalScore);
@@ -94,7 +91,6 @@ const JobDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="bg-white py-4 px-4 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -117,15 +113,13 @@ const JobDetail: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-4 py-6">
-        {/* Match Score Card - Only show if coming from favorites */}
         {showMatchScore && (
           <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
             <div className="text-center mb-2">
               <h3 className="text-lg font-semibold">맞춤형 공고 분석</h3>
               <p className="text-sm text-gray-600 mt-1 mb-3">나와 잘 맞는 공고인지 알아보세요</p>
-              <div className="mb-3">
+              <div className="mb-6">
                 <MatchScoreGauge score={matchScore} />
               </div>
             </div>
@@ -141,7 +135,6 @@ const JobDetail: React.FC = () => {
           </div>
         )}
         
-        {/* Job Header Info */}
         <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
           {job.category && (
             <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
@@ -172,7 +165,6 @@ const JobDetail: React.FC = () => {
           </div>
         </div>
 
-        {/* Job Description */}
         <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
           <h3 className="text-xl font-bold mb-4">공고 내용</h3>
           <div className="prose">
@@ -202,7 +194,6 @@ const JobDetail: React.FC = () => {
           </ul>
         </div>
 
-        {/* Apply Button */}
         <div className="mt-6">
           <Button className="w-full py-6 text-lg" asChild>
             <Link to="/apply">
@@ -212,7 +203,6 @@ const JobDetail: React.FC = () => {
         </div>
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );

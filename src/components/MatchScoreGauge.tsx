@@ -16,7 +16,7 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="relative w-52 h-26 mb-2">
+      <div className="relative w-52 h-26 mb-4">
         {/* Semi-circular gauge visualization */}
         <div className="absolute w-full">
           <div className="flex justify-between w-full px-1 text-xs text-gray-500">

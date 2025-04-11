@@ -30,7 +30,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <div>
           <div className="text-center mb-6">
             <p className="text-gray-600 mb-2">나와 잘 맞는 공고인지 알아보세요</p>
-            <div className="mb-4">
+            <div className="mb-8">
               <MatchScoreGauge score={analysis.totalScore} />
             </div>
           </div>
