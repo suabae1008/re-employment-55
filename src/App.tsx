@@ -16,6 +16,7 @@ import PartTimeJobs from "./pages/PartTimeJobs";
 import NearbyJobs from "./pages/NearbyJobs";
 import EducationInfo from "./pages/EducationInfo";
 import NotFound from "./pages/NotFound";
+import ResumeForm from "./pages/ResumeForm";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,6 +34,8 @@ const App: React.FC = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/apply" element={<Apply />} />
             <Route path="/resume" element={<Resume />} />
+            <Route path="/resume/create" element={<ResumeForm />} />
+            <Route path="/resume/edit/:id" element={<ResumeForm />} />
             <Route path="/cover-letter" element={<CoverLetter />} />
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/jobs/part-time" element={<PartTimeJobs />} />

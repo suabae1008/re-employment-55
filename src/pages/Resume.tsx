@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Download, Plus, Edit2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BottomNavigation from '../components/BottomNavigation';
@@ -16,10 +16,11 @@ interface Resume {
 const Resume = () => {
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [showEmptyState, setShowEmptyState] = useState(true);
+  const navigate = useNavigate();
 
   // In a real app, this would fetch from a backend
   // Here we're just simulating for the UI demonstration
-  React.useEffect(() => {
+  useEffect(() => {
     // Simulate checking if user has resumes
     const hasResumes = localStorage.getItem('hasResumes') === 'true';
     setShowEmptyState(!hasResumes);
@@ -36,16 +37,8 @@ const Resume = () => {
   }, []);
 
   const handleCreateResume = () => {
-    // In a real app, this would navigate to a resume creation form
-    // For demo purposes, we'll just toggle the state
-    localStorage.setItem('hasResumes', 'true');
-    setShowEmptyState(false);
-    setResumes([{
-      id: '1',
-      title: '기본 이력서',
-      date: '2025.03.26 작성',
-      content: '경력 및 학력 정보...'
-    }]);
+    // Navigate to the resume form page
+    navigate('/resume/create');
   };
 
   return (
@@ -94,6 +87,7 @@ const Resume = () => {
                       variant="outline" 
                       size="sm"
                       className="flex items-center"
+                      onClick={() => navigate(`/resume/edit/${resume.id}`)}
                     >
                       <Edit2 size={16} className="mr-1" />
                       이력서 수정
