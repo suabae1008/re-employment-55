@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronLeft, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
@@ -30,7 +29,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <div>
           <div className="text-center mb-6">
             <p className="text-gray-600 mb-2">나와 잘 맞는 공고인지 알아보세요</p>
-            <div className="mb-8">
+            <div className="mb-10">
               <MatchScoreGauge score={analysis.totalScore} />
             </div>
           </div>
@@ -40,7 +39,6 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
               <CollapsibleTrigger className="w-full text-left p-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">지격사항 {analysis.requiredQualifications.filter(q => q.isMatched).length}개 중 {analysis.requiredQualifications.length}개를 만족했어요</span>
-                  <span className="text-gray-400">〉</span>
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -62,7 +60,6 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
               <CollapsibleTrigger className="w-full text-left p-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">유사한 경험이 있어요</span>
-                  <span className="text-gray-400">〉</span>
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -84,7 +81,6 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
               <CollapsibleTrigger className="w-full text-left p-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">우대사항 {analysis.preferredQualifications.filter(q => q.isMatched).length}개 중 {analysis.preferredQualifications.length}개를 만족했어요</span>
-                  <span className="text-gray-400">〉</span>
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
