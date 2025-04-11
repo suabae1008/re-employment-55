@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom colors for senior re-employment app
+				"app-blue": "#4AA5FF",
+				"app-yellow": "#FFD84A",
+				"app-text": "#333333",
+				"app-gray": "#F5F5F5",
+				"app-light-blue": "#E8F4FF",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
