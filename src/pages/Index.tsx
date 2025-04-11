@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
