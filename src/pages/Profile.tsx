@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Edit2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BottomNavigation from '../components/BottomNavigation';
@@ -17,6 +17,27 @@ const Profile = () => {
     desiredWorkingHours: '평일 가능',
     desiredSalary: '월 210 만원'
   });
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(profile.name);
+
+  // Store name in localStorage on initial load
+  useEffect(() => {
+    localStorage.setItem('userName', profile.name);
+  }, []);
+
+  const handleSaveName = () => {
+    if (tempName.trim()) {
+      const updatedProfile = { ...profile, name: tempName };
+      setProfile(updatedProfile);
+      localStorage.setItem('userName', tempName);
+      
+      // Dispatch storage event for cross-component communication
+      window.dispatchEvent(new Event('storage'));
+      
+      setIsEditingName(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -40,9 +61,34 @@ const Profile = () => {
           </div>
           
           <div className="space-y-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-gray-500">성함</span>
-              <span>{profile.name}</span>
+              {isEditingName ? (
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={tempName}
+                    onChange={(e) => setTempName(e.target.value)}
+                    className="border rounded px-2 py-1 text-sm"
+                  />
+                  <button 
+                    onClick={handleSaveName}
+                    className="ml-2 bg-app-blue text-white rounded px-2 py-1 text-sm"
+                  >
+                    저장
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <span>{profile.name}</span>
+                  <button 
+                    onClick={() => setIsEditingName(true)}
+                    className="ml-2 text-gray-500"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                </div>
+              )}
             </div>
             
             <div className="flex justify-between">

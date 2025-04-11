@@ -9,7 +9,7 @@ interface JobToggleProps {
 
 const JobToggle: React.FC<JobToggleProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="flex w-full max-w-xl mx-auto my-4">
+    <div className="flex w-full max-w-xl mx-auto my-4 justify-center">
       <button
         onClick={() => setActiveTab('recommended')}
         className={`flex items-center justify-center gap-2 py-2 flex-1 rounded-l-full text-sm font-medium ${

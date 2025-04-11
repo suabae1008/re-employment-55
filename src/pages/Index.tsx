@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, School, LightbulbIcon, Calendar } from 'lucide-react';
+import { Search, MapPin, Briefcase, School, Calendar } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
@@ -11,6 +11,13 @@ import BottomNavigation from '../components/BottomNavigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs } from '../services/jobService';
 import { Job } from '../components/JobList';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
@@ -19,6 +26,31 @@ const Index = () => {
     jobType: 'all',
     region: 'all'
   });
+  
+  // Get user name from localStorage or use default
+  const [userName, setUserName] = useState<string>('김현숙');
+  
+  useEffect(() => {
+    // Check localStorage for user name
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+    }
+    
+    // Add event listener for name changes
+    const handleStorageChange = () => {
+      const updatedName = localStorage.getItem('userName');
+      if (updatedName) {
+        setUserName(updatedName);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
   
   const { data: jobs, isLoading } = useQuery({
     queryKey: ['jobs'],
@@ -65,7 +97,6 @@ const Index = () => {
       title: '방문간호사 모집 공고 (파트 타임)',
       company: '주식회사웰케어스테이션',
       highlight: 'D-2',
-      imageUrl: '/lovable-uploads/3aa8ac17-9c21-4161-ae1f-3e092f26a777.png'
     },
     {
       id: 2,
@@ -100,7 +131,7 @@ const Index = () => {
         {activeTab === 'recommended' && (
           <>
             <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">김현속님을 위한</h2>
+              <h2 className="text-2xl font-bold mb-2">{userName}님을 위한</h2>
               <h2 className="text-2xl font-bold mb-4">오늘의 추천 구직 공고</h2>
               <p className="text-gray-600 mb-4">내 이력과 적합한 공고를 확인해보세요.</p>
               
@@ -113,7 +144,6 @@ const Index = () => {
                     title={job.title}
                     company={job.company}
                     location={job.location}
-                    imageUrl={job.imageUrl}
                     category={job.category}
                     highlight={job.highlight}
                   />
@@ -121,59 +151,87 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Recent Public Job Information */}
+            {/* Recent Public Job Information - Carousel */}
             <div className="mb-6">
               <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
                 <Search className="text-app-blue mr-2" size={20} />
                 <span className="font-medium">최근 올라온 공공 일자리 정보</span>
               </div>
               
-              <div className="space-y-4">
-                {recentJobs.map((job) => (
-                  <JobCard 
-                    key={job.id}
-                    id={job.id}
-                    title={job.title}
-                    company={job.company}
-                    location={job.location}
-                  />
-                ))}
-              </div>
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {recentJobs.map((job) => (
+                    <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
+                      <JobCard 
+                        id={job.id}
+                        title={job.title}
+                        company={job.company}
+                        location={job.location}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-1" />
+                <CarouselNext className="right-1" />
+              </Carousel>
             </div>
 
-            {/* Categories */}
+            {/* Categories as Horizontal Scrolling Cards */}
             <div className="grid grid-cols-1 gap-4 mb-6">
               {/* Part-time Job Postings */}
-              <CategoryCard 
-                title="파트 타임 모집 공고" 
-                icon={Briefcase}
-                backgroundColor="bg-yellow-100"
-                to="/jobs/part-time" 
-              />
+              <div className="mb-4">
+                <h3 className="text-lg font-medium mb-3">파트 타임 모집 공고</h3>
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    {partTimeJobs.map((job) => (
+                      <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
+                        <JobCard 
+                          id={job.id}
+                          title={job.title}
+                          company={job.company}
+                          location={job.location}
+                          category={job.category}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-1" />
+                  <CarouselNext className="right-1" />
+                </Carousel>
+              </div>
               
               {/* Job Postings Near Me */}
-              <CategoryCard 
-                title="집에서 가까운 모집 공고" 
-                icon={MapPin} 
-                backgroundColor="bg-green-100"
-                to="/jobs/nearby"
-              />
+              <div className="mb-4">
+                <h3 className="text-lg font-medium mb-3">집에서 가까운 모집 공고</h3>
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    {nearbyJobs.map((job) => (
+                      <CarouselItem key={job.id} className="md:basis-1/2 lg:basis-1/3">
+                        <JobCard 
+                          id={job.id}
+                          title={job.title}
+                          company={job.company}
+                          location={job.location}
+                          category={job.category}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-1" />
+                  <CarouselNext className="right-1" />
+                </Carousel>
+              </div>
               
               {/* Job Preparation Education */}
-              <CategoryCard 
-                title="취업 준비 교육 정보" 
-                icon={School}
-                backgroundColor="bg-purple-100"
-                to="/education" 
-              />
-
-              {/* Educational Program */}
-              <CategoryCard 
-                title="교육생 모집" 
-                icon={LightbulbIcon}
-                backgroundColor="bg-blue-100"
-                to="/programs" 
-              />
+              <div>
+                <h3 className="text-lg font-medium mb-3">취업 준비 교육 정보</h3>
+                <CategoryCard 
+                  title="취업 준비 교육 정보" 
+                  icon={School}
+                  backgroundColor="bg-purple-100"
+                  to="/education" 
+                />
+              </div>
             </div>
           </>
         )}
