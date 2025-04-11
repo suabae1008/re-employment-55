@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Star, StarOff } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -16,6 +15,7 @@ export interface Job {
   description?: string;
   employmentType?: string;
   isFavorite?: boolean;
+  highlight?: string; // Added highlight property
 }
 
 interface JobListProps {

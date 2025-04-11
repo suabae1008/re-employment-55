@@ -7,8 +7,18 @@ import { getEducationData } from '../services/jobService';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import BottomNavigation from '../components/BottomNavigation';
 
+// Define the education program type
+interface EducationProgram {
+  id: number;
+  title: string;
+  provider: string;
+  duration: string;
+  startDate: string;
+  category: string;
+}
+
 const EducationInfo = () => {
-  const { data: educationPrograms, isLoading } = useQuery({
+  const { data: educationPrograms, isLoading } = useQuery<EducationProgram[]>({
     queryKey: ['education'],
     queryFn: () => getEducationData(),
   });

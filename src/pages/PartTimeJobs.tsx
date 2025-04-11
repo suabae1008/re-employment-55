@@ -6,9 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { getJobsByType } from '../services/jobService';
 import JobCard from '../components/JobCard';
 import BottomNavigation from '../components/BottomNavigation';
+import { Job } from '../components/JobList';
 
 const PartTimeJobs = () => {
-  const { data: jobs, isLoading } = useQuery({
+  const { data: jobs, isLoading } = useQuery<Job[]>({
     queryKey: ['jobs', 'part-time'],
     queryFn: () => getJobsByType('part-time'),
   });

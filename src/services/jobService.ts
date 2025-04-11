@@ -96,7 +96,16 @@ export const sampleJobs: Job[] = [
 ];
 
 // Education information data for job preparation
-export const educationData = [
+export interface EducationProgram {
+  id: number;
+  title: string;
+  provider: string;
+  duration: string;
+  startDate: string;
+  category: string;
+}
+
+export const educationData: EducationProgram[] = [
   {
     id: 1,
     title: '간호조무사 양성 과정',
@@ -149,7 +158,7 @@ export const getJobsByType = async (type: string): Promise<Job[]> => {
 };
 
 // Get education data
-export const getEducationData = async () => {
+export const getEducationData = async (): Promise<EducationProgram[]> => {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(educationData);
