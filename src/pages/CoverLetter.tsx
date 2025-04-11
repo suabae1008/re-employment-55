@@ -96,14 +96,6 @@ const CoverLetter = () => {
             <p className="text-gray-500 mb-10">작성된 자기소개서가 없습니다.</p>
             <div className="space-y-4 w-full max-w-md">
               <Button 
-                onClick={handleCreateCoverLetter}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center w-full justify-center"
-              >
-                <Plus size={20} className="mr-2" />
-                자기소개서 작성하기
-              </Button>
-              
-              <Button 
                 onClick={handleCreateAICoverLetter}
                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full justify-center"
               >
@@ -168,14 +160,6 @@ const CoverLetter = () => {
               </Card>
             ))}
             <div className="mt-8 space-y-4 flex flex-col items-center">
-              <Button 
-                onClick={handleCreateCoverLetter}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
-              >
-                <Plus size={20} className="mr-2" />
-                새 자기소개서 작성하기
-              </Button>
-              
               <Button 
                 onClick={handleCreateAICoverLetter}
                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
