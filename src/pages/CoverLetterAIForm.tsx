@@ -41,7 +41,6 @@ const CoverLetterAIForm = () => {
   const [isRecording, setIsRecording] = useState(Array(3).fill(false));
   const navigate = useNavigate();
   
-  // For speech recognition (SpeechRecognition API)
   const recognitionRefs = useRef<(SpeechRecognition | null)[]>([null, null, null]);
   
   const handleKeywordClick = (id: string) => {
@@ -50,15 +49,12 @@ const CoverLetterAIForm = () => {
     setKeywords(prevKeywords => 
       prevKeywords.map(keyword => {
         if (keyword.id === id) {
-          // If already selected, always allow deselection
           if (keyword.selected) {
             return { ...keyword, selected: false };
           } 
-          // If not selected and less than 3 are currently selected, allow selection
           else if (selectedCount < 3) {
             return { ...keyword, selected: true };
           }
-          // Otherwise, don't change (max 3 selections)
           return keyword;
         }
         return keyword;
@@ -72,7 +68,6 @@ const CoverLetterAIForm = () => {
       return;
     }
     
-    // Shuffle and reassign colors to keywords
     const shuffledKeywords = [...INITIAL_KEYWORDS]
       .sort(() => Math.random() - 0.5)
       .map((keyword, index) => {
@@ -96,12 +91,10 @@ const CoverLetterAIForm = () => {
   };
   
   const toggleRecording = (index: number) => {
-    // Stop any ongoing recordings
     stopAllRecordings();
     
     const newRecordingState = Array(3).fill(false);
     
-    // If we're not currently recording for this index, start recording
     if (!isRecording[index]) {
       newRecordingState[index] = true;
       startRecording(index);
@@ -112,7 +105,6 @@ const CoverLetterAIForm = () => {
   
   const startRecording = (index: number) => {
     try {
-      // Check if SpeechRecognition is available
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       
       if (!SpeechRecognitionAPI) {
@@ -134,7 +126,6 @@ const CoverLetterAIForm = () => {
       };
       
       recognition.onend = () => {
-        // Update recording state when recognition ends
         setIsRecording(prev => {
           const newState = [...prev];
           newState[index] = false;
@@ -142,7 +133,7 @@ const CoverLetterAIForm = () => {
         });
       };
       
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error('Speech recognition error', event.error);
         toast.error(`음성 인식 오류: ${event.error}`);
         setIsRecording(prev => {
@@ -176,7 +167,6 @@ const CoverLetterAIForm = () => {
   };
   
   const handleGenerateCoverLetter = () => {
-    // Validation
     if (!company.trim()) {
       toast.error("회사명을 입력해주세요.");
       return;
@@ -192,7 +182,6 @@ const CoverLetterAIForm = () => {
       return;
     }
     
-    // Get selected keywords
     const selectedKeywords = keywords
       .filter(k => k.selected)
       .map(k => k.text);
@@ -202,18 +191,14 @@ const CoverLetterAIForm = () => {
       return;
     }
     
-    // In a real app, this would send the data to a backend for AI processing
     toast.success("자기소개서 생성 중입니다...");
     
-    // Simulate successful creation and redirect
     setTimeout(() => {
-      // Save the state to localStorage to indicate we have cover letters
       localStorage.setItem('hasCoverLetters', 'true');
       navigate('/cover-letter');
     }, 2000);
   };
   
-  // Cleanup on unmount
   React.useEffect(() => {
     return () => {
       stopAllRecordings();
@@ -228,7 +213,6 @@ const CoverLetterAIForm = () => {
   
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="bg-white py-4 px-4">
         <div className="flex items-center mb-4">
           <Link to="/cover-letter" className="mr-4">
@@ -241,9 +225,7 @@ const CoverLetterAIForm = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-4 py-6 space-y-6">
-        {/* Company and Position Inputs */}
         <div className="space-y-4">
           <div>
             <label htmlFor="company" className="block text-sm font-medium mb-1">회사명</label>
@@ -266,7 +248,6 @@ const CoverLetterAIForm = () => {
           </div>
         </div>
         
-        {/* Keywords Selection */}
         <Card>
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-3">
@@ -300,7 +281,6 @@ const CoverLetterAIForm = () => {
           </CardContent>
         </Card>
         
-        {/* Questions Inputs */}
         <div className="space-y-5">
           {questions.map((question, index) => (
             <Card key={index}>
@@ -335,7 +315,6 @@ const CoverLetterAIForm = () => {
           ))}
         </div>
         
-        {/* Action Buttons */}
         <div className="flex gap-3 mt-8">
           <Button
             variant="outline"
@@ -354,7 +333,6 @@ const CoverLetterAIForm = () => {
         </div>
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
