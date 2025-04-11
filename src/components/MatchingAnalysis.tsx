@@ -30,7 +30,9 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <div>
           <div className="text-center mb-6">
             <p className="text-gray-600 mb-2">나와 잘 맞는 공고인지 알아보세요</p>
-            <MatchScoreGauge score={analysis.totalScore} />
+            <div className="mb-4">
+              <MatchScoreGauge score={analysis.totalScore} />
+            </div>
           </div>
 
           <Collapsible className="mb-4">
@@ -231,7 +233,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         </div>
       )}
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">지원하기</Button>
       </div>
     </div>

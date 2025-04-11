@@ -125,7 +125,9 @@ const JobDetail: React.FC = () => {
             <div className="text-center mb-2">
               <h3 className="text-lg font-semibold">맞춤형 공고 분석</h3>
               <p className="text-sm text-gray-600 mt-1 mb-3">나와 잘 맞는 공고인지 알아보세요</p>
-              <MatchScoreGauge score={matchScore} />
+              <div className="mb-3">
+                <MatchScoreGauge score={matchScore} />
+              </div>
             </div>
             
             <Button 

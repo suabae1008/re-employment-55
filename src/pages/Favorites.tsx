@@ -79,7 +79,7 @@ const Favorites = () => {
             <Link to="/" className="mr-4">
               <ArrowLeft size={24} />
             </Link>
-            <h1 className="text-xl font-bold">찜한 공고</h1>
+            <h1 className="text-xl font-bold">관심 공고</h1>
           </div>
           <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={refreshing}>
             <RefreshCw size={20} className={`${refreshing ? 'animate-spin' : ''}`} />
@@ -108,7 +108,7 @@ const Favorites = () => {
             {filteredJobs.map(job => (
               <div key={job.id} className="mb-3 relative">
                 <Link to={`/job/${job.id}`} state={{ fromFavorites: true }}>
-                  <div className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow p-3">
+                  <div className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow p-3 pl-12">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <h3 className="font-semibold text-lg">{job.title}</h3>
@@ -124,8 +124,9 @@ const Favorites = () => {
                   </div>
                 </Link>
                 <button 
-                  className="absolute top-3 left-3 text-yellow-500"
+                  className="absolute top-1/2 -translate-y-1/2 left-3 text-yellow-500"
                   onClick={() => handleToggleFavorite(job.id)}
+                  aria-label="관심 공고에서 제거"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
