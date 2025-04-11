@@ -6,43 +6,42 @@ import { Input } from "@/components/ui/input";
 import { Job } from '../components/JobList';
 import JobList from '../components/JobList';
 import BottomNavigation from '../components/BottomNavigation';
-import { getFavoriteJobs, toggleFavoriteJob } from '../services/jobService';
+import { getJobsFromStorage, toggleFavoriteJob } from '../services/jobService';
 
-const Favorites = () => {
-  const [favoriteJobs, setFavoriteJobs] = useState<Job[]>([]);
+const Apply = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadFavoriteJobs = () => {
+    const loadJobs = async () => {
       try {
         setLoading(true);
-        const favorites = getFavoriteJobs();
-        setFavoriteJobs(favorites);
+        const loadedJobs = getJobsFromStorage();
+        setJobs(loadedJobs);
       } catch (error) {
-        console.error('Failed to load favorite jobs:', error);
+        console.error('Failed to load jobs:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    loadFavoriteJobs();
+    loadJobs();
   }, []);
 
   const handleToggleFavorite = (jobId: string | number) => {
-    toggleFavoriteJob(jobId);
-    // Remove the job from the favorites list directly
-    setFavoriteJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
+    const updatedJobs = toggleFavoriteJob(jobId);
+    setJobs(updatedJobs);
   };
 
   const filteredJobs = searchQuery 
-    ? favoriteJobs.filter(job => 
+    ? jobs.filter(job => 
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (job.location && job.location.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (job.category && job.category.toLowerCase().includes(searchQuery.toLowerCase()))
       )
-    : favoriteJobs;
+    : jobs;
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -52,13 +51,13 @@ const Favorites = () => {
           <Link to="/" className="mr-4">
             <ArrowLeft size={24} />
           </Link>
-          <h1 className="text-xl font-bold">관심 공고</h1>
+          <h1 className="text-xl font-bold">지원소개서</h1>
         </div>
         
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           <Input
-            placeholder="관심 공고 검색"
+            placeholder="공고 검색 (제목, 기관명, 지역, 분야)"
             className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -72,16 +71,11 @@ const Favorites = () => {
           <div className="text-center py-10">
             <p>데이터를 불러오는 중...</p>
           </div>
-        ) : favoriteJobs.length > 0 ? (
+        ) : (
           <JobList 
             jobs={filteredJobs} 
             onToggleFavorite={handleToggleFavorite} 
           />
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500">저장된 관심 공고가 없습니다.</p>
-            <p className="text-gray-500 mt-2">홈 또는 지원소개서 페이지에서 별표 아이콘을 클릭하여 관심 공고로 등록해보세요.</p>
-          </div>
         )}
       </main>
 
@@ -91,4 +85,4 @@ const Favorites = () => {
   );
 };
 
-export default Favorites;
+export default Apply;
