@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart, School } from 'lucide-react';
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
 import JobToggle from '../components/JobToggle';
@@ -8,7 +8,7 @@ import JobFilters from '../components/JobFilters';
 import JobCard from '../components/JobCard';
 import BottomNavigation from '../components/BottomNavigation';
 import { useQuery } from '@tanstack/react-query';
-import { fetchJobs } from '../services/jobService';
+import { fetchJobs, getEducationData } from '../services/jobService';
 import { Job } from '../components/JobList';
 import { toast } from 'sonner';
 import { 
@@ -65,6 +65,11 @@ const Index = () => {
     queryFn: fetchJobs,
   });
 
+  const { data: educationPrograms } = useQuery({
+    queryKey: ['education'],
+    queryFn: () => getEducationData(),
+  });
+
   // Filter jobs based on selected filters
   useEffect(() => {
     if (!jobs) {
@@ -87,7 +92,6 @@ const Index = () => {
 
   // Job categories for the recommended tab
   const partTimeJobs = jobs?.filter(job => job.employmentType === '파트타임') || [];
-  const recentJobs = jobs?.slice(0, 5) || [];
   const nearbyJobs = jobs?.filter(job => job.location?.includes('서울')) || [];
 
   // Handle filter changes
@@ -159,46 +163,43 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Interactive Public Job Information Carousel */}
-            <div className="mb-8">
-              <div className="bg-app-light-blue p-4 rounded-lg flex items-center mb-4">
-                <Calendar className="text-app-blue mr-2" size={20} />
-                <span className="font-medium">최근 올라온 공공 일자리 정보</span>
+            {/* Job Categories as Cards - REORDERED */}
+            <div className="grid grid-cols-1 gap-6 mb-6">
+              {/* 1. Job Postings Near Me */}
+              <div className="mb-6">
+                <div className="flex items-center mb-4">
+                  <MapPin className="text-app-blue mr-2" size={20} />
+                  <h3 className="font-medium">집에서 가까운 모집 공고</h3>
+                </div>
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent>
+                    {nearbyJobs.map((job) => (
+                      <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                        <div className="h-full p-1">
+                          <JobCard 
+                            id={job.id}
+                            title={job.title}
+                            company={job.company}
+                            location={job.location}
+                            category={job.category}
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <div className="flex justify-center mt-4">
+                    <CarouselPrevious className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                    <CarouselNext className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
+                  </div>
+                </Carousel>
               </div>
               
-              <Carousel 
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                className="w-full"
-              >
-                <CarouselContent>
-                  {recentJobs.map((job) => (
-                    <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
-                      <div className="h-full p-1">
-                        <JobCard 
-                          id={job.id}
-                          title={job.title}
-                          company={job.company}
-                          location={job.location}
-                          category={job.category}
-                          highlight={job.highlight}
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="flex justify-center mt-4">
-                  <CarouselPrevious className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
-                  <CarouselNext className="static transform-none mx-2 bg-white shadow-md hover:bg-gray-50" />
-                </div>
-              </Carousel>
-            </div>
-
-            {/* Job Categories as Cards */}
-            <div className="grid grid-cols-1 gap-6 mb-6">
-              {/* Part-time Job Postings */}
+              {/* 2. Part-time Job Postings */}
               <div className="mb-6">
                 <div className="flex items-center mb-4">
                   <Clock className="text-app-blue mr-2" size={20} />
@@ -232,11 +233,11 @@ const Index = () => {
                 </Carousel>
               </div>
               
-              {/* Job Postings Near Me */}
-              <div className="mb-4">
+              {/* 3. Senior Education Information */}
+              <div className="mb-6">
                 <div className="flex items-center mb-4">
-                  <MapPin className="text-app-blue mr-2" size={20} />
-                  <h3 className="font-medium">집에서 가까운 모집 공고</h3>
+                  <School className="text-app-blue mr-2" size={20} />
+                  <h3 className="font-medium">시니어 교육 정보</h3>
                 </div>
                 <Carousel
                   opts={{
@@ -245,16 +246,33 @@ const Index = () => {
                   className="w-full"
                 >
                   <CarouselContent>
-                    {nearbyJobs.map((job) => (
-                      <CarouselItem key={job.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                    {educationPrograms?.map((program) => (
+                      <CarouselItem key={program.id} className="basis-full md:basis-1/2 lg:basis-1/3">
                         <div className="h-full p-1">
-                          <JobCard 
-                            id={job.id}
-                            title={job.title}
-                            company={job.company}
-                            location={job.location}
-                            category={job.category}
-                          />
+                          <Card className="h-full">
+                            <CardHeader className={`bg-emerald-50 rounded-t-lg`}>
+                              <CardTitle className="text-lg font-bold">{program.title}</CardTitle>
+                              <CardDescription className="text-gray-700">
+                                {program.provider}
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent className="pt-4">
+                              <div className="flex flex-col gap-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="font-medium">기간:</span>
+                                  <span>{program.duration}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="font-medium">시작일:</span>
+                                  <span>{program.startDate}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="font-medium">분야:</span>
+                                  <span>{program.category}</span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
                         </div>
                       </CarouselItem>
                     ))}
