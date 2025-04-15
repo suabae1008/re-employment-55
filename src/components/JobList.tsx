@@ -16,7 +16,8 @@ export interface Job {
   description?: string;
   employmentType?: string;
   isFavorite?: boolean;
-  highlight?: string; // Added highlight property
+  highlight?: string; // Highlight property
+  detailUrl?: string; // Added detailUrl property for Seoul API
 }
 
 interface JobListProps {

@@ -65,7 +65,8 @@ const convertToJobFormat = (seoulJob: any): Job => {
       // If date parsing fails, don't set a highlight
     }
   }
-  
+
+  // Create a job object with the Seoul API data
   return {
     id: seoulJob.JO_REGIST_NO,
     title: seoulJob.JO_SJ,
@@ -77,7 +78,6 @@ const convertToJobFormat = (seoulJob: any): Job => {
     isFavorite: false,
     description: `모집인원: ${seoulJob.RCRIT_NMPR}\n학력: ${seoulJob.ACDMCR_CMMN}\n고용형태: ${seoulJob.EMPLYM_STLE}\n임금: ${seoulJob.WORK_PARAR}`,
     highlight: highlight,
-    detailUrl: seoulJob.JO_DETHOME_URL
   };
 };
 

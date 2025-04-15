@@ -1,4 +1,6 @@
+
 import { fetchSeoulJobs } from './seoulJobsService';
+import { Job } from '../components/JobList';
 
 // Sample data that mimics the structure of job data
 export const sampleJobs: Job[] = [
