@@ -1,5 +1,5 @@
-
 import { fetchSeoulJobs } from './seoulJobsService';
+import { fetchJobsFromDB, JobDBEntry } from './supabaseClient';
 import { Job } from '../components/JobList';
 
 // Sample data that mimics the structure of job data
@@ -70,7 +70,7 @@ export const sampleJobs: Job[] = [
     category: '요양/돌봄',
     isFavorite: false,
     employmentType: '정규직',
-    description: '서울시노인복지센터에서 노인분들을 케어할 요양보호사를 모집합니다. 노인분들의 일상생활을 지원하고, 건강 관리를 돕는 역할을 담당합니다.\n\n주요 업무:\n- 노인 일상생활 지원\n- 식사 및 투약 보조\n- 위생 관리 지원\n- 건강 상태 모니터링',
+    description: '서울시노인복���센터에서 노인분들을 케어할 요양보호사를 모집합니다. 노인분들의 일상생활을 지원하고, 건강 관리를 돕는 역할을 담당합니다.\n\n주요 업무:\n- 노인 일상생활 지원\n- 식사 및 투약 보조\n- 위생 관리 지원\n- 건강 상태 모니터링',
   },
   {
     id: 7,
@@ -133,11 +133,62 @@ export const educationData: EducationProgram[] = [
   }
 ];
 
+// Convert DB job entry to our Job format
+const convertDBJobToJobFormat = (dbJob: JobDBEntry): Job => {
+  // Extract location from work_location if possible
+  const locationMatch = dbJob.work_location?.match(/서울특별시\s+([^\s]+구)/);
+  const location = locationMatch ? locationMatch[0] : '서울';
+  
+  // Determine deadline
+  const deadline = !dbJob.closing_date ? '상시채용' : dbJob.closing_date;
+  
+  // Generate a highlight if deadline is close (within 3 days)
+  let highlight = '';
+  if (deadline !== '상시채용') {
+    try {
+      const deadlineDate = new Date(deadline);
+      const today = new Date();
+      const daysLeft = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysLeft <= 3 && daysLeft > 0) {
+        highlight = `D-${daysLeft}`;
+      }
+    } catch (e) {
+      // If date parsing fails, don't set a highlight
+    }
+  }
+
+  return {
+    id: dbJob.id || dbJob.regist_no || 0,
+    title: dbJob.job_title || '',
+    company: dbJob.company_name || '',
+    location: location,
+    deadline: deadline,
+    employmentType: dbJob.employment_type_name || '정규직',
+    category: dbJob.job_type_name || '일반',
+    isFavorite: false,
+    description: dbJob.job_description || '',
+    highlight: highlight,
+  };
+};
+
 // In a real application, this would fetch data from a database
-// For now, we'll try to fetch from Seoul API first, then fall back to sample data
+// Now we'll try to fetch from Supabase DB first, then Seoul API, then fall back to sample data
 export const fetchJobs = async (): Promise<Job[]> => {
   try {
-    // First try to fetch from the Seoul API
+    // First try to fetch from Supabase database
+    const dbJobs = await fetchJobsFromDB();
+    
+    if (dbJobs && dbJobs.length > 0) {
+      console.log("Fetched jobs from Supabase database:", dbJobs.length);
+      const formattedJobs = dbJobs.map(convertDBJobToJobFormat);
+      // Store in localStorage for offline access
+      saveJobsToStorage(formattedJobs);
+      return formattedJobs;
+    }
+    
+    // If DB is empty, try to fetch from Seoul API
+    console.log("No jobs in database, fetching from Seoul API");
     const seoulJobs = await fetchSeoulJobs(1, 20);
     
     // If we got data from Seoul API, return it
@@ -147,7 +198,7 @@ export const fetchJobs = async (): Promise<Job[]> => {
       return seoulJobs;
     }
     
-    // If Seoul API fails, fall back to localStorage or sample data
+    // If all APIs fail, fall back to localStorage or sample data
     return getJobsFromStorage();
   } catch (error) {
     console.error('Error in fetchJobs:', error);
@@ -158,7 +209,7 @@ export const fetchJobs = async (): Promise<Job[]> => {
 
 // Get jobs by type (part-time, nearby, etc.)
 export const getJobsByType = async (type: string): Promise<Job[]> => {
-  const allJobs = getJobsFromStorage();
+  const allJobs = await fetchJobs();
   
   switch(type) {
     case 'part-time':
@@ -172,24 +223,20 @@ export const getJobsByType = async (type: string): Promise<Job[]> => {
 
 // Get education data
 export const getEducationData = async (): Promise<EducationProgram[]> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(educationData);
-    }, 300);
-  });
+  return educationData;
 };
 
 // Get recommendations for a user
 export const getRecommendedJobs = async (userId: string): Promise<Job[]> => {
   // In a real app, this would use user profile data to match with jobs
-  const allJobs = getJobsFromStorage();
+  const allJobs = await fetchJobs();
   // For demo purposes, return first 3 jobs as "recommended"
   return allJobs.slice(0, 3);
 };
 
 // Get a job by ID
-export const getJobById = (id: string | number): Job | null => {
-  const allJobs = getJobsFromStorage();
+export const getJobById = async (id: string | number): Promise<Job | null> => {
+  const allJobs = await fetchJobs();
   const job = allJobs.find(job => job.id.toString() === id.toString());
   return job || null;
 };
@@ -206,14 +253,14 @@ export const saveJobsToStorage = (jobs: Job[]): void => {
 };
 
 // Get only favorite jobs
-export const getFavoriteJobs = (): Job[] => {
-  const allJobs = getJobsFromStorage();
+export const getFavoriteJobs = async (): Promise<Job[]> => {
+  const allJobs = await fetchJobs();
   return allJobs.filter(job => job.isFavorite);
 };
 
 // Toggle favorite status for a job
-export const toggleFavoriteJob = (jobId: string | number): Job[] => {
-  const allJobs = getJobsFromStorage();
+export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
+  const allJobs = await fetchJobs();
   const updatedJobs = allJobs.map(job => 
     job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
   );

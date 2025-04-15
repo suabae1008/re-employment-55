@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { getSeoulApiKey } from './supabaseClient';
+import { getSeoulApiKey, syncSeoulJobs } from './supabaseClient';
 import { Job } from '../components/JobList';
 
 // Seoul Open API endpoint
@@ -78,17 +78,18 @@ const convertToJobFormat = (seoulJob: any): Job => {
     isFavorite: false,
     description: `모집인원: ${seoulJob.RCRIT_NMPR}\n학력: ${seoulJob.ACDMCR_CMMN}\n고용형태: ${seoulJob.EMPLYM_STLE}\n임금: ${seoulJob.WORK_PARAR}`,
     highlight: highlight,
+    detailUrl: seoulJob.JO_DETHOME_URL,
   };
 };
 
 // Function to fetch job data from Seoul API
 export const fetchSeoulJobs = async (startIndex = 1, endIndex = 10): Promise<Job[]> => {
   try {
-    // Get API key from Supabase
+    // Get API key
     const apiKey = await getSeoulApiKey();
     
     if (!apiKey) {
-      console.error('Failed to retrieve Seoul API key from Supabase');
+      console.error('Failed to retrieve Seoul API key');
       return [];
     }
     
@@ -99,6 +100,9 @@ export const fetchSeoulJobs = async (startIndex = 1, endIndex = 10): Promise<Job
     
     // Check if request was successful
     if (response.data?.JobList?.RESULT?.CODE === 'INFO-000') {
+      // Sync with Supabase database
+      await syncSeoulJobs(response.data.JobList.row);
+      
       // Convert Seoul API data to our Job format
       return response.data.JobList.row.map(convertToJobFormat);
     } else {
