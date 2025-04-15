@@ -14,7 +14,7 @@ const Apply = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadJobs = async () => {
+    const loadJobs = () => {
       try {
         setLoading(true);
         const loadedJobs = getJobsFromStorage();

@@ -234,9 +234,9 @@ export const getRecommendedJobs = async (userId: string): Promise<Job[]> => {
   return allJobs.slice(0, 3);
 };
 
-// Get a job by ID
-export const getJobById = async (id: string | number): Promise<Job | null> => {
-  const allJobs = await fetchJobs();
+// Get a job by ID - changed to return directly, not a Promise
+export const getJobById = (id: string | number): Job | null => {
+  const allJobs = getJobsFromStorage();
   const job = allJobs.find(job => job.id.toString() === id.toString());
   return job || null;
 };
@@ -252,15 +252,15 @@ export const saveJobsToStorage = (jobs: Job[]): void => {
   localStorage.setItem('jobs', JSON.stringify(jobs));
 };
 
-// Get only favorite jobs
-export const getFavoriteJobs = async (): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
+// Get only favorite jobs - changed to not be async
+export const getFavoriteJobs = (): Job[] => {
+  const allJobs = getJobsFromStorage();
   return allJobs.filter(job => job.isFavorite);
 };
 
-// Toggle favorite status for a job
-export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
+// Toggle favorite status for a job - changed to not be async
+export const toggleFavoriteJob = (jobId: string | number): Job[] => {
+  const allJobs = getJobsFromStorage();
   const updatedJobs = allJobs.map(job => 
     job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
   );
