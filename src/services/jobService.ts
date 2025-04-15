@@ -1,5 +1,4 @@
-
-import { Job } from "../components/JobList";
+import { fetchSeoulJobs } from './seoulJobsService';
 
 // Sample data that mimics the structure of job data
 export const sampleJobs: Job[] = [
@@ -133,14 +132,26 @@ export const educationData: EducationProgram[] = [
 ];
 
 // In a real application, this would fetch data from a database
-// For now, we'll use the sample data to simulate the API response
+// For now, we'll try to fetch from Seoul API first, then fall back to sample data
 export const fetchJobs = async (): Promise<Job[]> => {
-  // Simulate API call with a delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(getJobsFromStorage());
-    }, 500);
-  });
+  try {
+    // First try to fetch from the Seoul API
+    const seoulJobs = await fetchSeoulJobs(1, 20);
+    
+    // If we got data from Seoul API, return it
+    if (seoulJobs && seoulJobs.length > 0) {
+      // Store in localStorage for offline access
+      saveJobsToStorage(seoulJobs);
+      return seoulJobs;
+    }
+    
+    // If Seoul API fails, fall back to localStorage or sample data
+    return getJobsFromStorage();
+  } catch (error) {
+    console.error('Error in fetchJobs:', error);
+    // Fall back to localStorage or sample data
+    return getJobsFromStorage();
+  }
 };
 
 // Get jobs by type (part-time, nearby, etc.)
@@ -206,4 +217,22 @@ export const toggleFavoriteJob = (jobId: string | number): Job[] => {
   );
   saveJobsToStorage(updatedJobs);
   return updatedJobs;
+};
+
+// Store jobs by type for future reference
+export const fetchJobsByCategory = async (category: string): Promise<Job[]> => {
+  try {
+    // Fetch all jobs
+    const allJobs = await fetchJobs();
+    
+    // Filter by requested category
+    if (category === 'all') {
+      return allJobs;
+    }
+    
+    return allJobs.filter(job => job.category === category || job.employmentType === category);
+  } catch (error) {
+    console.error('Error fetching jobs by category:', error);
+    return [];
+  }
 };
