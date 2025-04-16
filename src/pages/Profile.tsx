@@ -4,6 +4,10 @@ import { ArrowLeft, User, Edit2, Save, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BottomNavigation from '../components/BottomNavigation';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 // Interface for our profile data
@@ -32,9 +36,10 @@ const Profile = () => {
     desiredSalary: '월 210 만원'
   });
 
-  // Editing states for each field
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState<ProfileData>({...profile});
+  // 전체 섹션 편집 상태 관리
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditingJob, setIsEditingJob] = useState(false);
+  const [tempProfile, setTempProfile] = useState<ProfileData>({...profile});
 
   // Load profile from localStorage on initial load
   useEffect(() => {
@@ -42,7 +47,7 @@ const Profile = () => {
     if (savedProfile) {
       const parsedProfile = JSON.parse(savedProfile);
       setProfile(parsedProfile);
-      setTempValues(parsedProfile);
+      setTempProfile(parsedProfile);
     } else {
       // Store initial profile in localStorage if not already present
       localStorage.setItem('userProfile', JSON.stringify(profile));
@@ -50,44 +55,49 @@ const Profile = () => {
     }
   }, []);
 
-  const handleEditField = (field: string) => {
-    setEditingField(field);
-    setTempValues({...profile});
+  const handleOpenProfileEdit = () => {
+    setTempProfile({...profile});
+    setIsEditingProfile(true);
   };
 
-  const handleCancelEdit = () => {
-    setEditingField(null);
+  const handleOpenJobEdit = () => {
+    setTempProfile({...profile});
+    setIsEditingJob(true);
   };
 
   const handleInputChange = (field: keyof ProfileData, value: string) => {
-    setTempValues({
-      ...tempValues,
+    setTempProfile({
+      ...tempProfile,
       [field]: value
     });
   };
 
   const handleGenderChange = (gender: '여자' | '남자') => {
-    setTempValues({
-      ...tempValues,
+    setTempProfile({
+      ...tempProfile,
       gender
     });
   };
 
-  const handleSaveField = (field: keyof ProfileData) => {
+  const handleSaveProfile = () => {
     const updatedProfile = { 
-      ...profile, 
-      [field]: tempValues[field] 
+      ...profile,
+      name: tempProfile.name,
+      gender: tempProfile.gender,
+      birthDate: tempProfile.birthDate,
+      phone: tempProfile.phone,
+      email: tempProfile.email
     };
     
     setProfile(updatedProfile);
-    setEditingField(null);
+    setIsEditingProfile(false);
     
     // Save to localStorage
     localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
     
     // Update userName in localStorage if name was changed
-    if (field === 'name') {
-      localStorage.setItem('userName', tempValues.name);
+    if (profile.name !== tempProfile.name) {
+      localStorage.setItem('userName', tempProfile.name);
       
       // Dispatch storage event for cross-component communication
       window.dispatchEvent(new Event('storage'));
@@ -96,40 +106,30 @@ const Profile = () => {
     toast.success("저장되었습니다");
   };
 
-  const renderEditableField = (label: string, field: keyof ProfileData, type: string = 'text') => {
-    const isEditing = editingField === field;
+  const handleSaveJob = () => {
+    const updatedProfile = { 
+      ...profile,
+      desiredJob: tempProfile.desiredJob,
+      desiredLocation: tempProfile.desiredLocation,
+      desiredWorkingHours: tempProfile.desiredWorkingHours,
+      desiredSalary: tempProfile.desiredSalary
+    };
     
+    setProfile(updatedProfile);
+    setIsEditingJob(false);
+    
+    // Save to localStorage
+    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+    
+    toast.success("저장되었습니다");
+  };
+
+  // 프로필 정보 렌더링 함수
+  const renderProfileField = (label: string, value: string) => {
     return (
       <div className="flex justify-between items-center py-3 border-b border-gray-100">
         <span className="text-gray-500">{label}</span>
-        {isEditing ? (
-          <div className="flex items-center">
-            <input
-              type={type}
-              value={tempValues[field]}
-              onChange={(e) => handleInputChange(field, e.target.value)}
-              className="border rounded px-2 py-1 text-sm w-36"
-            />
-            <button 
-              onClick={() => handleSaveField(field)}
-              className="ml-2 text-green-500"
-              aria-label="저장"
-            >
-              <Check size={18} />
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center">
-            <span>{profile[field]}</span>
-            <button 
-              onClick={() => handleEditField(field)}
-              className="ml-2 text-gray-500"
-              aria-label="수정"
-            >
-              <Edit2 size={14} />
-            </button>
-          </div>
-        )}
+        <span>{value}</span>
       </div>
     );
   };
@@ -150,62 +150,22 @@ const Profile = () => {
         <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold">내 프로필</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleOpenProfileEdit}
+              className="text-blue-500"
+            >
+              <Edit2 size={18} />
+            </Button>
           </div>
           
           <div className="space-y-2">
-            {renderEditableField('성함', 'name')}
-            
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-gray-500">성별</span>
-              {editingField === 'gender' ? (
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-4">
-                    <label className="flex items-center">
-                      <input 
-                        type="radio" 
-                        name="gender" 
-                        checked={tempValues.gender === '여자'} 
-                        onChange={() => handleGenderChange('여자')}
-                        className="mr-2 text-blue-500"
-                      />
-                      <span>여자</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input 
-                        type="radio" 
-                        name="gender" 
-                        checked={tempValues.gender === '남자'} 
-                        onChange={() => handleGenderChange('남자')}
-                        className="mr-2"
-                      />
-                      <span>남자</span>
-                    </label>
-                  </div>
-                  <button 
-                    onClick={() => handleSaveField('gender')}
-                    className="ml-2 text-green-500"
-                    aria-label="저장"
-                  >
-                    <Check size={18} />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  <span>{profile.gender}</span>
-                  <button 
-                    onClick={() => handleEditField('gender')}
-                    className="ml-2 text-gray-500"
-                    aria-label="수정"
-                  >
-                    <Edit2 size={14} />
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            {renderEditableField('생년월일', 'birthDate')}
-            {renderEditableField('전화번호', 'phone')}
-            {renderEditableField('E-mail', 'email', 'email')}
+            {renderProfileField('성함', profile.name)}
+            {renderProfileField('성별', profile.gender)}
+            {renderProfileField('생년월일', profile.birthDate)}
+            {renderProfileField('전화번호', profile.phone)}
+            {renderProfileField('E-mail', profile.email)}
           </div>
         </div>
 
@@ -213,16 +173,155 @@ const Profile = () => {
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold">내 희망 직무</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleOpenJobEdit}
+              className="text-blue-500"
+            >
+              <Edit2 size={18} />
+            </Button>
           </div>
           
           <div className="space-y-2">
-            {renderEditableField('희망 직무', 'desiredJob')}
-            {renderEditableField('희망 근무 지역', 'desiredLocation')}
-            {renderEditableField('희망 근무 가능 시간', 'desiredWorkingHours')}
-            {renderEditableField('희망 급여', 'desiredSalary')}
+            {renderProfileField('희망 직무', profile.desiredJob)}
+            {renderProfileField('희망 근무 지역', profile.desiredLocation)}
+            {renderProfileField('희망 근무 가능 시간', profile.desiredWorkingHours)}
+            {renderProfileField('희망 급여', profile.desiredSalary)}
           </div>
         </div>
       </main>
+
+      {/* 프로필 정보 편집 다이얼로그 */}
+      <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>내 프로필 수정</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">성함</Label>
+              <Input 
+                id="name" 
+                value={tempProfile.name} 
+                onChange={(e) => handleInputChange('name', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>성별</Label>
+              <div className="flex space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input 
+                    type="radio" 
+                    name="gender" 
+                    checked={tempProfile.gender === '여자'} 
+                    onChange={() => handleGenderChange('여자')} 
+                    className="form-radio" 
+                  />
+                  <span>여자</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input 
+                    type="radio" 
+                    name="gender" 
+                    checked={tempProfile.gender === '남자'} 
+                    onChange={() => handleGenderChange('남자')} 
+                    className="form-radio" 
+                  />
+                  <span>남자</span>
+                </label>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="birthDate">생년월일</Label>
+              <Input 
+                id="birthDate" 
+                value={tempProfile.birthDate} 
+                onChange={(e) => handleInputChange('birthDate', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="phone">전화번호</Label>
+              <Input 
+                id="phone" 
+                value={tempProfile.phone} 
+                onChange={(e) => handleInputChange('phone', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">E-mail</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                value={tempProfile.email} 
+                onChange={(e) => handleInputChange('email', e.target.value)} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-end">
+            <Button onClick={handleSaveProfile} className="w-full">
+              저장하기
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* 희망 직무 편집 다이얼로그 */}
+      <Dialog open={isEditingJob} onOpenChange={setIsEditingJob}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>내 희망 직무 수정</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="desiredJob">희망 직무</Label>
+              <Input 
+                id="desiredJob" 
+                value={tempProfile.desiredJob} 
+                onChange={(e) => handleInputChange('desiredJob', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="desiredLocation">희망 근무 지역</Label>
+              <Input 
+                id="desiredLocation" 
+                value={tempProfile.desiredLocation} 
+                onChange={(e) => handleInputChange('desiredLocation', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="desiredWorkingHours">희망 근무 가능 시간</Label>
+              <Input 
+                id="desiredWorkingHours" 
+                value={tempProfile.desiredWorkingHours} 
+                onChange={(e) => handleInputChange('desiredWorkingHours', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="desiredSalary">희망 급여</Label>
+              <Input 
+                id="desiredSalary" 
+                value={tempProfile.desiredSalary} 
+                onChange={(e) => handleInputChange('desiredSalary', e.target.value)} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-end">
+            <Button onClick={handleSaveJob} className="w-full">
+              저장하기
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Bottom Navigation */}
       <BottomNavigation />
