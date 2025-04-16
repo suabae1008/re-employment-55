@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -8,12 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { toast } from "sonner";
 import BottomNavigation from '../components/BottomNavigation';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface ResumeData {
   id: string;
@@ -21,6 +20,9 @@ interface ResumeData {
   basicInfo: {
     name: string;
     birthDate: Date | null;
+    birthYear: number;
+    birthMonth: number;
+    birthDay: number;
     email: string;
     phone: string;
     address: string;
@@ -48,12 +50,22 @@ const ResumeForm = () => {
   const navigate = useNavigate();
   const isEditMode = !!id;
   const [activeTab, setActiveTab] = useState("basicInfo");
+
+  // Generate year, month, and day options
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 80 }, (_, i) => currentYear - 79 + i);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const [days, setDays] = useState<number[]>([]);
+
   const [resumeData, setResumeData] = useState<ResumeData>({
     id: id || Date.now().toString(),
     title: '기본 이력서',
     basicInfo: {
       name: '',
       birthDate: null,
+      birthYear: currentYear - 30,
+      birthMonth: 1,
+      birthDay: 1,
       email: '',
       phone: '',
       address: '',
@@ -76,6 +88,33 @@ const ResumeForm = () => {
     certificates: []
   });
 
+  // Update the days array when year or month changes
+  useEffect(() => {
+    const { birthYear, birthMonth } = resumeData.basicInfo;
+    const daysInMonth = new Date(birthYear, birthMonth, 0).getDate();
+    setDays(Array.from({ length: daysInMonth }, (_, i) => i + 1));
+    
+    // Adjust day if it exceeds days in month
+    if (resumeData.basicInfo.birthDay > daysInMonth) {
+      handleBirthDateChange('birthDay', daysInMonth);
+    }
+  }, [resumeData.basicInfo.birthYear, resumeData.basicInfo.birthMonth]);
+
+  // Update birthDate when year, month, or day changes
+  useEffect(() => {
+    const { birthYear, birthMonth, birthDay } = resumeData.basicInfo;
+    if (birthYear && birthMonth && birthDay) {
+      const date = new Date(birthYear, birthMonth - 1, birthDay);
+      setResumeData(prev => ({
+        ...prev,
+        basicInfo: {
+          ...prev.basicInfo,
+          birthDate: date
+        }
+      }));
+    }
+  }, [resumeData.basicInfo.birthYear, resumeData.basicInfo.birthMonth, resumeData.basicInfo.birthDay]);
+
   useEffect(() => {
     if (isEditMode) {
       // Load resume data from localStorage in edit mode
@@ -85,6 +124,9 @@ const ResumeForm = () => {
         // Convert string dates back to Date objects
         if (resume.basicInfo.birthDate) {
           resume.basicInfo.birthDate = new Date(resume.basicInfo.birthDate);
+          resume.basicInfo.birthYear = resume.basicInfo.birthDate.getFullYear();
+          resume.basicInfo.birthMonth = resume.basicInfo.birthDate.getMonth() + 1;
+          resume.basicInfo.birthDay = resume.basicInfo.birthDate.getDate();
         }
         if (resume.education.startDate) {
           resume.education.startDate = new Date(resume.education.startDate);
@@ -112,6 +154,16 @@ const ResumeForm = () => {
   }, [id, isEditMode]);
 
   const handleBasicInfoChange = (field: string, value: any) => {
+    setResumeData(prev => ({
+      ...prev,
+      basicInfo: {
+        ...prev.basicInfo,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleBirthDateChange = (field: string, value: number) => {
     setResumeData(prev => ({
       ...prev,
       basicInfo: {
@@ -199,30 +251,94 @@ const ResumeForm = () => {
                     />
                   </div>
                   
-                  <div>
+                  <div className="space-y-2">
                     <Label>생년월일</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                        >
-                          {resumeData.basicInfo.birthDate ? (
-                            format(resumeData.basicInfo.birthDate, 'PPP', { locale: ko })
-                          ) : (
-                            <span className="text-muted-foreground">날짜 선택</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={resumeData.basicInfo.birthDate || undefined}
-                          onSelect={(date) => handleBasicInfoChange('birthDate', date)}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <Label htmlFor="birthYear">연도</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.basicInfo.birthYear}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-48 h-60 overflow-y-auto p-0">
+                            <ToggleGroup 
+                              type="single"
+                              className="flex flex-col"
+                              value={resumeData.basicInfo.birthYear.toString()}
+                              onValueChange={(value) => value && handleBirthDateChange('birthYear', parseInt(value))}
+                            >
+                              {years.map(year => (
+                                <ToggleGroupItem key={year} value={year.toString()} className="w-full rounded-none justify-start">
+                                  {year}
+                                </ToggleGroupItem>
+                              ))}
+                            </ToggleGroup>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="birthMonth">월</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.basicInfo.birthMonth}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-40 h-60 overflow-y-auto p-0">
+                            <ToggleGroup 
+                              type="single"
+                              className="flex flex-col"
+                              value={resumeData.basicInfo.birthMonth.toString()}
+                              onValueChange={(value) => value && handleBirthDateChange('birthMonth', parseInt(value))}
+                            >
+                              {months.map(month => (
+                                <ToggleGroupItem key={month} value={month.toString()} className="w-full rounded-none justify-start">
+                                  {month}
+                                </ToggleGroupItem>
+                              ))}
+                            </ToggleGroup>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="birthDay">일</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.basicInfo.birthDay}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-40 h-60 overflow-y-auto p-0">
+                            <ToggleGroup 
+                              type="single"
+                              className="flex flex-col"
+                              value={resumeData.basicInfo.birthDay.toString()}
+                              onValueChange={(value) => value && handleBirthDateChange('birthDay', parseInt(value))}
+                            >
+                              {days.map(day => (
+                                <ToggleGroupItem key={day} value={day.toString()} className="w-full rounded-none justify-start">
+                                  {day}
+                                </ToggleGroupItem>
+                              ))}
+                            </ToggleGroup>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
                   </div>
                   
                   <div>
@@ -438,7 +554,7 @@ const ResumeForm = () => {
           <TabsContent value="experience" className="mt-4">
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center py-10 text-gray-500">경력 정보를 입력하세요</p>
+                <p className="text-center py-10 text-gray-500">경력 정보를 입력하���요</p>
                 {/* Experience form will be expanded in future iterations */}
               </CardContent>
             </Card>
