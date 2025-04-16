@@ -378,6 +378,11 @@ const ResumeForm = () => {
     navigate('/resume');
   };
 
+  // Function to navigate to the confirmation screen
+  const handleNextToConfirmation = () => {
+    setActiveTab("confirmation");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <header className="bg-white py-4 px-4 sticky top-0 z-10 shadow-sm">
@@ -388,23 +393,18 @@ const ResumeForm = () => {
             </Link>
             <h1 className="text-xl font-bold">{isEditMode ? '이력서 수정' : '이력서 작성'}</h1>
           </div>
-          <Button 
-            onClick={handleSaveResume}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black"
-          >
-            <Save size={16} className="mr-2" />
-            저장
-          </Button>
+          {/* Yellow save button removed from header */}
         </div>
       </header>
 
       <main className="px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="basicInfo">기본정보</TabsTrigger>
             <TabsTrigger value="education">학력</TabsTrigger>
             <TabsTrigger value="experience">경력</TabsTrigger>
             <TabsTrigger value="certificates">자격증</TabsTrigger>
+            <TabsTrigger value="confirmation">확인</TabsTrigger>
           </TabsList>
           
           <TabsContent value="basicInfo" className="mt-4">
@@ -1032,10 +1032,213 @@ const ResumeForm = () => {
                     이전
                   </Button>
                   <Button 
-                    onClick={handleSaveResume}
+                    onClick={handleNextToConfirmation}
                     className="bg-black hover:bg-gray-800 text-white"
                   >
                     다음
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* New Confirmation Tab */}
+          <TabsContent value="confirmation" className="mt-4">
+            <Card>
+              <CardContent className="pt-6">
+                <h2 className="text-xl font-bold mb-6 text-center">이력서 확인</h2>
+                
+                {/* Basic Info Section */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-3 pb-2 border-b">기본정보</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">성함</p>
+                      <p className="font-medium">{resumeData.basicInfo.name || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">생년월일</p>
+                      <p className="font-medium">
+                        {resumeData.basicInfo.birthDate 
+                          ? format(resumeData.basicInfo.birthDate, 'yyyy년 MM월 dd일') 
+                          : '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">이메일</p>
+                      <p className="font-medium">{resumeData.basicInfo.email || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">휴대폰</p>
+                      <p className="font-medium">{resumeData.basicInfo.phone || '-'}</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-sm text-gray-500">주소</p>
+                      <p className="font-medium">{resumeData.basicInfo.address || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">보훈 대상</p>
+                      <p className="font-medium">{resumeData.basicInfo.veteran ? '예' : '아니오'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">장애 여부</p>
+                      <p className="font-medium">{resumeData.basicInfo.disability ? '예' : '아니오'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">취업계층 여부</p>
+                      <p className="font-medium">{resumeData.basicInfo.employmentSector ? '예' : '아니오'}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Education Section */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-3 pb-2 border-b">학력</h3>
+                  {resumeData.education.level ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-500">최종학력</p>
+                        <p className="font-medium">{resumeData.education.level}</p>
+                      </div>
+                      {resumeData.education.level !== '해당없음' && (
+                        <>
+                          <div>
+                            <p className="text-sm text-gray-500">학교명</p>
+                            <p className="font-medium">{resumeData.education.schoolName || '-'}</p>
+                          </div>
+                          {resumeData.education.level !== '고등학교' && (
+                            <div>
+                              <p className="text-sm text-gray-500">전공</p>
+                              <p className="font-medium">{resumeData.education.major || '-'}</p>
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-sm text-gray-500">졸업상태</p>
+                            <p className="font-medium">{resumeData.education.graduationStatus || '-'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">입학일</p>
+                            <p className="font-medium">
+                              {resumeData.education.startDate 
+                                ? format(resumeData.education.startDate, 'yyyy-MM-dd') 
+                                : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">졸업일</p>
+                            <p className="font-medium">
+                              {resumeData.education.endDate 
+                                ? format(resumeData.education.endDate, 'yyyy-MM-dd') 
+                                : '-'}
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">등록된 학력 정보가 없습니다.</p>
+                  )}
+                </div>
+                
+                {/* Experience Section */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-3 pb-2 border-b">경력</h3>
+                  {resumeData.experience.length > 0 ? (
+                    resumeData.experience.map((exp, index) => (
+                      <div key={exp.id} className="mb-6 pb-4 border-b last:border-b-0">
+                        <h4 className="font-medium mb-2">경력 {index + 1}: {exp.companyName || '회사명 미입력'}</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <p className="text-sm text-gray-500">직무</p>
+                            <p className="font-medium">{exp.jobTitle || '-'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">계약 형태</p>
+                            <p className="font-medium">{exp.employmentType || '-'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">부서</p>
+                            <p className="font-medium">{exp.department || '-'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">상태</p>
+                            <p className="font-medium">{exp.status}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">시작일</p>
+                            <p className="font-medium">
+                              {exp.startDate ? format(exp.startDate, 'yyyy-MM-dd') : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">종료일</p>
+                            <p className="font-medium">
+                              {exp.status === '재직 중' 
+                                ? '재직 중' 
+                                : exp.endDate 
+                                  ? format(exp.endDate, 'yyyy-MM-dd') 
+                                  : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">국가</p>
+                            <p className="font-medium">{exp.country}</p>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-gray-500">주요 성과</p>
+                            <p className="font-medium">{exp.achievements || '-'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">등록된 경력 정보가 없습니다.</p>
+                  )}
+                </div>
+                
+                {/* Certificates Section */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-3 pb-2 border-b">자격증</h3>
+                  {resumeData.certificates.length > 0 && resumeData.certificates[0].name ? (
+                    resumeData.certificates.map((cert, index) => (
+                      <div key={cert.id} className="mb-4 pb-2 border-b last:border-b-0">
+                        <h4 className="font-medium mb-2">자격증 {index + 1}: {cert.name}</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <p className="text-sm text-gray-500">자격등급</p>
+                            <p className="font-medium">{cert.grade || '-'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">발급날짜</p>
+                            <p className="font-medium">
+                              {cert.issueDate ? format(cert.issueDate, 'yyyy-MM-dd') : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">발급기관</p>
+                            <p className="font-medium">{cert.issuer || '-'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">등록된 자격증 정보가 없습니다.</p>
+                  )}
+                </div>
+                
+                <div className="mt-12 flex flex-col space-y-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setActiveTab("certificates")}
+                    className="w-full"
+                  >
+                    이전
+                  </Button>
+                  <Button 
+                    onClick={handleSaveResume}
+                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-black h-12 font-bold"
+                  >
+                    확인
                   </Button>
                 </div>
               </CardContent>
