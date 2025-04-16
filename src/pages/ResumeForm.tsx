@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Calendar as CalendarIcon, Check } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,13 +7,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar"; // Added missing Calendar import
+import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { toast } from "sonner";
 import BottomNavigation from '../components/BottomNavigation';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 interface ResumeData {
   id: string;
@@ -43,7 +51,18 @@ interface ResumeData {
     startDate: Date | null;
     endDate: Date | null;
   };
-  experience: any[]; // To be expanded later
+  experience: Array<{
+    id: string;
+    companyName: string;
+    jobTitle: string;
+    employmentType: string;
+    department: string;
+    status: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    country: string;
+    achievements: string;
+  }>;
   certificates: any[]; // To be expanded later
 }
 
@@ -86,7 +105,18 @@ const ResumeForm = () => {
       startDate: null,
       endDate: null
     },
-    experience: [],
+    experience: [{
+      id: Date.now().toString(),
+      companyName: '',
+      jobTitle: '',
+      employmentType: '',
+      department: '',
+      status: '재직 중',
+      startDate: null,
+      endDate: null,
+      country: '대한민국',
+      achievements: ''
+    }],
     certificates: []
   });
 
@@ -136,6 +166,30 @@ const ResumeForm = () => {
         if (resume.education.endDate) {
           resume.education.endDate = new Date(resume.education.endDate);
         }
+
+        // Convert experience dates if they exist
+        if (resume.experience && resume.experience.length > 0) {
+          resume.experience = resume.experience.map((exp: any) => ({
+            ...exp,
+            startDate: exp.startDate ? new Date(exp.startDate) : null,
+            endDate: exp.endDate ? new Date(exp.endDate) : null,
+          }));
+        } else {
+          // Initialize experience array if not present
+          resume.experience = [{
+            id: Date.now().toString(),
+            companyName: '',
+            jobTitle: '',
+            employmentType: '',
+            department: '',
+            status: '재직 중',
+            startDate: null,
+            endDate: null,
+            country: '대한민국',
+            achievements: ''
+          }];
+        }
+
         setResumeData(resume);
       }
     } else {
@@ -183,6 +237,57 @@ const ResumeForm = () => {
         [field]: value
       }
     }));
+  };
+
+  const handleExperienceChange = (index: number, field: string, value: any) => {
+    setResumeData(prev => {
+      const updatedExperience = [...prev.experience];
+      updatedExperience[index] = {
+        ...updatedExperience[index],
+        [field]: value
+      };
+      return {
+        ...prev,
+        experience: updatedExperience
+      };
+    });
+  };
+
+  const addExperience = () => {
+    setResumeData(prev => ({
+      ...prev,
+      experience: [
+        ...prev.experience,
+        {
+          id: Date.now().toString(),
+          companyName: '',
+          jobTitle: '',
+          employmentType: '',
+          department: '',
+          status: '재직 중',
+          startDate: null,
+          endDate: null,
+          country: '대한민국',
+          achievements: ''
+        }
+      ]
+    }));
+  };
+
+  const removeExperience = (index: number) => {
+    if (resumeData.experience.length <= 1) {
+      toast.error("최소 하나의 경력 정보가 필요합니다");
+      return;
+    }
+    
+    setResumeData(prev => {
+      const updatedExperience = [...prev.experience];
+      updatedExperience.splice(index, 1);
+      return {
+        ...prev,
+        experience: updatedExperience
+      };
+    });
   };
 
   const handleFileChange = (field: string, file: File | null) => {
@@ -556,8 +661,212 @@ const ResumeForm = () => {
           <TabsContent value="experience" className="mt-4">
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center py-10 text-gray-500">경력 정보를 입력하���요</p>
-                {/* Experience form will be expanded in future iterations */}
+                {resumeData.experience.map((exp, index) => (
+                  <div key={exp.id} className="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
+                    {index > 0 && (
+                      <div className="flex justify-end mb-4">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => removeExperience(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    )}
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor={`companyName-${index}`}>직장명</Label>
+                        <Input 
+                          id={`companyName-${index}`} 
+                          value={exp.companyName} 
+                          onChange={(e) => handleExperienceChange(index, 'companyName', e.target.value)}
+                          placeholder="직장명을 입력해주세요"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`jobTitle-${index}`}>직무</Label>
+                        <Select
+                          value={exp.jobTitle}
+                          onValueChange={(value) => handleExperienceChange(index, 'jobTitle', value)}
+                        >
+                          <SelectTrigger id={`jobTitle-${index}`} className="w-full">
+                            <SelectValue placeholder="직무를 선택해 주세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="소프트웨어 개발자">소프트웨어 개발자</SelectItem>
+                            <SelectItem value="웹 개발자">웹 개발자</SelectItem>
+                            <SelectItem value="시스템 엔지니어">시스템 엔지니어</SelectItem>
+                            <SelectItem value="데이터 엔지니어">데이터 엔지니어</SelectItem>
+                            <SelectItem value="데이터 분석가">데이터 분석가</SelectItem>
+                            <SelectItem value="영업 담당자">영업 담당자</SelectItem>
+                            <SelectItem value="마케팅 담당자">마케팅 담당자</SelectItem>
+                            <SelectItem value="인사 담당자">인사 담당자</SelectItem>
+                            <SelectItem value="경영 지원">경영 지원</SelectItem>
+                            <SelectItem value="회계 담당자">회계 담당자</SelectItem>
+                            <SelectItem value="디자이너">디자이너</SelectItem>
+                            <SelectItem value="기타">기타</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`employmentType-${index}`}>계약 형태</Label>
+                        <Select
+                          value={exp.employmentType}
+                          onValueChange={(value) => handleExperienceChange(index, 'employmentType', value)}
+                        >
+                          <SelectTrigger id={`employmentType-${index}`} className="w-full">
+                            <SelectValue placeholder="계약 형태를 선택해 주세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="정규직">정규직</SelectItem>
+                            <SelectItem value="계약직">계약직</SelectItem>
+                            <SelectItem value="인턴">인턴</SelectItem>
+                            <SelectItem value="파견직">파견직</SelectItem>
+                            <SelectItem value="아르바이트">아르바이트</SelectItem>
+                            <SelectItem value="프리랜서">프리랜서</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`department-${index}`}>부서</Label>
+                        <Input 
+                          id={`department-${index}`} 
+                          value={exp.department} 
+                          onChange={(e) => handleExperienceChange(index, 'department', e.target.value)}
+                          placeholder="담당했던 부서를 입력해주세요"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>상태</Label>
+                        <RadioGroup 
+                          value={exp.status}
+                          onValueChange={(value) => handleExperienceChange(index, 'status', value)}
+                          className="flex space-x-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroup.Item value="재직 중" id={`status-current-${index}`} />
+                            <Label htmlFor={`status-current-${index}`}>재직 중</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroup.Item value="퇴사" id={`status-quit-${index}`} />
+                            <Label htmlFor={`status-quit-${index}`}>퇴사</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>근무 기간</Label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className="w-full justify-start text-left font-normal"
+                                >
+                                  {exp.startDate ? (
+                                    format(exp.startDate, 'yyyy-MM-dd')
+                                  ) : (
+                                    <span className="text-muted-foreground">시작일</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                  mode="single"
+                                  selected={exp.startDate || undefined}
+                                  onSelect={(date) => handleExperienceChange(index, 'startDate', date)}
+                                  initialFocus
+                                  className="p-3 pointer-events-auto"
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className="w-full justify-start text-left font-normal"
+                                  disabled={exp.status === '재직 중'}
+                                >
+                                  {exp.endDate ? (
+                                    format(exp.endDate, 'yyyy-MM-dd')
+                                  ) : (
+                                    <span className="text-muted-foreground">종료일</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                  mode="single"
+                                  selected={exp.endDate || undefined}
+                                  onSelect={(date) => handleExperienceChange(index, 'endDate', date)}
+                                  initialFocus
+                                  className="p-3 pointer-events-auto"
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`country-${index}`}>국가</Label>
+                        <Select
+                          value={exp.country}
+                          onValueChange={(value) => handleExperienceChange(index, 'country', value)}
+                        >
+                          <SelectTrigger id={`country-${index}`} className="w-full">
+                            <SelectValue placeholder="국가를 선택해 주세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="대한민국">대한민국</SelectItem>
+                            <SelectItem value="일본">일본</SelectItem>
+                            <SelectItem value="중국">중국</SelectItem>
+                            <SelectItem value="미국">미국</SelectItem>
+                            <SelectItem value="영국">영국</SelectItem>
+                            <SelectItem value="캐나다">캐나다</SelectItem>
+                            <SelectItem value="호주">호주</SelectItem>
+                            <SelectItem value="기타">기타</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`achievements-${index}`}>주요 성과</Label>
+                        <Textarea
+                          id={`achievements-${index}`}
+                          value={exp.achievements}
+                          onChange={(e) => handleExperienceChange(index, 'achievements', e.target.value)}
+                          placeholder="주요 성과를 간략하게 작성해주세요."
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="mt-4">
+                  <Button 
+                    type="button" 
+                    onClick={addExperience}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    + 경력 추가
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
