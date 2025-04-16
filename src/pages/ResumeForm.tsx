@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Save, Calendar as CalendarIcon, Check } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -739,11 +740,11 @@ const ResumeForm = () => {
                           className="flex space-x-4"
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroup.Item value="재직 중" id={`status-current-${index}`} />
+                            <RadioGroupItem value="재직 중" id={`status-current-${index}`} />
                             <Label htmlFor={`status-current-${index}`}>재직 중</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroup.Item value="퇴사" id={`status-quit-${index}`} />
+                            <RadioGroupItem value="퇴사" id={`status-quit-${index}`} />
                             <Label htmlFor={`status-quit-${index}`}>퇴사</Label>
                           </div>
                         </RadioGroup>
