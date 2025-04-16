@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save, Calendar as CalendarIcon, Check } from 'lucide-react';
+import { ArrowLeft, Save, Calendar as CalendarIcon, Check, Plus } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -64,7 +63,13 @@ interface ResumeData {
     country: string;
     achievements: string;
   }>;
-  certificates: any[]; // To be expanded later
+  certificates: Array<{
+    id: string;
+    name: string;
+    grade: string;
+    issueDate: Date | null;
+    issuer: string;
+  }>;
 }
 
 const ResumeForm = () => {
@@ -117,7 +122,13 @@ const ResumeForm = () => {
       country: '대한민국',
       achievements: ''
     }],
-    certificates: []
+    certificates: [{
+      id: Date.now().toString(),
+      name: '',
+      grade: '',
+      issueDate: null,
+      issuer: ''
+    }]
   });
 
   useEffect(() => {
@@ -180,6 +191,21 @@ const ResumeForm = () => {
             endDate: null,
             country: '대한민국',
             achievements: ''
+          }];
+        }
+
+        if (resume.certificates && resume.certificates.length > 0) {
+          resume.certificates = resume.certificates.map((cert: any) => ({
+            ...cert,
+            issueDate: cert.issueDate ? new Date(cert.issueDate) : null,
+          }));
+        } else {
+          resume.certificates = [{
+            id: Date.now().toString(),
+            name: '',
+            grade: '',
+            issueDate: null,
+            issuer: ''
           }];
         }
 
@@ -278,6 +304,52 @@ const ResumeForm = () => {
       return {
         ...prev,
         experience: updatedExperience
+      };
+    });
+  };
+
+  const handleCertificateChange = (index: number, field: string, value: any) => {
+    setResumeData(prev => {
+      const updatedCertificates = [...prev.certificates];
+      updatedCertificates[index] = {
+        ...updatedCertificates[index],
+        [field]: value
+      };
+      return {
+        ...prev,
+        certificates: updatedCertificates
+      };
+    });
+  };
+
+  const addCertificate = () => {
+    setResumeData(prev => ({
+      ...prev,
+      certificates: [
+        ...prev.certificates,
+        {
+          id: Date.now().toString(),
+          name: '',
+          grade: '',
+          issueDate: null,
+          issuer: ''
+        }
+      ]
+    }));
+  };
+
+  const removeCertificate = (index: number) => {
+    if (resumeData.certificates.length <= 1) {
+      toast.error("최소 하나의 자격증 정보가 필요합니다");
+      return;
+    }
+    
+    setResumeData(prev => {
+      const updatedCertificates = [...prev.certificates];
+      updatedCertificates.splice(index, 1);
+      return {
+        ...prev,
+        certificates: updatedCertificates
       };
     });
   };
@@ -863,8 +935,108 @@ const ResumeForm = () => {
           <TabsContent value="certificates" className="mt-4">
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center py-10 text-gray-500">자격증 정보를 입력하세요</p>
-                {/* Certificates form will be expanded in future iterations */}
+                {resumeData.certificates.map((cert, index) => (
+                  <div key={cert.id} className="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-medium text-lg">자격증 {index + 1}</h3>
+                        {index > 0 && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => removeCertificate(index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            삭제
+                          </Button>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-name-${index}`}>자격증 명</Label>
+                        <Input 
+                          id={`certificate-name-${index}`} 
+                          value={cert.name} 
+                          onChange={(e) => handleCertificateChange(index, 'name', e.target.value)}
+                          placeholder="자격증 명을 작성해주세요."
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-grade-${index}`}>자격등급</Label>
+                        <Input 
+                          id={`certificate-grade-${index}`} 
+                          value={cert.grade} 
+                          onChange={(e) => handleCertificateChange(index, 'grade', e.target.value)}
+                          placeholder="직접 입력"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-date-${index}`}>발급날짜</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id={`certificate-date-${index}`}
+                              variant="outline"
+                              className="w-full justify-between text-left font-normal"
+                            >
+                              {cert.issueDate ? (
+                                format(cert.issueDate, 'yyyy-MM-dd')
+                              ) : (
+                                <span className="text-muted-foreground">날짜 선택</span>
+                              )}
+                              <CalendarIcon className="h-5 w-5 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={cert.issueDate || undefined}
+                              onSelect={(date) => handleCertificateChange(index, 'issueDate', date)}
+                              initialFocus
+                              className="p-3 pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-issuer-${index}`}>발급기관</Label>
+                        <Input 
+                          id={`certificate-issuer-${index}`} 
+                          value={cert.issuer} 
+                          onChange={(e) => handleCertificateChange(index, 'issuer', e.target.value)}
+                          placeholder="직접 입력"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="mt-4 flex justify-center">
+                  <Button 
+                    type="button" 
+                    onClick={addCertificate}
+                    variant="outline"
+                    className="rounded-full px-8"
+                    size="sm"
+                  >
+                    <Plus size={16} className="mr-1" /> 추가
+                  </Button>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-4">
+                  <Button variant="outline" onClick={() => setActiveTab("experience")}>
+                    이전
+                  </Button>
+                  <Button 
+                    onClick={handleSaveResume}
+                    className="bg-black hover:bg-gray-800 text-white"
+                  >
+                    다음
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
