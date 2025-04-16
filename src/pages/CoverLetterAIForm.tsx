@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Mic, MicOff, RefreshCcw, PenTool } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -33,8 +33,11 @@ const INITIAL_KEYWORDS: Keyword[] = [
 ];
 
 const CoverLetterAIForm = () => {
-  const [company, setCompany] = useState('');
-  const [position, setPosition] = useState('');
+  const location = useLocation();
+  const jobData = location.state || {};
+  
+  const [company, setCompany] = useState(jobData.company || '');
+  const [position, setPosition] = useState(jobData.position || '');
   const [keywords, setKeywords] = useState<Keyword[]>(INITIAL_KEYWORDS);
   const [refreshCount, setRefreshCount] = useState(0);
   const [questions, setQuestions] = useState(['', '', '']);
