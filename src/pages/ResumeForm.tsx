@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Save, Calendar as CalendarIcon, Check, Plus } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -949,3 +950,103 @@ const ResumeForm = () => {
                           >
                             삭제
                           </Button>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-name-${index}`}>자격증 명</Label>
+                        <Input 
+                          id={`certificate-name-${index}`} 
+                          value={cert.name} 
+                          onChange={(e) => handleCertificateChange(index, 'name', e.target.value)}
+                          placeholder="자격증 명을 작성해주세요."
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-grade-${index}`}>자격등급</Label>
+                        <Input 
+                          id={`certificate-grade-${index}`} 
+                          value={cert.grade} 
+                          onChange={(e) => handleCertificateChange(index, 'grade', e.target.value)}
+                          placeholder="직접 입력"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-date-${index}`}>발급날짜</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id={`certificate-date-${index}`}
+                              variant="outline"
+                              className="w-full justify-between text-left font-normal"
+                            >
+                              {cert.issueDate ? (
+                                format(cert.issueDate, 'yyyy-MM-dd')
+                              ) : (
+                                <span className="text-muted-foreground">날짜 선택</span>
+                              )}
+                              <CalendarIcon className="h-5 w-5 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={cert.issueDate || undefined}
+                              onSelect={(date) => handleCertificateChange(index, 'issueDate', date)}
+                              initialFocus
+                              className="p-3 pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor={`certificate-issuer-${index}`}>발급기관</Label>
+                        <Input 
+                          id={`certificate-issuer-${index}`} 
+                          value={cert.issuer} 
+                          onChange={(e) => handleCertificateChange(index, 'issuer', e.target.value)}
+                          placeholder="직접 입력"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="mt-4 flex justify-center">
+                  <Button 
+                    type="button" 
+                    onClick={addCertificate}
+                    variant="outline"
+                    className="rounded-full px-8"
+                    size="sm"
+                  >
+                    <Plus size={16} className="mr-1" /> 추가
+                  </Button>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-4">
+                  <Button variant="outline" onClick={() => setActiveTab("experience")}>
+                    이전
+                  </Button>
+                  <Button 
+                    onClick={handleSaveResume}
+                    className="bg-black hover:bg-gray-800 text-white"
+                  >
+                    다음
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </main>
+
+      <BottomNavigation />
+    </div>
+  );
+};
+
+export default ResumeForm;
