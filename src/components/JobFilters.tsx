@@ -16,6 +16,27 @@ interface JobFiltersProps {
 const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
   const jobTypes = [
     { value: 'all', label: '모든 직종' },
+    { value: '기획·전략', label: '기획·전략' },
+    { value: '마케팅·홍보', label: '마케팅·홍보' },
+    { value: '영업·판매·무역', label: '영업·판매·무역' },
+    { value: '상품기획·MD', label: '상품기획·MD' },
+    { value: '고객상담·TM', label: '고객상담·TM' },
+    { value: '구매·자재·물류', label: '구매·자재·물류' },
+    { value: '건설·건축', label: '건설·건축' },
+    { value: '의료', label: '의료' },
+    { value: '연구·R&D', label: '연구·R&D' },
+    { value: '회계·세무·재무', label: '회계·세무·재무' },
+    { value: '인사·노무·HRD', label: '인사·노무·HRD' },
+    { value: '총무·법무·사무', label: '총무·법무·사무' },
+    { value: 'IT개발·데이터', label: 'IT개발·데이터' },
+    { value: '디자인', label: '디자인' },
+    { value: '서비스', label: '서비스' },
+    { value: '교육', label: '교육' },
+    { value: '미디어·문화·스포츠', label: '미디어·문화·스포츠' },
+    { value: '금융·보험', label: '금융·보험' },
+    { value: '생산', label: '생산' },
+    { value: '공공·복지', label: '공공·복지' },
+    { value: '운전·운송·배송', label: '운전·운송·배송' },
     { value: 'nursing', label: '간호/요양' },
     { value: 'education', label: '교육/보육' },
     { value: 'office', label: '사무직' },
@@ -60,7 +81,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
             <SelectValue placeholder="직업 선택" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[300px] overflow-y-auto">
             {jobTypes.map(type => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}
