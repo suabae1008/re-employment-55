@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Job } from '../components/JobList';
 import JobList from '../components/JobList';
 import BottomNavigation from '../components/BottomNavigation';
-import { getJobsFromStorage, toggleFavoriteJob } from '../services/jobService';
+import { fetchJobs, getJobsFromStorage, toggleFavoriteJob } from '../services/jobService';
+import { toast } from 'sonner';
 
 const Apply = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -14,13 +15,19 @@ const Apply = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadJobs = () => {
+    const loadJobs = async () => {
       try {
         setLoading(true);
-        const loadedJobs = getJobsFromStorage();
+        // Try to fetch jobs from Supabase/Seoul API
+        const loadedJobs = await fetchJobs();
         setJobs(loadedJobs);
+        toast.success("구직정보가 업데이트 되었습니다.");
       } catch (error) {
         console.error('Failed to load jobs:', error);
+        // Fallback to local storage
+        const localJobs = getJobsFromStorage();
+        setJobs(localJobs);
+        toast.error("구직정보 업데이트에 실패했습니다. 로컬 데이터를 사용합니다.");
       } finally {
         setLoading(false);
       }

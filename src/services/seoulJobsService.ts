@@ -3,7 +3,8 @@ import axios from 'axios';
 import { getSeoulApiKey, syncSeoulJobs } from './supabaseClient';
 import { Job } from '../components/JobList';
 
-// Seoul Open API endpoint
+// Seoul Open API endpoint - using a CORS proxy
+const CORS_PROXY = 'https://corsproxy.io/?';
 const SEOUL_API_URL = 'http://openapi.seoul.go.kr:8088';
 
 // Interface for Seoul API response
@@ -93,13 +94,18 @@ export const fetchSeoulJobs = async (startIndex = 1, endIndex = 10): Promise<Job
       return [];
     }
     
-    // Make request to Seoul Open API
-    const response = await axios.get<SeoulApiResponse>(
-      `${SEOUL_API_URL}/${apiKey}/json/JobList/${startIndex}/${endIndex}/`
-    );
+    // Make request to Seoul Open API via CORS proxy
+    const encodedUrl = encodeURIComponent(`${SEOUL_API_URL}/${apiKey}/json/JobList/${startIndex}/${endIndex}/`);
+    const proxyUrl = `${CORS_PROXY}${encodedUrl}`;
+    
+    console.log('Fetching Seoul jobs from:', proxyUrl);
+    
+    const response = await axios.get<SeoulApiResponse>(proxyUrl);
     
     // Check if request was successful
     if (response.data?.JobList?.RESULT?.CODE === 'INFO-000') {
+      console.log('Successfully fetched Seoul jobs:', response.data.JobList.row.length);
+      
       // Sync with Supabase database
       await syncSeoulJobs(response.data.JobList.row);
       
