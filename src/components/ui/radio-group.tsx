@@ -40,7 +40,4 @@ const RadioGroupItem = React.forwardRef<
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-// Add Item as a property to RadioGroup for easier access
-RadioGroup.Item = RadioGroupItem
-
 export { RadioGroup, RadioGroupItem }

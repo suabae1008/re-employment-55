@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import BottomNavigation from '../components/BottomNavigation';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   Select,
@@ -72,7 +72,6 @@ const ResumeForm = () => {
   const isEditMode = !!id;
   const [activeTab, setActiveTab] = useState("basicInfo");
 
-  // Generate year, month, and day options
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 80 }, (_, i) => currentYear - 79 + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -120,19 +119,16 @@ const ResumeForm = () => {
     certificates: []
   });
 
-  // Update the days array when year or month changes
   useEffect(() => {
     const { birthYear, birthMonth } = resumeData.basicInfo;
     const daysInMonth = new Date(birthYear, birthMonth, 0).getDate();
     setDays(Array.from({ length: daysInMonth }, (_, i) => i + 1));
     
-    // Adjust day if it exceeds days in month
     if (resumeData.basicInfo.birthDay > daysInMonth) {
       handleBirthDateChange('birthDay', daysInMonth);
     }
   }, [resumeData.basicInfo.birthYear, resumeData.basicInfo.birthMonth]);
 
-  // Update birthDate when year, month, or day changes
   useEffect(() => {
     const { birthYear, birthMonth, birthDay } = resumeData.basicInfo;
     if (birthYear && birthMonth && birthDay) {
@@ -149,11 +145,9 @@ const ResumeForm = () => {
 
   useEffect(() => {
     if (isEditMode) {
-      // Load resume data from localStorage in edit mode
       const savedResumes = JSON.parse(localStorage.getItem('resumes') || '[]');
       const resume = savedResumes.find((r: any) => r.id === id);
       if (resume) {
-        // Convert string dates back to Date objects
         if (resume.basicInfo.birthDate) {
           resume.basicInfo.birthDate = new Date(resume.basicInfo.birthDate);
           resume.basicInfo.birthYear = resume.basicInfo.birthDate.getFullYear();
@@ -167,7 +161,6 @@ const ResumeForm = () => {
           resume.education.endDate = new Date(resume.education.endDate);
         }
 
-        // Convert experience dates if they exist
         if (resume.experience && resume.experience.length > 0) {
           resume.experience = resume.experience.map((exp: any) => ({
             ...exp,
@@ -175,7 +168,6 @@ const ResumeForm = () => {
             endDate: exp.endDate ? new Date(exp.endDate) : null,
           }));
         } else {
-          // Initialize experience array if not present
           resume.experience = [{
             id: Date.now().toString(),
             companyName: '',
@@ -193,7 +185,6 @@ const ResumeForm = () => {
         setResumeData(resume);
       }
     } else {
-      // In create mode, try to prefill with user profile data
       const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
       if (userProfile.name) {
         setResumeData(prev => ({
@@ -301,7 +292,6 @@ const ResumeForm = () => {
   };
 
   const handleSaveResume = () => {
-    // Save resume to localStorage
     const savedResumes = JSON.parse(localStorage.getItem('resumes') || '[]');
     const updatedResumes = isEditMode
       ? savedResumes.map((resume: any) => resume.id === id ? resumeData : resume)
@@ -316,7 +306,6 @@ const ResumeForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="bg-white py-4 px-4 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
@@ -335,7 +324,6 @@ const ResumeForm = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4">
@@ -882,7 +870,6 @@ const ResumeForm = () => {
         </Tabs>
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
