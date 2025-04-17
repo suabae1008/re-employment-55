@@ -24,6 +24,8 @@ const JobCard: React.FC<JobCardProps> = ({
   highlight,
   onClick,
 }) => {
+  const navigate = useNavigate();
+  
   // Generate a pastel background color based on the company name
   const generateBackgroundColor = (name: string) => {
     const colors = [
@@ -44,6 +46,14 @@ const JobCard: React.FC<JobCardProps> = ({
   };
   
   const bgColor = generateBackgroundColor(company);
+  
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick();
+    } else if (id) {
+      navigate(`/job/${id}`);
+    }
+  };
   
   const cardContent = (
     <>
@@ -95,16 +105,10 @@ const JobCard: React.FC<JobCardProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
-      onClick={onClick}
+      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer animate-fade-in"
+      onClick={handleCardClick}
     >
-      {id && !onClick ? (
-        <Link to={`/job/${id}`} className="block h-full">
-          {cardContent}
-        </Link>
-      ) : (
-        cardContent
-      )}
+      {cardContent}
     </div>
   );
 };

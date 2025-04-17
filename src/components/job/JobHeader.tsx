@@ -31,6 +31,8 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, handleToggleFavorite }) => {
         <button 
           onClick={() => {
             handleToggleFavorite();
+            toast(job.isFavorite ? '관심 공고에서 제거되었습니다' : '관심 공고에 추가되었습니다');
+            
             // Add animation when favorited
             const btn = document.querySelector('.favorite-btn');
             if (btn) {
