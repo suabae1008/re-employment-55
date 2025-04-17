@@ -1,8 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart, School, Sparkles, List } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import BottomNavigation from '../components/BottomNavigation';
+import JobCard from '../components/JobCard';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs, getEducationData } from '../services/jobService';
 import { Job } from '../components/JobList';
@@ -11,6 +12,7 @@ import { toast } from 'sonner';
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
   const [userName, setUserName] = useState<string>('김현숙');
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Check localStorage for user name
@@ -43,6 +45,10 @@ const Index = () => {
     queryKey: ['education'],
     queryFn: () => getEducationData(),
   });
+
+  const handleJobCardClick = (jobId: string | number) => {
+    navigate(`/job/${jobId}`);
+  };
 
   return (
     <div className="bg-white min-h-screen">
@@ -114,7 +120,10 @@ const Index = () => {
               </p>
 
               {/* Job Cards */}
-              <article className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4">
+              <article 
+                className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => handleJobCardClick(1)}
+              >
                 <div className="flex justify-between items-center">
                   <h3 className="text-base text-gray-600 font-bold">주식회사웰케어스테이션</h3>
                   <div className="bg-gray-100 rounded-full px-2 py-1 text-sm font-bold">
@@ -128,7 +137,10 @@ const Index = () => {
                 </div>
               </article>
 
-              <article className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4">
+              <article 
+                className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => handleJobCardClick(2)}
+              >
                 <div className="flex justify-between items-center">
                   <h3 className="text-base text-gray-600 font-bold">이화여자대학교 산학협력단</h3>
                   <div className="bg-gray-100 rounded-full px-2 py-1 text-sm font-bold">
@@ -146,7 +158,10 @@ const Index = () => {
             {/* Job Categories as Cards */}
             <div className="mt-5 flex flex-col gap-2">
               {/* Public Jobs */}
-              <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+              <article 
+                className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all"
+                onClick={() => handleJobCardClick(3)}
+              >
                 <div className="px-2">
                   <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-blue-100 w-full">
                     🔍 최근 올라온 공공 일자리 정보
@@ -165,58 +180,64 @@ const Index = () => {
               </article>
 
               {/* Part-time Jobs */}
-              <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
-                <div className="px-2">
-                  <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-red-100 w-full">
-                    🎈 파트 타임 모집 공고
-                  </h2>
-                </div>
-                <div className="relative">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/af7462bc608ebdda31fb77f7512f012d8e32f2a5"
-                    alt="파트타임 일자리"
-                    className="w-full h-[182px] object-cover"
-                  />
-                  <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
-                    서울북부교육청 학습비타민 지원가 모집 (주 3회)
-                  </h3>
-                </div>
-              </article>
+              <Link to="/jobs/part-time" className="block">
+                <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
+                  <div className="px-2">
+                    <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-red-100 w-full">
+                      🎈 파트 타임 모집 공고
+                    </h2>
+                  </div>
+                  <div className="relative">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/af7462bc608ebdda31fb77f7512f012d8e32f2a5"
+                      alt="파트타임 일자리"
+                      className="w-full h-[182px] object-cover"
+                    />
+                    <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
+                      서울북부교육청 학습비타민 지원가 모집 (주 3회)
+                    </h3>
+                  </div>
+                </article>
+              </Link>
 
               {/* Nearby Jobs */}
-              <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
-                <div className="px-2">
-                  <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-green-100 w-full">
-                    🏡 집에서 가까운 모집 공고
-                  </h2>
-                </div>
-                <div className="relative">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7e6c5f6e8a9bd491a4280ee026463466e00c7fc9?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
-                    alt="근처 일자리"
-                    className="w-full h-[182px] object-cover"
-                  />
-                  <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
-                    송파구시설관리공단 주임간호사 채용
-                  </h3>
-                </div>
-              </article>
+              <Link to="/jobs/nearby" className="block">
+                <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
+                  <div className="px-2">
+                    <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-green-100 w-full">
+                      🏡 집에서 가까운 모집 공고
+                    </h2>
+                  </div>
+                  <div className="relative">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/7e6c5f6e8a9bd491a4280ee026463466e00c7fc9?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
+                      alt="근처 일자리"
+                      className="w-full h-[182px] object-cover"
+                    />
+                    <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
+                      송파구시설관리공단 주임간호사 채용
+                    </h3>
+                  </div>
+                </article>
+              </Link>
 
               {/* Education Information */}
-              <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
-                <div className="px-2">
-                  <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-yellow-100 w-full">
-                    📝 취업 준비 교육 정보
-                  </h2>
-                </div>
-                <div className="relative">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/a42b21f36731534d6f73a7f8ee22168d39794df3?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
-                    alt="교육 정보"
-                    className="w-full h-[182px] object-cover"
-                  />
-                </div>
-              </article>
+              <Link to="/education" className="block">
+                <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
+                  <div className="px-2">
+                    <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-yellow-100 w-full">
+                      📝 취업 준비 교육 정보
+                    </h2>
+                  </div>
+                  <div className="relative">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/a42b21f36731534d6f73a7f8ee22168d39794df3?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
+                      alt="교육 정보"
+                      className="w-full h-[182px] object-cover"
+                    />
+                  </div>
+                </article>
+              </Link>
             </div>
           </>
         )}
@@ -230,7 +251,11 @@ const Index = () => {
               <div className="space-y-4">
                 {jobs && jobs.length > 0 ? (
                   jobs.map((job) => (
-                    <article key={job.id} className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4">
+                    <article 
+                      key={job.id} 
+                      className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => handleJobCardClick(job.id)}
+                    >
                       <div className="flex justify-between items-center">
                         <h3 className="text-base text-gray-600 font-bold">{job.company}</h3>
                       </div>

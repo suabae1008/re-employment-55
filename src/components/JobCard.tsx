@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MapPin, Calendar, Briefcase, Star } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface JobCardProps {
   id?: string | number;
@@ -11,6 +11,7 @@ interface JobCardProps {
   imageUrl?: string;
   category?: string;
   highlight?: string;
+  onClick?: () => void;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -21,6 +22,7 @@ const JobCard: React.FC<JobCardProps> = ({
   imageUrl,
   category,
   highlight,
+  onClick,
 }) => {
   // Generate a pastel background color based on the company name
   const generateBackgroundColor = (name: string) => {
@@ -92,8 +94,11 @@ const JobCard: React.FC<JobCardProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-      {id ? (
+    <div 
+      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+      onClick={onClick}
+    >
+      {id && !onClick ? (
         <Link to={`/job/${id}`} className="block h-full">
           {cardContent}
         </Link>
