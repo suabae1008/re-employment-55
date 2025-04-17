@@ -155,30 +155,8 @@ const Index = () => {
               </article>
             </section>
 
-            {/* Job Categories as Cards */}
+            {/* Job Categories */}
             <div className="mt-5 flex flex-col gap-2">
-              {/* Public Jobs */}
-              <article 
-                className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all"
-                onClick={() => handleJobCardClick(3)}
-              >
-                <div className="px-2">
-                  <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-blue-100 w-full">
-                    🔍 최근 올라온 공공 일자리 정보
-                  </h2>
-                </div>
-                <div className="relative">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/0d15098566cb190c266210b9ed4b29b4fbc8528b"
-                    alt="공공 일자리"
-                    className="w-full h-[182px] object-cover"
-                  />
-                  <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
-                    서울특별시어린이병원 기간제 노동자 채용 공고
-                  </h3>
-                </div>
-              </article>
-
               {/* Part-time Jobs */}
               <Link to="/jobs/part-time" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
