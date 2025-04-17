@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, StarOff, MapPin, Calendar, Building, Briefcase, BarChart2, FileUp, PenTool } from 'lucide-react';
