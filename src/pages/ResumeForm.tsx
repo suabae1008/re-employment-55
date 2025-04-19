@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "../components/ui/card";
@@ -65,9 +64,6 @@ const ResumeForm: React.FC = () => {
     description2: "",
     
     skills: "",
-    certificates: "",
-    languages: "",
-    awards: "",
     
     experiences: [
       {
