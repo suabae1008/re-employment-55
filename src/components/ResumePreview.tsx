@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 interface ResumePreviewProps {
   formData: any;
   onEdit: () => void;
-  onSubmit: () => void;
+  onSubmit: (e?: React.FormEvent) => void; // Updated to accept an optional event parameter
 }
 
 const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmit }) => {
@@ -121,7 +121,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmi
           </section>
 
           <div className="flex justify-end space-x-4 mt-8">
-            <Button onClick={onSubmit} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={() => onSubmit()} className="bg-blue-600 hover:bg-blue-700">
               확인
             </Button>
           </div>
@@ -131,4 +131,4 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmi
   );
 };
 
-export default ResumePreview;  // Ensuring default export
+export default ResumePreview;

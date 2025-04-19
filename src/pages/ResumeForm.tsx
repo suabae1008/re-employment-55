@@ -165,8 +165,10 @@ const ResumeForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
     try {
       const resumeData = Object.values(formData) as string[];
       await createResume(resumeData);
