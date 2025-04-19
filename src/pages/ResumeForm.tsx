@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "../components/ui/card";
@@ -1183,7 +1182,15 @@ const ResumeForm: React.FC = () => {
                       <Checkbox
                         id="documentCreation"
                         checked={formData.computerSkills.documentCreation}
-                        onCheckedChange={() => handleCheckboxChange("computerSkills.documentCreation")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            computerSkills: {
+                              ...prev.computerSkills,
+                              documentCreation: !prev.computerSkills.documentCreation
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="documentCreation">문서 작성 (한글, MS워드 등)</Label>
                     </div>
@@ -1192,7 +1199,15 @@ const ResumeForm: React.FC = () => {
                       <Checkbox
                         id="spreadsheet"
                         checked={formData.computerSkills.spreadsheet}
-                        onCheckedChange={() => handleCheckboxChange("computerSkills.spreadsheet")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            computerSkills: {
+                              ...prev.computerSkills,
+                              spreadsheet: !prev.computerSkills.spreadsheet
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="spreadsheet">스프레드시트 (엑셀 등)</Label>
                     </div>
@@ -1201,7 +1216,15 @@ const ResumeForm: React.FC = () => {
                       <Checkbox
                         id="presentation"
                         checked={formData.computerSkills.presentation}
-                        onCheckedChange={() => handleCheckboxChange("computerSkills.presentation")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            computerSkills: {
+                              ...prev.computerSkills,
+                              presentation: !prev.computerSkills.presentation
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="presentation">프레젠테이션 (파워포인트 등)</Label>
                     </div>
@@ -1210,39 +1233,73 @@ const ResumeForm: React.FC = () => {
                       <Checkbox
                         id="accounting"
                         checked={formData.computerSkills.accounting}
-                        onCheckedChange={() => handleCheckboxChange("computerSkills.accounting")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            computerSkills: {
+                              ...prev.computerSkills,
+                              accounting: !prev.computerSkills.accounting
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="accounting">회계 프로그램</Label>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="otherComputerSkills">기타</Label>
-                      <Input
-                        id="otherComputerSkills"
-                        name="computerSkills.other"
-                        value={formData.computerSkills.other}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          computerSkills: {
-                            ...prev.computerSkills,
-                            other: e.target.value
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="otherSkill"
+                          checked={!!formData.computerSkills.other}
+                          onCheckedChange={(checked) => 
+                            setFormData(prev => ({
+                              ...prev,
+                              computerSkills: {
+                                ...prev.computerSkills,
+                                other: checked ? " " : ""
+                              }
+                            }))
                           }
-                        }))}
-                        placeholder="기타 컴퓨터 활용 능력"
-                      />
+                        />
+                        <Label htmlFor="otherSkill">기타</Label>
+                      </div>
+                      
+                      {formData.computerSkills.other !== "" && (
+                        <Input
+                          value={formData.computerSkills.other}
+                          onChange={(e) => 
+                            setFormData(prev => ({
+                              ...prev,
+                              computerSkills: {
+                                ...prev.computerSkills,
+                                other: e.target.value
+                              }
+                            }))
+                          }
+                          placeholder="기타 컴퓨터 활용 능력을 입력하세요"
+                          className="mt-2"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
                 
                 <div className="border-t pt-6">
                   <h3 className="font-medium text-lg mb-4">운전 능력</h3>
-                  
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="drivingLicense"
                         checked={formData.drivingAbility.license}
-                        onCheckedChange={() => handleCheckboxChange("drivingAbility.license")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            drivingAbility: {
+                              ...prev.drivingAbility,
+                              license: !prev.drivingAbility.license
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="drivingLicense">운전면허 보유</Label>
                     </div>
@@ -1251,7 +1308,15 @@ const ResumeForm: React.FC = () => {
                       <Checkbox
                         id="ownVehicle"
                         checked={formData.drivingAbility.vehicle}
-                        onCheckedChange={() => handleCheckboxChange("drivingAbility.vehicle")}
+                        onCheckedChange={() => 
+                          setFormData(prev => ({
+                            ...prev,
+                            drivingAbility: {
+                              ...prev.drivingAbility,
+                              vehicle: !prev.drivingAbility.vehicle
+                            }
+                          }))
+                        }
                       />
                       <Label htmlFor="ownVehicle">차량 보유</Label>
                     </div>

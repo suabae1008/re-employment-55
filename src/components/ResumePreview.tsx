@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "./ui/card";
 import { PencilLine } from "lucide-react";
@@ -11,6 +10,23 @@ interface ResumePreviewProps {
 }
 
 const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmit }) => {
+  const formatComputerSkills = () => {
+    const skills = [];
+    if (formData.computerSkills.documentCreation) skills.push("문서 작성");
+    if (formData.computerSkills.spreadsheet) skills.push("스프레드시트");
+    if (formData.computerSkills.presentation) skills.push("프레젠테이션");
+    if (formData.computerSkills.accounting) skills.push("회계 프로그램");
+    if (formData.computerSkills.other) skills.push(formData.computerSkills.other);
+    return skills.join(", ");
+  };
+
+  const formatDrivingAbility = () => {
+    const abilities = [];
+    if (formData.drivingAbility.license) abilities.push("운전면허 보유");
+    if (formData.drivingAbility.vehicle) abilities.push("차량 보유");
+    return abilities.join(", ");
+  };
+
   return (
     <Card className="max-w-[800px] mx-auto">
       <CardContent className="p-6">
@@ -120,9 +136,19 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmi
             </div>
           </section>
 
+          <section>
+            <h3 className="text-lg font-semibold mb-4">컴퓨터 활용 능력</h3>
+            <p>{formatComputerSkills()}</p>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-4">운전 능력</h3>
+            <p>{formatDrivingAbility()}</p>
+          </section>
+
           <div className="flex justify-end space-x-4 mt-8">
             <Button onClick={() => onSubmit()} className="bg-blue-600 hover:bg-blue-700">
-              확인
+              저장
             </Button>
           </div>
         </div>
