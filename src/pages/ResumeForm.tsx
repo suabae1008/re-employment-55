@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -16,16 +15,20 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { createResume } from '../services/resumeService';
+import { PostcodeSearch } from '../components/PostcodeSearch';
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("personal");
   const [formData, setFormData] = useState({
-    // Personal Info
+    // Basic Info
     name: "",
     email: "",
     phone: "",
+    birthDate: "",
+    postcode: "",
     address: "",
+    addressDetail: "",
     
     // Education
     highestEducation: "대학교", // 기본값 대학교
@@ -62,17 +65,53 @@ const ResumeForm: React.FC = () => {
     awards: ""
   });
 
+  const [formErrors, setFormErrors] = useState({
+    name: false,
+    email: false,
+    phone: false,
+    birthDate: false,
+    address: false,
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (formErrors[name as keyof typeof formErrors]) {
+      setFormErrors(prev => ({ ...prev, [name]: false }));
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleAddressComplete = (data: any) => {
+    setFormData(prev => ({
+      ...prev,
+      postcode: data.zonecode,
+      address: data.address,
+    }));
+    setFormErrors(prev => ({ ...prev, address: false }));
+  };
+
+  const validateBasicInfo = () => {
+    const errors = {
+      name: !formData.name,
+      email: !formData.email,
+      phone: !formData.phone,
+      birthDate: !formData.birthDate,
+      address: !formData.address,
+    };
+    
+    setFormErrors(errors);
+    return !Object.values(errors).some(error => error);
+  };
+
   const handleTabChange = (value: string) => {
-    setActiveTab(value);
+    if (value !== "personal" || validateBasicInfo()) {
+      setActiveTab(value);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,6 +127,10 @@ const ResumeForm: React.FC = () => {
   };
 
   const handleNext = () => {
+    if (activeTab === "personal" && !validateBasicInfo()) {
+      return;
+    }
+    
     switch(activeTab) {
       case "personal":
         setActiveTab("education");
@@ -137,7 +180,7 @@ const ResumeForm: React.FC = () => {
       
       <Tabs defaultValue="personal" value={activeTab} onValueChange={handleTabChange} className="max-w-[800px] mx-auto px-6 py-8">
         <TabsList className="grid w-full grid-cols-4 mb-8">
-          <TabsTrigger value="personal" className="text-sm">인적 정보</TabsTrigger>
+          <TabsTrigger value="personal" className="text-sm">기본 정보</TabsTrigger>
           <TabsTrigger value="education" className="text-sm">학력 사항</TabsTrigger>
           <TabsTrigger value="experience" className="text-sm">경력 사항</TabsTrigger>
           <TabsTrigger value="skills" className="text-sm">기술 & 자격증</TabsTrigger>
@@ -157,9 +200,12 @@ const ResumeForm: React.FC = () => {
                       name="name" 
                       placeholder="이름을 입력하세요" 
                       value={formData.name} 
-                      onChange={handleChange} 
-                      required 
+                      onChange={handleChange}
+                      className={formErrors.name ? "border-red-500" : ""}
                     />
+                    {formErrors.name && (
+                      <p className="text-red-500 text-xs">이름을 입력해주세요</p>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
@@ -172,9 +218,12 @@ const ResumeForm: React.FC = () => {
                       type="email" 
                       placeholder="이메일을 입력하세요" 
                       value={formData.email} 
-                      onChange={handleChange} 
-                      required 
+                      onChange={handleChange}
+                      className={formErrors.email ? "border-red-500" : ""} 
                     />
+                    {formErrors.email && (
+                      <p className="text-red-500 text-xs">이메일을 입력해주세요</p>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
@@ -186,25 +235,76 @@ const ResumeForm: React.FC = () => {
                       name="phone" 
                       placeholder="연락처를 입력하세요" 
                       value={formData.phone} 
-                      onChange={handleChange} 
-                      required 
+                      onChange={handleChange}
+                      className={formErrors.phone ? "border-red-500" : ""} 
                     />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-xs">연락처를 입력해주세요</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="birthDate">
+                      생년월일 <span className="text-red-500 text-xs">필수</span>
+                    </Label>
+                    <Input 
+                      id="birthDate" 
+                      name="birthDate" 
+                      type="date" 
+                      value={formData.birthDate} 
+                      onChange={handleChange}
+                      className={formErrors.birthDate ? "border-red-500" : ""} 
+                    />
+                    {formErrors.birthDate && (
+                      <p className="text-red-500 text-xs">생년월일을 입력해주세요</p>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="address">주소</Label>
-                    <Input 
-                      id="address" 
-                      name="address" 
-                      placeholder="주소를 입력하세요" 
-                      value={formData.address} 
-                      onChange={handleChange} 
-                    />
+                    <Label htmlFor="address">
+                      주소 <span className="text-red-500 text-xs">필수</span>
+                    </Label>
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-[1fr_120px] gap-2">
+                        <Input 
+                          id="postcode" 
+                          name="postcode" 
+                          placeholder="우편번호" 
+                          value={formData.postcode} 
+                          readOnly 
+                          className={formErrors.address ? "border-red-500" : ""} 
+                        />
+                        <PostcodeSearch onComplete={handleAddressComplete} />
+                      </div>
+                      <Input 
+                        id="address" 
+                        name="address" 
+                        placeholder="도로명 주소" 
+                        value={formData.address} 
+                        readOnly 
+                        className={formErrors.address ? "border-red-500" : ""} 
+                      />
+                      <Input 
+                        id="addressDetail" 
+                        name="addressDetail" 
+                        placeholder="상세 주소를 입력하세요" 
+                        value={formData.addressDetail} 
+                        onChange={handleChange} 
+                      />
+                    </div>
+                    {formErrors.address && (
+                      <p className="text-red-500 text-xs">주소를 입력해주세요</p>
+                    )}
                   </div>
                 </div>
                 
                 <div className="flex justify-end space-x-4 mt-6">
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
+                  <Button 
+                    onClick={handleNext} 
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    다음
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -226,11 +326,12 @@ const ResumeForm: React.FC = () => {
                       <SelectValue placeholder="최종 학력을 선택하세요" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="해당없음">해당없음</SelectItem>
                       <SelectItem value="고등학교">고등학교</SelectItem>
                       <SelectItem value="전문대학">전문대학</SelectItem>
                       <SelectItem value="대학교">대학교</SelectItem>
                       <SelectItem value="대학원">대학원</SelectItem>
-                      <SelectItem value="기타">검정고시</SelectItem>
+                      <SelectItem value="검정고시">검정고시</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
