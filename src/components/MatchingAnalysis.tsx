@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronLeft, CheckCircle2, XCircle, User } from 'lucide-react';
+import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
 import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
