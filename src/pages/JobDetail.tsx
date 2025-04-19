@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Briefcase } from 'lucide-react';
+import { ArrowLeft, Briefcase, Star } from 'lucide-react';
 import { Job } from '../components/JobList';
 import { getJobById, toggleFavoriteJob } from '../services/jobService';
 import { getMockMatchAnalysis } from '../services/matchingService';
@@ -134,6 +135,14 @@ const JobDetail: React.FC = () => {
 
         <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
           <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleToggleFavorite} 
+            className="text-gray-500 hover:text-yellow-500"
+          >
+            <Star fill={job?.isFavorite ? 'currentColor' : 'none'} />
+          </Button>
+          <Button 
             className="flex-1 py-3 text-lg font-medium bg-[#FFE14D] hover:bg-[#FFD700] text-black"
             onClick={() => setShowApplyDialog(true)}
           >
@@ -156,3 +165,4 @@ const JobDetail: React.FC = () => {
 };
 
 export default JobDetail;
+
