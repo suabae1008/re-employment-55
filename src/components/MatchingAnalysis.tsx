@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
@@ -21,8 +20,8 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <h2 className="text-lg font-semibold">맞춤형 공고 분석</h2>
       </div>
 
-      <div className="space-y-8"> {/* Increased spacing from space-y-6 to space-y-8 */}
-        <div className="text-center mb-10"> {/* Increased bottom margin */}
+      <div className="space-y-6">
+        <div className="text-center mb-8">
           <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
             맞춤형 공고 분석
           </div>
@@ -32,40 +31,42 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
             아래에서 자세한 내용을 확인해보세요.
           </p>
           <div className="mb-10">
-            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" /> {/* Added fontSize prop */}
+            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
           </div>
         </div>
 
-        <Collapsible>
-          <Card>
-            <CollapsibleTrigger className="w-full text-left p-4">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">자격 사항</span>
-                <span className="text-sm text-gray-600">
-                  {analysis.requiredQualifications.filter(q => q.isMatched).length}개 중 {analysis.requiredQualifications.length}개를 만족했어요
-                </span>
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <CardContent className="pt-0">
-                <div className="grid gap-3 py-4">
-                  {analysis.requiredQualifications.map((qual) => (
-                    <div key={qual.id} className={`flex items-center justify-between p-3 rounded-lg ${qual.isMatched ? 'bg-green-50' : 'bg-red-50'}`}>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">{qual.name}</span>
-                      </div>
-                      {qual.isMatched ? (
-                        <CheckCircle2 size={20} className="text-green-500" />
-                      ) : (
-                        <XCircle size={20} className="text-red-500" />
-                      )}
-                    </div>
-                  ))}
+        <div className="mt-12">
+          <Collapsible>
+            <Card>
+              <CollapsibleTrigger className="w-full text-left p-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">자격 사항</span>
+                  <span className="text-sm text-gray-600">
+                    {analysis.requiredQualifications.filter(q => q.isMatched).length}개 중 {analysis.requiredQualifications.length}개를 만족했어요
+                  </span>
                 </div>
-              </CardContent>
-            </CollapsibleContent>
-          </Card>
-        </Collapsible>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="pt-0">
+                  <div className="grid gap-3 py-4">
+                    {analysis.requiredQualifications.map((qual) => (
+                      <div key={qual.id} className={`flex items-center justify-between p-3 rounded-lg ${qual.isMatched ? 'bg-green-50' : 'bg-red-50'}`}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">{qual.name}</span>
+                        </div>
+                        {qual.isMatched ? (
+                          <CheckCircle2 size={20} className="text-green-500" />
+                        ) : (
+                          <XCircle size={20} className="text-red-500" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+        </div>
 
         <Collapsible>
           <Card>
