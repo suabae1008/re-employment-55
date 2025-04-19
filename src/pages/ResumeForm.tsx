@@ -721,7 +721,7 @@ const ResumeForm = () => {
                               onCheckedChange={(checked) => handleBasicInfoChange('employmentSector', !!checked)}
                             />
                             <label htmlFor="employmentSector" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                              취업계층 여부
+                              취약계층 여부
                             </label>
                           </div>
                           
@@ -732,7 +732,7 @@ const ResumeForm = () => {
                                 onValueChange={(value) => handleBasicInfoChange('employmentSectorType', value)}
                               >
                                 <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="취업계층 종류를 선택하세요" />
+                                  <SelectValue placeholder="취약계층 종류를 선택하세요" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="저소득층">저소득층</SelectItem>
