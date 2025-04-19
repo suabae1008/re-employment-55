@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "../components/ui/card";
@@ -413,7 +412,7 @@ const ResumeForm: React.FC = () => {
                           onCheckedChange={() => handleCheckboxChange("isDisabled")}
                         />
                         <Label htmlFor="isDisabled" className="flex items-center gap-1">
-                          <Wheelchair className="w-4 h-4" />
+                          <Accessibility className="w-4 h-4" />
                           장애 여부
                         </Label>
                       </div>
