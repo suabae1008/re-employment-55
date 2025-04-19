@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -99,10 +98,16 @@ const JobDetail: React.FC = () => {
 
       <main className="px-4 py-6">
         {fromFavorites && (
-          <MatchingScoreCard 
-            matchScore={matchScore}
-            onShowAnalysis={() => setActiveTab('analysis')}
-          />
+          <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
+            <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
+              맞춤형 공고 분석
+            </div>
+            <h2 className="text-2xl font-bold mb-2">모집 공고문</h2>
+            <p className="text-gray-600">
+              해당 공고는 입사 지원에 도움이 되는 경력과 자격을 보유하고 있습니다.
+              맞춤형 분석 탭에서 자세한 내용을 확인해보세요.
+            </p>
+          </div>
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -163,4 +168,3 @@ const JobDetail: React.FC = () => {
 };
 
 export default JobDetail;
-

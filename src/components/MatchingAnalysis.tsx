@@ -17,7 +17,6 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
 
   return (
     <div>
-      {/* Header with back button */}
       <div className="flex items-center mb-4">
         <button onClick={onBack} className="mr-2">
           <ChevronLeft size={24} />
@@ -25,15 +24,15 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <h2 className="text-lg font-semibold">공고 맞춤형 분석</h2>
       </div>
 
+      <div className="text-center mb-6">
+        <p className="text-gray-600 mb-2">나와 잘 맞는 공고인지 알아보세요</p>
+        <div className="mb-10">
+          <MatchScoreGauge score={analysis.totalScore} />
+        </div>
+      </div>
+
       {activeTab === 'overview' && (
         <div>
-          <div className="text-center mb-6">
-            <p className="text-gray-600 mb-2">나와 잘 맞는 공고인지 알아보세요</p>
-            <div className="mb-10">
-              <MatchScoreGauge score={analysis.totalScore} />
-            </div>
-          </div>
-
           <Collapsible className="mb-4">
             <Card className="mb-2">
               <CollapsibleTrigger className="w-full text-left p-4">
