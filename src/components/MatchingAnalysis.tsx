@@ -1,8 +1,15 @@
 import React from 'react';
-import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle } from 'lucide-react';
+import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle, Info } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
 import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import MatchScoreGauge from './MatchScoreGauge';
 
 interface MatchingAnalysisProps {
@@ -25,16 +32,39 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
           <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
             맞춤형 공고 분석
           </div>
-          <h2 className="text-2xl font-bold mb-2">매칭 점수 </h2>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <h2 className="text-2xl font-bold">매칭 점수</h2>
+            <Dialog>
+              <DialogTrigger>
+                <Info className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle className="text-center mb-4">매칭 점수는 이렇게 계산되었어요</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>자격 사항</span>
+                    <span className="text-blue-500 font-medium">최대 50점</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>공고와 유사한 경험</span>
+                    <span className="text-blue-500 font-medium">최대 30점</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>우대 사항</span>
+                    <span className="text-blue-500 font-medium">최대 20점</span>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
           <h4 className="mb-10">
             <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
           </h4>
           <p className="text-gray-600 mb-4">
             나와 잘 맞는 공고인지 확인해보세요.
           </p>
-          {/* <div className="mb-10">
-            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
-          </div> */}
         </div>
 
         <div className="mt-12">
