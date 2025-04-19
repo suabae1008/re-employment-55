@@ -11,6 +11,7 @@ import { Award, Accessibility, HandHeart, Upload, Trash2 } from "lucide-react";
 import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
 import { cn } from "@/lib/utils";
+import { Separator } from '../components/ui/separator';
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +81,27 @@ const ResumeForm: React.FC = () => {
         endMonth: "",
         responsibilities: ""
       }
-    ]
+    ],
+    
+    certificates: [{
+      name: "",
+      grade: "",
+      issueDate: "",
+      organization: ""
+    }],
+    
+    computerSkills: {
+      documentCreation: false,
+      spreadsheet: false,
+      presentation: false,
+      accounting: false,
+      other: "",
+    },
+    
+    drivingAbility: {
+      license: false,
+      vehicle: false,
+    }
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -251,6 +272,37 @@ const ResumeForm: React.FC = () => {
     }));
   };
 
+  const addCertificate = () => {
+    setFormData(prev => ({
+      ...prev,
+      certificates: [
+        ...prev.certificates,
+        {
+          name: "",
+          grade: "",
+          issueDate: "",
+          organization: ""
+        }
+      ]
+    }));
+  };
+
+  const updateCertificate = (index: number, field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      certificates: prev.certificates.map((cert, i) => 
+        i === index ? { ...cert, [field]: value } : cert
+      )
+    }));
+  };
+
+  const deleteCertificate = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      certificates: prev.certificates.filter((_, i) => i !== index)
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
@@ -277,7 +329,7 @@ const ResumeForm: React.FC = () => {
           <TabsTrigger value="personal" className="text-sm">기본 정보</TabsTrigger>
           <TabsTrigger value="education" className="text-sm">학력 사항</TabsTrigger>
           <TabsTrigger value="experience" className="text-sm">경력 사항</TabsTrigger>
-          <TabsTrigger value="skills" className="text-sm">기술 & 자격증</TabsTrigger>
+          <TabsTrigger value="skills" className="text-sm">자격증 & 기타</TabsTrigger>
         </TabsList>
         
         <TabsContent value="personal">
@@ -414,7 +466,7 @@ const ResumeForm: React.FC = () => {
                       <Input 
                         id="addressDetail" 
                         name="addressDetail" 
-                        placeholder="상세 주소를 입력하��요" 
+                        placeholder="상세 주소를 입력하요" 
                         value={formData.addressDetail} 
                         onChange={handleChange} 
                       />
@@ -889,230 +941,4 @@ const ResumeForm: React.FC = () => {
                       <div className="space-y-2">
                         <Label htmlFor={`jobTitle${index}`}>직무</Label>
                         <Select
-                          value={experience.jobTitle}
-                          onValueChange={(value) => handleExperienceChange(index, "jobTitle", value)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="직무를 선택하세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {jobTitles.map((title) => (
-                              <SelectItem key={title} value={title}>
-                                {title}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {experience.jobTitle === "직접 입력" && (
-                          <Input
-                            className="mt-2"
-                            value={experience.customJobTitle}
-                            onChange={(e) => handleExperienceChange(index, "customJobTitle", e.target.value)}
-                            placeholder="직무를 입력하세요"
-                          />
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor={`contractType${index}`}>계약 형태</Label>
-                        <Select
-                          value={experience.contractType}
-                          onValueChange={(value) => handleExperienceChange(index, "contractType", value)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="계약 형태를 선택하세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {contractTypes.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor={`employmentStatus${index}`}>상태</Label>
-                        <Select
-                          value={experience.employmentStatus}
-                          onValueChange={(value) => handleExperienceChange(index, "employmentStatus", value)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="상태를 선택하세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="재직중">재직중</SelectItem>
-                            <SelectItem value="퇴사">퇴사</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>입사일</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Select
-                            value={experience.startYear}
-                            onValueChange={(value) => handleExperienceChange(index, "startYear", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="년도" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {years.map(year => (
-                                <SelectItem key={year} value={year.toString()}>
-                                  {year}년
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <Select
-                            value={experience.startMonth}
-                            onValueChange={(value) => handleExperienceChange(index, "startMonth", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="월" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {months.map(month => (
-                                <SelectItem key={month} value={month.toString()}>
-                                  {month}월
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>퇴사일</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Select
-                            value={experience.endYear}
-                            onValueChange={(value) => handleExperienceChange(index, "endYear", value)}
-                            disabled={experience.employmentStatus === "재직중"}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="년도" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {years.map(year => (
-                                <SelectItem key={year} value={year.toString()}>
-                                  {year}년
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <Select
-                            value={experience.endMonth}
-                            onValueChange={(value) => handleExperienceChange(index, "endMonth", value)}
-                            disabled={experience.employmentStatus === "재직중"}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="월" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {months.map(month => (
-                                <SelectItem key={month} value={month.toString()}>
-                                  {month}월
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor={`responsibilities${index}`}>주요 성과</Label>
-                        <Input
-                          id={`responsibilities${index}`}
-                          value={experience.responsibilities}
-                          onChange={(e) => handleExperienceChange(index, "responsibilities", e.target.value)}
-                          placeholder="담당했던 업무를 간략히 설명해주세요"
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addNewExperience}
-                  className="w-full"
-                >
-                  경력 추가하기
-                </Button>
-
-                <div className="flex justify-between space-x-4 mt-6">
-                  <Button onClick={handlePrevious} variant="outline">이전</Button>
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="skills">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="skills">보유 기술</Label>
-                  <Input 
-                    id="skills" 
-                    name="skills" 
-                    placeholder="보유한 기술을 입력하세요 (예: Python, JavaScript, Photoshop)" 
-                    value={formData.skills} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="certificates">자격증</Label>
-                  <Input 
-                    id="certificates" 
-                    name="certificates" 
-                    placeholder="보유한 자격증을 입력하세요" 
-                    value={formData.certificates} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="languages">언어</Label>
-                  <Input 
-                    id="languages" 
-                    name="languages" 
-                    placeholder="보유한 언어를 입력하세요" 
-                    value={formData.languages} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="awards">수상</Label>
-                  <Input 
-                    id="awards" 
-                    name="awards" 
-                    placeholder="보유한 수상내역을 입력하세요" 
-                    value={formData.awards} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="flex justify-between space-x-4 mt-6">
-                  <Button onClick={handlePrevious} variant="outline">이전</Button>
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default ResumeForm;
+                          value={
