@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PostcodeSearch } from '@/components/PostcodeSearch';
 
 interface ResumeData {
   id: string;
@@ -122,6 +123,22 @@ const ResumeForm = () => {
       issuer: ''
     }]
   });
+
+  const [address, setAddress] = useState({
+    postcode: '',
+    roadAddress: '',
+    detailAddress: ''
+  });
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.async = true;
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     const { birthYear, birthMonth } = resumeData.basicInfo;
@@ -373,6 +390,29 @@ const ResumeForm = () => {
     setActiveTab("confirmation");
   };
 
+  const isBasicInfoComplete = () => {
+    const { name, email, phone, address: fullAddress, birthDate } = resumeData.basicInfo;
+    return name && email && phone && fullAddress && birthDate;
+  };
+
+  const handlePostcodeComplete = (data: any) => {
+    setAddress({
+      ...address,
+      postcode: data.zonecode,
+      roadAddress: data.roadAddress
+    });
+    handleBasicInfoChange('address', `${data.roadAddress} ${address.detailAddress}`);
+  };
+
+  const handleDetailAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const detailAddress = e.target.value;
+    setAddress({
+      ...address,
+      detailAddress
+    });
+    handleBasicInfoChange('address', `${address.roadAddress} ${detailAddress}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
@@ -416,17 +456,24 @@ const ResumeForm = () => {
 
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">성함</Label>
+                        <Label htmlFor="name" className="flex items-center gap-1">
+                          성함
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
                         <Input
                           id="name"
                           value={resumeData.basicInfo.name}
                           onChange={(e) => handleBasicInfoChange('name', e.target.value)}
                           className="h-12"
+                          required
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label>생년월일</Label>
+                        <Label className="flex items-center gap-1">
+                          생년월일
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
                         <div className="grid grid-cols-3 gap-3">
                           <Select
                             value={resumeData.basicInfo.birthYear.toString()}
@@ -479,34 +526,64 @@ const ResumeForm = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="email">이메일</Label>
+                        <Label htmlFor="email" className="flex items-center gap-1">
+                          이메일
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
                         <Input
                           id="email"
                           type="email"
                           value={resumeData.basicInfo.email}
                           onChange={(e) => handleBasicInfoChange('email', e.target.value)}
                           className="h-12"
+                          required
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phone">휴대폰</Label>
+                        <Label htmlFor="phone" className="flex items-center gap-1">
+                          휴대폰
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
                         <Input
                           id="phone"
                           value={resumeData.basicInfo.phone}
                           onChange={(e) => handleBasicInfoChange('phone', e.target.value)}
                           className="h-12"
+                          required
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address">주소</Label>
-                        <Input
-                          id="address"
-                          value={resumeData.basicInfo.address}
-                          onChange={(e) => handleBasicInfoChange('address', e.target.value)}
-                          className="h-12"
-                        />
+                        <Label htmlFor="address" className="flex items-center gap-1">
+                          주소
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-3 gap-2">
+                            <Input
+                              value={address.postcode}
+                              placeholder="우편번호"
+                              readOnly
+                              className="h-12"
+                            />
+                            <div className="col-span-2">
+                              <PostcodeSearch onComplete={handlePostcodeComplete} />
+                            </div>
+                          </div>
+                          <Input
+                            value={address.roadAddress}
+                            placeholder="도로명 주소"
+                            readOnly
+                            className="h-12"
+                          />
+                          <Input
+                            value={address.detailAddress}
+                            onChange={handleDetailAddressChange}
+                            placeholder="상세 주소"
+                            className="h-12"
+                          />
+                        </div>
                       </div>
 
                       <div className="pt-4 space-y-4">
@@ -548,6 +625,7 @@ const ResumeForm = () => {
                         <Button
                           onClick={() => setActiveTab("education")}
                           className="w-full h-12 text-lg font-bold"
+                          disabled={!isBasicInfoComplete()}
                         >
                           다음
                         </Button>
@@ -849,7 +927,7 @@ const ResumeForm = () => {
                             onValueChange={(value) => handleExperienceChange(index, 'country', value)}
                           >
                             <SelectTrigger id={`country-${index}`} className="w-full">
-                              <SelectValue placeholder="국��를 선택해 주세요" />
+                              <SelectValue placeholder="국���를 선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="대한민국">대한민국</SelectItem>
