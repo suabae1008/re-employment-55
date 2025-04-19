@@ -10,6 +10,7 @@ import { Checkbox } from "../components/ui/checkbox";
 import { Award, Accessibility, HandHeart, Upload } from "lucide-react";
 import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
+import { cn } from "@/lib/utils";
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
