@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  CardContent,
-} from "../components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/ui/tabs";
+import { Card, CardContent } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Checkbox } from "../components/ui/checkbox";
+import { Award, Wheelchair, HandHeart, Upload } from "lucide-react";
 import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
 
@@ -21,17 +15,27 @@ const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("personal");
   const [formData, setFormData] = useState({
-    // Basic Info
     name: "",
     email: "",
     phone: "",
-    birthDate: "",
+    birthYear: "",
+    birthMonth: "",
+    birthDay: "",
     postcode: "",
     address: "",
     addressDetail: "",
     
-    // Education
-    highestEducation: "대학교", // 기본값 대학교
+    isVeteran: false,
+    veteranType: "",
+    veteranDocument: null,
+    isDisabled: false,
+    disabilityType: "",
+    disabilityDocument: null,
+    isVulnerable: false,
+    vulnerableType: "",
+    vulnerableDocument: null,
+    
+    highestEducation: "대학교",
     highSchool: "",
     highSchoolMajor: "",
     highSchoolGradYear: "",
@@ -48,7 +52,6 @@ const ResumeForm: React.FC = () => {
     gradSchoolGPA: "",
     gradSchoolGradYear: "",
     
-    // Work Experience
     company1: "",
     position1: "",
     period1: "",
@@ -58,7 +61,6 @@ const ResumeForm: React.FC = () => {
     period2: "",
     description2: "",
     
-    // Skills & Certifications
     skills: "",
     certificates: "",
     languages: "",
@@ -69,14 +71,15 @@ const ResumeForm: React.FC = () => {
     name: false,
     email: false,
     phone: false,
-    birthDate: false,
+    birthYear: false,
+    birthMonth: false,
+    birthDay: false,
     address: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (formErrors[name as keyof typeof formErrors]) {
       setFormErrors(prev => ({ ...prev, [name]: false }));
     }
@@ -95,12 +98,23 @@ const ResumeForm: React.FC = () => {
     setFormErrors(prev => ({ ...prev, address: false }));
   };
 
+  const handleCheckboxChange = (name: string) => {
+    setFormData(prev => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, [fieldName]: file }));
+  };
+
   const validateBasicInfo = () => {
     const errors = {
       name: !formData.name,
       email: !formData.email,
       phone: !formData.phone,
-      birthDate: !formData.birthDate,
+      birthYear: !formData.birthYear,
+      birthMonth: !formData.birthMonth,
+      birthDay: !formData.birthDay,
       address: !formData.address,
     };
     
@@ -117,7 +131,6 @@ const ResumeForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Convert formData to string array (or whatever format your API expects)
       const resumeData = Object.values(formData) as string[];
       await createResume(resumeData);
       navigate('/resume');
@@ -161,6 +174,10 @@ const ResumeForm: React.FC = () => {
         break;
     }
   };
+
+  const years = Array.from({ length: 86 }, (_, i) => new Date().getFullYear() - 15 - i).reverse();
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -244,18 +261,51 @@ const ResumeForm: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="birthDate">
+                    <Label>
                       생년월일 <span className="text-red-500 text-xs">필수</span>
                     </Label>
-                    <Input 
-                      id="birthDate" 
-                      name="birthDate" 
-                      type="date" 
-                      value={formData.birthDate} 
-                      onChange={handleChange}
-                      className={formErrors.birthDate ? "border-red-500" : ""} 
-                    />
-                    {formErrors.birthDate && (
+                    <div className="grid grid-cols-3 gap-4">
+                      <Select 
+                        value={formData.birthYear}
+                        onValueChange={(value) => handleSelectChange("birthYear", value)}
+                      >
+                        <SelectTrigger className={formErrors.birthYear ? "border-red-500" : ""}>
+                          <SelectValue placeholder="년도" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {years.map(year => (
+                            <SelectItem key={year} value={year.toString()}>{year}년</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select 
+                        value={formData.birthMonth}
+                        onValueChange={(value) => handleSelectChange("birthMonth", value)}
+                      >
+                        <SelectTrigger className={formErrors.birthMonth ? "border-red-500" : ""}>
+                          <SelectValue placeholder="월" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {months.map(month => (
+                            <SelectItem key={month} value={month.toString()}>{month}월</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select 
+                        value={formData.birthDay}
+                        onValueChange={(value) => handleSelectChange("birthDay", value)}
+                      >
+                        <SelectTrigger className={formErrors.birthDay ? "border-red-500" : ""}>
+                          <SelectValue placeholder="일" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {days.map(day => (
+                            <SelectItem key={day} value={day.toString()}>{day}일</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {(formErrors.birthYear || formErrors.birthMonth || formErrors.birthDay) && (
                       <p className="text-red-500 text-xs">생년월일을 입력해주세요</p>
                     )}
                   </div>
@@ -298,6 +348,175 @@ const ResumeForm: React.FC = () => {
                   </div>
                 </div>
                 
+                <div className="space-y-4 pt-4 border-t">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="isVeteran"
+                          checked={formData.isVeteran}
+                          onCheckedChange={() => handleCheckboxChange("isVeteran")}
+                        />
+                        <Label htmlFor="isVeteran" className="flex items-center gap-1">
+                          <Award className="w-4 h-4" />
+                          보훈 대상
+                        </Label>
+                      </div>
+                      {formData.isVeteran && (
+                        <div className="mt-2 ml-6 space-y-2">
+                          <Select
+                            value={formData.veteranType}
+                            onValueChange={(value) => handleSelectChange("veteranType", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="보훈 종류 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="독립유공자">독립유공자</SelectItem>
+                              <SelectItem value="국가유공자">국가유공자</SelectItem>
+                              <SelectItem value="보훈보상대상자">보훈보상대상자</SelectItem>
+                              <SelectItem value="특수임무유공자">특수임무유공자</SelectItem>
+                              <SelectItem value="5.18민주유공자">5.18민주유공자</SelectItem>
+                              <SelectItem value="고엽제후유의증">고엽제후유의증</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="file"
+                              onChange={(e) => handleFileChange(e, "veteranDocument")}
+                              className="hidden"
+                              id="veteranDocument"
+                            />
+                            <Label
+                              htmlFor="veteranDocument"
+                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                            >
+                              <Upload className="w-4 h-4" />
+                              증빙서류 첨부
+                            </Label>
+                            {formData.veteranDocument && (
+                              <span className="text-sm text-gray-600">
+                                {formData.veteranDocument.name}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="isDisabled"
+                          checked={formData.isDisabled}
+                          onCheckedChange={() => handleCheckboxChange("isDisabled")}
+                        />
+                        <Label htmlFor="isDisabled" className="flex items-center gap-1">
+                          <Wheelchair className="w-4 h-4" />
+                          장애 여부
+                        </Label>
+                      </div>
+                      {formData.isDisabled && (
+                        <div className="mt-2 ml-6 space-y-2">
+                          <Select
+                            value={formData.disabilityType}
+                            onValueChange={(value) => handleSelectChange("disabilityType", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="장애 종류 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="지체장애">지체장애</SelectItem>
+                              <SelectItem value="시각장애">시각장애</SelectItem>
+                              <SelectItem value="청각장애">청각장애</SelectItem>
+                              <SelectItem value="언어장애">언어장애</SelectItem>
+                              <SelectItem value="지적장애">지적장애</SelectItem>
+                              <SelectItem value="자폐성장애">자폐성장애</SelectItem>
+                              <SelectItem value="정신장애">정신장애</SelectItem>
+                              <SelectItem value="신장장애">신장장애</SelectItem>
+                              <SelectItem value="심장장애">심장장애</SelectItem>
+                              <SelectItem value="호흡기장애">호흡기장애</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="file"
+                              onChange={(e) => handleFileChange(e, "disabilityDocument")}
+                              className="hidden"
+                              id="disabilityDocument"
+                            />
+                            <Label
+                              htmlFor="disabilityDocument"
+                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                            >
+                              <Upload className="w-4 h-4" />
+                              증빙서류 첨부
+                            </Label>
+                            {formData.disabilityDocument && (
+                              <span className="text-sm text-gray-600">
+                                {formData.disabilityDocument.name}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="isVulnerable"
+                          checked={formData.isVulnerable}
+                          onCheckedChange={() => handleCheckboxChange("isVulnerable")}
+                        />
+                        <Label htmlFor="isVulnerable" className="flex items-center gap-1">
+                          <HandHeart className="w-4 h-4" />
+                          취약계층 여부
+                        </Label>
+                      </div>
+                      {formData.isVulnerable && (
+                        <div className="mt-2 ml-6 space-y-2">
+                          <Select
+                            value={formData.vulnerableType}
+                            onValueChange={(value) => handleSelectChange("vulnerableType", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="취약계층 종류 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="기초생활수급자">기초생활수급자</SelectItem>
+                              <SelectItem value="차상위계층">차상위계층</SelectItem>
+                              <SelectItem value="한부모가족">한부모가족</SelectItem>
+                              <SelectItem value="북한이탈주민">북한이탈주민</SelectItem>
+                              <SelectItem value="결혼이민자">결혼이민자</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="file"
+                              onChange={(e) => handleFileChange(e, "vulnerableDocument")}
+                              className="hidden"
+                              id="vulnerableDocument"
+                            />
+                            <Label
+                              htmlFor="vulnerableDocument"
+                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                            >
+                              <Upload className="w-4 h-4" />
+                              증빙서류 첨부
+                            </Label>
+                            {formData.vulnerableDocument && (
+                              <span className="text-sm text-gray-600">
+                                {formData.vulnerableDocument.name}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex justify-end space-x-4 mt-6">
                   <Button 
                     onClick={handleNext} 
@@ -686,7 +905,7 @@ const ResumeForm: React.FC = () => {
                   <Input 
                     id="languages" 
                     name="languages" 
-                    placeholder="구사 가능한 외국어와 수준을 입력하세요" 
+                    placeholder="구사 가능한 외국어와 수준을 입력하세��" 
                     value={formData.languages} 
                     onChange={handleChange} 
                   />
