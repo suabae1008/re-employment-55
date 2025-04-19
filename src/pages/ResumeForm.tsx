@@ -849,7 +849,7 @@ const ResumeForm = () => {
                             onValueChange={(value) => handleExperienceChange(index, 'country', value)}
                           >
                             <SelectTrigger id={`country-${index}`} className="w-full">
-                              <SelectValue placeholder="국가를 선택해 주세요" />
+                              <SelectValue placeholder="국��를 선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="대한민국">대한민국</SelectItem>
@@ -933,3 +933,72 @@ const ResumeForm = () => {
                         </div>
                         
                         <div>
+                          <Label htmlFor={`certificate-issueDate-${index}`}>발급일</Label>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                {cert.issueDate ? (
+                                  format(cert.issueDate, 'yyyy-MM-dd')
+                                ) : (
+                                  <span className="text-muted-foreground">날짜 선택</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={cert.issueDate || undefined}
+                                onSelect={(date) => handleCertificateChange(index, 'issueDate', date)}
+                                initialFocus
+                                className="p-3 pointer-events-auto"
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor={`certificate-issuer-${index}`}>발급기관</Label>
+                          <Input 
+                            id={`certificate-issuer-${index}`} 
+                            value={cert.issuer} 
+                            onChange={(e) => handleCertificateChange(index, 'issuer', e.target.value)}
+                            placeholder="발급기관을 입력해주세요."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="confirmation" className="mt-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="max-w-[600px] mx-auto">
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-bold mb-2">이력서 작성 완료</h2>
+                      <p className="text-gray-500">작성한 내용을 확인하고 이력서를 저장하세요.</p>
+                    </div>
+                    <Button
+                      onClick={handleSaveResume}
+                      className="w-full h-12 text-lg font-bold"
+                    >
+                      이력서 저장하기
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </header>
+    </div>
+  );
+};
+
+export default ResumeForm;
