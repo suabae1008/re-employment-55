@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Download, Plus, Edit2, Trash, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -31,15 +30,11 @@ const CoverLetter = () => {
   const [showEmptyState, setShowEmptyState] = useState(true);
   const navigate = useNavigate();
 
-  // In a real app, this would fetch from a backend
-  // Here we're just simulating for the UI demonstration
   React.useEffect(() => {
-    // Simulate checking if user has cover letters
     const hasCoverLetters = localStorage.getItem('hasCoverLetters') === 'true';
     setShowEmptyState(!hasCoverLetters);
     
     if (hasCoverLetters) {
-      // Mock data
       setCoverLetters([{
         id: '1',
         company: '방문간호사',
@@ -51,20 +46,16 @@ const CoverLetter = () => {
   }, []);
 
   const handleCreateCoverLetter = () => {
-    // Navigate to cover letter creation form
     navigate('/cover-letter/create');
   };
 
   const handleCreateAICoverLetter = () => {
-    // Navigate to AI cover letter creation page
     navigate('/cover-letter/ai-create');
   };
   
   const handleDeleteCoverLetter = (id: string) => {
-    // Remove the cover letter from the state
     setCoverLetters(prev => prev.filter(letter => letter.id !== id));
     
-    // If no cover letters left, update the empty state and localStorage
     if (coverLetters.length <= 1) {
       localStorage.setItem('hasCoverLetters', 'false');
       setShowEmptyState(true);
@@ -75,7 +66,6 @@ const CoverLetter = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="bg-white py-4 px-4">
         <div className="flex items-center mb-4">
           <Link to="/" className="mr-4">
@@ -89,7 +79,6 @@ const CoverLetter = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-4 py-6">
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
@@ -97,7 +86,7 @@ const CoverLetter = () => {
             <div className="space-y-4 w-full max-w-md">
               <Button 
                 onClick={handleCreateAICoverLetter}
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full justify-center"
+                className="bg-[#FFE14D] hover:bg-[#FFD700] text-black rounded-full py-3 px-6 flex items-center w-full justify-center"
               >
                 <Sparkles size={20} className="mr-2" />
                 AI 자기소개서 작성하기
@@ -162,7 +151,7 @@ const CoverLetter = () => {
             <div className="mt-8 space-y-4 flex flex-col items-center">
               <Button 
                 onClick={handleCreateAICoverLetter}
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
+                className="bg-[#FFE14D] hover:bg-[#FFD700] text-black rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
               >
                 <Sparkles size={20} className="mr-2" />
                 AI 자기소개서 작성하기
@@ -172,7 +161,6 @@ const CoverLetter = () => {
         )}
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
