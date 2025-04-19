@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 interface ResumePreviewProps {
   formData: any;
   onEdit: () => void;
-  onSubmit: (e?: React.FormEvent) => void; // Updated to accept an optional event parameter
+  onSubmit: (e?: React.FormEvent) => void;
 }
 
 const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmit }) => {
