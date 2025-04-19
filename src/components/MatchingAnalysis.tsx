@@ -27,7 +27,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
           </div>
           <h2 className="text-2xl font-bold mb-2">모집 공고문</h2>
           <p className="text-gray-600 mb-4">
-            나와 잘 맞는 공공인지 확인해보세요.
+            나와 잘 맞는 공고인지 확인해보세요.
           </p>
           <div className="mb-10">
             <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
