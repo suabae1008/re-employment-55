@@ -9,6 +9,7 @@ import { getMockMatchAnalysis } from '../services/matchingService';
 import BottomNavigation from '../components/BottomNavigation';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MatchingAnalysis from '../components/MatchingAnalysis';
 import JobHeader from '../components/job/JobHeader';
 import JobInfo from '../components/job/JobInfo';
@@ -22,10 +23,9 @@ const JobDetail: React.FC = () => {
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showMatchingAnalysis, setShowMatchingAnalysis] = useState(false);
-  const [matchScore, setMatchScore] = useState(0);
-  const [showMatchScore, setShowMatchScore] = useState(false);
   const [showApplyDialog, setShowApplyDialog] = useState(false);
+  const [matchScore, setMatchScore] = useState(0);
+  const [activeTab, setActiveTab] = useState('info');
   
   const fromFavorites = location.state?.fromFavorites || false;
 
@@ -38,9 +38,6 @@ const JobDetail: React.FC = () => {
       if (fromFavorites) {
         const analysis = getMockMatchAnalysis(id);
         setMatchScore(analysis.totalScore);
-        setShowMatchScore(true);
-      } else {
-        setShowMatchScore(false);
       }
       
       setLoading(false);
@@ -96,38 +93,46 @@ const JobDetail: React.FC = () => {
     );
   }
 
-  if (showMatchingAnalysis && showMatchScore) {
-    return (
-      <div className="min-h-screen bg-white pb-20 px-4 py-4">
-        <MatchingAnalysis 
-          analysis={getMockMatchAnalysis(id as string)} 
-          onBack={() => setShowMatchingAnalysis(false)} 
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <JobHeader job={job} handleToggleFavorite={handleToggleFavorite} />
 
       <main className="px-4 py-6">
-        {showMatchScore && (
+        {fromFavorites && (
           <MatchingScoreCard 
-            matchScore={matchScore} 
-            onShowAnalysis={() => setShowMatchingAnalysis(true)} 
+            matchScore={matchScore}
+            onShowAnalysis={() => setActiveTab('analysis')}
           />
         )}
-        
-        <JobInfo job={job} />
-        <JobDescription job={job} />
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="w-full">
+            <TabsTrigger value="info" className="flex-1">공고 정보</TabsTrigger>
+            {fromFavorites && (
+              <TabsTrigger value="analysis" className="flex-1">맞춤형 분석</TabsTrigger>
+            )}
+          </TabsList>
+
+          <TabsContent value="info" className="space-y-4">
+            <JobInfo job={job} />
+            <JobDescription job={job} />
+          </TabsContent>
+
+          {fromFavorites && (
+            <TabsContent value="analysis">
+              <MatchingAnalysis 
+                analysis={getMockMatchAnalysis(id as string)} 
+                onBack={() => setActiveTab('info')} 
+              />
+            </TabsContent>
+          )}
+        </Tabs>
 
         <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
           <Button 
             variant="outline"
             className="flex-none w-12 h-12 p-0"
             onClick={handleToggleFavorite}
-            aria-label={job.isFavorite ? "관심 공고에서 제거" : "관심 공고에 추가"}
           >
             {job.isFavorite ? (
               <Star className="w-5 h-5 text-yellow-500" />
@@ -158,3 +163,4 @@ const JobDetail: React.FC = () => {
 };
 
 export default JobDetail;
+
