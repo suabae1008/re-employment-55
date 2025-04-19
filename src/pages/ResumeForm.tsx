@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
-import { Award, Accessibility, HandHeart, Upload } from "lucide-react";
+import { Award, Accessibility, HandHeart, Upload, Trash2 } from "lucide-react";
 import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
 import { cn } from "@/lib/utils";
@@ -209,6 +209,13 @@ const ResumeForm: React.FC = () => {
           responsibilities: ""
         }
       ]
+    }));
+  };
+
+  const deleteExperience = (indexToDelete: number) => {
+    setFormData(prev => ({
+      ...prev,
+      experiences: prev.experiences.filter((_, index) => index !== indexToDelete)
     }));
   };
 
@@ -855,7 +862,17 @@ const ResumeForm: React.FC = () => {
               <div className="space-y-6">
                 {formData.experiences.map((experience, index) => (
                   <div key={index} className="space-y-4">
-                    <h3 className="font-medium text-lg">경력 {index + 1}</h3>
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-medium text-lg">경력 {index + 1}</h3>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteExperience(index)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </Button>
+                    </div>
                     
                     <div className="space-y-4">
                       <div className="space-y-2">
