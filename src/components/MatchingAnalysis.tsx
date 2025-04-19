@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
@@ -33,10 +32,6 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
           </p>
           <div className="mb-10">
             <MatchScoreGauge score={analysis.totalScore} />
-            <p className="text-sm text-gray-600 mt-2">
-              해당 공고는 당신의 기존 이력과<br />
-              평균적으로 {analysis.totalScore}% 일치해요
-            </p>
           </div>
         </div>
 
