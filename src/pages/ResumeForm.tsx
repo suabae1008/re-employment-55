@@ -1,7 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save, Calendar as CalendarIcon, Check, Plus } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Calendar as CalendarIcon, Check, Plus } from 'lucide-react';
+import { format } from "date-fns";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,21 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { toast } from "sonner";
-import BottomNavigation from '../components/BottomNavigation';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ResumeData {
   id: string;
@@ -378,227 +369,200 @@ const ResumeForm = () => {
     navigate('/resume');
   };
 
-  // Function to navigate to the confirmation screen
   const handleNextToConfirmation = () => {
     setActiveTab("confirmation");
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white py-4 px-4 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center">
-            <Link to="/resume" className="mr-4">
-              <ArrowLeft size={24} />
-            </Link>
-            <h1 className="text-xl font-bold">{isEditMode ? '이력서 수정' : '이력서 작성'}</h1>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
+        <div className="max-w-[800px] mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <Link to="/resume" className="hover:opacity-70">
+                <ArrowLeft size={24} />
+              </Link>
+              <h1 className="text-2xl font-bold">{isEditMode ? '이력서 수정' : '이력서 작성'}</h1>
+            </div>
           </div>
-          {/* Yellow save button removed from header */}
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-5 max-w-[600px] mx-auto bg-gray-100 p-1 rounded-lg">
+              <TabsTrigger value="basicInfo" className="rounded-md data-[state=active]:bg-white">
+                기본정보
+              </TabsTrigger>
+              <TabsTrigger value="education" className="rounded-md data-[state=active]:bg-white">
+                학력
+              </TabsTrigger>
+              <TabsTrigger value="experience" className="rounded-md data-[state=active]:bg-white">
+                경력
+              </TabsTrigger>
+              <TabsTrigger value="certificates" className="rounded-md data-[state=active]:bg-white">
+                자격증
+              </TabsTrigger>
+              <TabsTrigger value="confirmation" className="rounded-md data-[state=active]:bg-white">
+                확인
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </header>
 
-      <main className="px-4 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="basicInfo">기본정보</TabsTrigger>
-            <TabsTrigger value="education">학력</TabsTrigger>
-            <TabsTrigger value="experience">경력</TabsTrigger>
-            <TabsTrigger value="certificates">자격증</TabsTrigger>
-            <TabsTrigger value="confirmation">확인</TabsTrigger>
-          </TabsList>
-          
+      <main className="px-4 py-8">
+        <div className="max-w-[800px] mx-auto">
           <TabsContent value="basicInfo" className="mt-4">
-            <Card>
+            <Card className="border-none shadow-lg">
               <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">성함</Label>
-                    <Input 
-                      id="name" 
-                      value={resumeData.basicInfo.name} 
-                      onChange={(e) => handleBasicInfoChange('name', e.target.value)}
-                    />
+                <div className="max-w-[600px] mx-auto space-y-6">
+                  <div className="mb-8">
+                    <h2 className="text-2xl font-bold mb-2">{resumeData.basicInfo.name || '님'}의 이력서</h2>
+                    <p className="text-gray-500">기본 정보를 입력해주세요.</p>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label>생년월일</Label>
-                    
-                    <div className="grid grid-cols-3 gap-2">
-                      <div>
-                        <Label htmlFor="birthYear">연도</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full justify-start text-left font-normal"
-                            >
-                              {resumeData.basicInfo.birthYear}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-48 h-60 overflow-y-auto p-0">
-                            <ToggleGroup 
-                              type="single"
-                              className="flex flex-col"
-                              value={resumeData.basicInfo.birthYear.toString()}
-                              onValueChange={(value) => value && handleBirthDateChange('birthYear', parseInt(value))}
-                            >
-                              {years.map(year => (
-                                <ToggleGroupItem key={year} value={year.toString()} className="w-full rounded-none justify-start">
-                                  {year}
-                                </ToggleGroupItem>
-                              ))}
-                            </ToggleGroup>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="birthMonth">월</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full justify-start text-left font-normal"
-                            >
-                              {resumeData.basicInfo.birthMonth}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-40 h-60 overflow-y-auto p-0">
-                            <ToggleGroup 
-                              type="single"
-                              className="flex flex-col"
-                              value={resumeData.basicInfo.birthMonth.toString()}
-                              onValueChange={(value) => value && handleBirthDateChange('birthMonth', parseInt(value))}
-                            >
-                              {months.map(month => (
-                                <ToggleGroupItem key={month} value={month.toString()} className="w-full rounded-none justify-start">
-                                  {month}
-                                </ToggleGroupItem>
-                              ))}
-                            </ToggleGroup>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="birthDay">일</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full justify-start text-left font-normal"
-                            >
-                              {resumeData.basicInfo.birthDay}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-40 h-60 overflow-y-auto p-0">
-                            <ToggleGroup 
-                              type="single"
-                              className="flex flex-col"
-                              value={resumeData.basicInfo.birthDay.toString()}
-                              onValueChange={(value) => value && handleBirthDateChange('birthDay', parseInt(value))}
-                            >
-                              {days.map(day => (
-                                <ToggleGroupItem key={day} value={day.toString()} className="w-full rounded-none justify-start">
-                                  {day}
-                                </ToggleGroupItem>
-                              ))}
-                            </ToggleGroup>
-                          </PopoverContent>
-                        </Popover>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">성함</Label>
+                      <Input
+                        id="name"
+                        value={resumeData.basicInfo.name}
+                        onChange={(e) => handleBasicInfoChange('name', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>생년월일</Label>
+                      <div className="grid grid-cols-3 gap-3">
+                        <Select
+                          value={resumeData.basicInfo.birthYear.toString()}
+                          onValueChange={(value) => handleBirthDateChange('birthYear', parseInt(value))}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="연도" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map(year => (
+                              <SelectItem key={year} value={year.toString()}>
+                                {year}년
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <Select
+                          value={resumeData.basicInfo.birthMonth.toString()}
+                          onValueChange={(value) => handleBirthDateChange('birthMonth', parseInt(value))}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="월" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {months.map(month => (
+                              <SelectItem key={month} value={month.toString()}>
+                                {month}월
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <Select
+                          value={resumeData.basicInfo.birthDay.toString()}
+                          onValueChange={(value) => handleBirthDateChange('birthDay', parseInt(value))}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="일" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {days.map(day => (
+                              <SelectItem key={day} value={day.toString()}>
+                                {day}일
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">이메일</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      value={resumeData.basicInfo.email} 
-                      onChange={(e) => handleBasicInfoChange('email', e.target.value)}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="phone">휴대폰</Label>
-                    <Input 
-                      id="phone" 
-                      value={resumeData.basicInfo.phone} 
-                      onChange={(e) => handleBasicInfoChange('phone', e.target.value)}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="address">주소</Label>
-                    <Input 
-                      id="address" 
-                      value={resumeData.basicInfo.address} 
-                      onChange={(e) => handleBasicInfoChange('address', e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="veteran" 
-                      checked={resumeData.basicInfo.veteran} 
-                      onCheckedChange={(checked) => handleBasicInfoChange('veteran', !!checked)}
-                    />
-                    <Label htmlFor="veteran">보훈 대상</Label>
-                    {resumeData.basicInfo.veteran && (
-                      <Input 
-                        type="file" 
-                        className="ml-2" 
-                        onChange={(e) => {
-                          const file = e.target.files?.[0] || null;
-                          handleFileChange('veteranDocument', file);
-                        }}
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">이메일</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={resumeData.basicInfo.email}
+                        onChange={(e) => handleBasicInfoChange('email', e.target.value)}
+                        className="h-12"
                       />
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="disability" 
-                      checked={resumeData.basicInfo.disability} 
-                      onCheckedChange={(checked) => handleBasicInfoChange('disability', !!checked)}
-                    />
-                    <Label htmlFor="disability">장애 여부</Label>
-                    {resumeData.basicInfo.disability && (
-                      <Input 
-                        type="file" 
-                        className="ml-2" 
-                        onChange={(e) => {
-                          const file = e.target.files?.[0] || null;
-                          handleFileChange('disabilityDocument', file);
-                        }}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">휴대폰</Label>
+                      <Input
+                        id="phone"
+                        value={resumeData.basicInfo.phone}
+                        onChange={(e) => handleBasicInfoChange('phone', e.target.value)}
+                        className="h-12"
                       />
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="employmentSector" 
-                      checked={resumeData.basicInfo.employmentSector} 
-                      onCheckedChange={(checked) => handleBasicInfoChange('employmentSector', !!checked)}
-                    />
-                    <Label htmlFor="employmentSector">취업계층 여부</Label>
-                    {resumeData.basicInfo.employmentSector && (
-                      <Input 
-                        type="file" 
-                        className="ml-2" 
-                        onChange={(e) => {
-                          const file = e.target.files?.[0] || null;
-                          handleFileChange('employmentSectorDocument', file);
-                        }}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="address">주소</Label>
+                      <Input
+                        id="address"
+                        value={resumeData.basicInfo.address}
+                        onChange={(e) => handleBasicInfoChange('address', e.target.value)}
+                        className="h-12"
                       />
-                    )}
+                    </div>
+
+                    <div className="pt-4 space-y-4">
+                      <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
+                        <Checkbox
+                          id="veteran"
+                          checked={resumeData.basicInfo.veteran}
+                          onCheckedChange={(checked) => handleBasicInfoChange('veteran', !!checked)}
+                        />
+                        <label htmlFor="veteran" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                          보훈 대상
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
+                        <Checkbox
+                          id="disability"
+                          checked={resumeData.basicInfo.disability}
+                          onCheckedChange={(checked) => handleBasicInfoChange('disability', !!checked)}
+                        />
+                        <label htmlFor="disability" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                          장애 여부
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
+                        <Checkbox
+                          id="employmentSector"
+                          checked={resumeData.basicInfo.employmentSector}
+                          onCheckedChange={(checked) => handleBasicInfoChange('employmentSector', !!checked)}
+                        />
+                        <label htmlFor="employmentSector" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                          취업계층 여부
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="pt-8">
+                      <Button
+                        onClick={() => setActiveTab("education")}
+                        className="w-full h-12 text-lg font-bold"
+                      >
+                        다음
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="education" className="mt-4">
             <Card>
               <CardContent className="pt-6">
@@ -719,7 +683,7 @@ const ResumeForm = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="experience" className="mt-4">
             <Card>
               <CardContent className="pt-6">
@@ -932,7 +896,7 @@ const ResumeForm = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="certificates" className="mt-4">
             <Card>
               <CardContent className="pt-6">
@@ -1041,8 +1005,7 @@ const ResumeForm = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          
-          {/* New Confirmation Tab */}
+
           <TabsContent value="confirmation" className="mt-4">
             <Card>
               <CardContent className="pt-6">
@@ -1244,10 +1207,8 @@ const ResumeForm = () => {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+        </div>
       </main>
-
-      <BottomNavigation />
     </div>
   );
 };
