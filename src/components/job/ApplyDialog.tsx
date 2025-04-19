@@ -4,7 +4,6 @@ import {
   Dialog, 
   DialogContent, 
   DialogDescription, 
-  DialogFooter, 
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
@@ -12,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Briefcase, PenTool } from 'lucide-react';
+import { PenTool } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ApplyDialogProps {
@@ -67,6 +66,7 @@ const ApplyDialog: React.FC<ApplyDialogProps> = ({
                 type="file" 
                 accept=".pdf,.doc,.docx" 
                 onChange={handleFileChange}
+                className="bg-gray-50"
               />
               <Button 
                 variant="outline" 
@@ -88,7 +88,7 @@ const ApplyDialog: React.FC<ApplyDialogProps> = ({
           <div className="grid gap-2">
             <Label>AI 자기소개서 작성</Label>
             <Button 
-              className="w-full" 
+              className="w-full bg-[#FFE14D] hover:bg-[#FFD700] text-black" 
               onClick={onCreateCoverLetter}
             >
               <PenTool size={16} className="mr-2" />
@@ -99,16 +99,6 @@ const ApplyDialog: React.FC<ApplyDialogProps> = ({
             </p>
           </div>
         </div>
-        
-        <DialogFooter className="sm:justify-start">
-          <Button 
-            type="button" 
-            variant="secondary" 
-            onClick={() => onOpenChange(false)}
-          >
-            닫기
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
