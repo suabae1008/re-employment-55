@@ -20,7 +20,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <h2 className="text-lg font-semibold">맞춤형 공고 분석</h2>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="text-center mb-8">
           <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
             맞춤형 공고 분석
