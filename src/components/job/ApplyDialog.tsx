@@ -135,7 +135,6 @@ const ApplyDialog: React.FC<ApplyDialogProps> = ({
                 자기소개서 생성하기
               </Button>
               <p className="text-sm text-muted-foreground">
-                AI가 도와드리는 자기소개서 작성 툴을 이용해보세요.
               </p>
             </div>
           </div>
