@@ -28,8 +28,8 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Collapsible className="col-span-2">
+      <div className="space-y-4">
+        <Collapsible>
           <Card>
             <CollapsibleTrigger className="w-full text-left p-4">
               <div className="flex justify-between items-center">
@@ -68,8 +68,9 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
             <CollapsibleContent>
               <CardContent className="pt-0">
                 <div className="text-sm text-gray-600 space-y-2">
-                  <p>✓ 요양보호사 (3년)</p>
-                  <p>✓ 간호조무사 (9개월)</p>
+                  {analysis.experiences.map((exp) => (
+                    <p key={exp.id}>✓ {exp.title} ({exp.duration}개월)</p>
+                  ))}
                 </div>
               </CardContent>
             </CollapsibleContent>
@@ -106,7 +107,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
               <AlertCircle size={18} className="text-blue-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-700">자격사항 관련 경험 1년을 쌓아요</p>
+              <p className="text-sm text-gray-700">자격 사항 관련 경험 1년을 쌓아요</p>
               <p className="text-xs text-gray-500 mt-1">관련 경험이 더 많을수록 채용 확률이 커집니다</p>
             </div>
           </div>
