@@ -203,6 +203,27 @@ const ResumeForm: React.FC = () => {
     }
   };
 
+  const addNewExperience = () => {
+    setFormData(prev => ({
+      ...prev,
+      experiences: [
+        ...prev.experiences,
+        {
+          companyName: "",
+          jobTitle: "",
+          customJobTitle: "",
+          contractType: "",
+          employmentStatus: "",
+          startYear: "",
+          startMonth: "",
+          endYear: "",
+          endMonth: "",
+          responsibilities: ""
+        }
+      ]
+    }));
+  };
+
   const years = Array.from({ length: 86 }, (_, i) => new Date().getFullYear() - 15 - i).reverse();
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -239,7 +260,7 @@ const ResumeForm: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
         <div className="max-w-[800px] mx-auto">
-          <div className="flex flex-col items-start mb-6">
+          <div className="flex flex-col items-start">
             <img 
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true" 
               className="w-[61px] h-[50px] mb-2.5" 
@@ -247,9 +268,6 @@ const ResumeForm: React.FC = () => {
             />
             <h1 className="text-[28px] text-black mb-2.5">김현숙님,</h1>
             <p className="text-[15px] text-[#5A5A5A]">기본 정보를 확인해주세요.</p>
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">저장하기</Button>
           </div>
         </div>
       </header>
@@ -923,83 +941,81 @@ const ResumeForm: React.FC = () => {
                         </Select>
                       </div>
 
-                      <div className="col-span-2">
-                        <Label>근무 기간</Label>
-                        <div className="grid grid-cols-2 gap-4 mt-2">
-                          <div className="space-y-2">
-                            <div className="grid grid-cols-2 gap-2">
-                              <Select
-                                value={experience.startYear}
-                                onValueChange={(value) => handleExperienceChange(index, "startYear", value)}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="년도" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {years.map(year => (
-                                    <SelectItem key={year} value={year.toString()}>
-                                      {year}년
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <Select
-                                value={experience.startMonth}
-                                onValueChange={(value) => handleExperienceChange(index, "startMonth", value)}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="월" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {months.map(month => (
-                                    <SelectItem key={month} value={month.toString()}>
-                                      {month}월
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="grid grid-cols-2 gap-2">
-                              <Select
-                                value={experience.endYear}
-                                onValueChange={(value) => handleExperienceChange(index, "endYear", value)}
-                                disabled={experience.employmentStatus === "재직중"}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="년도" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {years.map(year => (
-                                    <SelectItem key={year} value={year.toString()}>
-                                      {year}년
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <Select
-                                value={experience.endMonth}
-                                onValueChange={(value) => handleExperienceChange(index, "endMonth", value)}
-                                disabled={experience.employmentStatus === "재직중"}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="월" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {months.map(month => (
-                                    <SelectItem key={month} value={month.toString()}>
-                                      {month}월
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
+                      <div className="space-y-2">
+                        <Label>입사일</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Select
+                            value={experience.startYear}
+                            onValueChange={(value) => handleExperienceChange(index, "startYear", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="년도" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {years.map(year => (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}년
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Select
+                            value={experience.startMonth}
+                            onValueChange={(value) => handleExperienceChange(index, "startMonth", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="월" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {months.map(month => (
+                                <SelectItem key={month} value={month.toString()}>
+                                  {month}월
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
 
-                      <div className="col-span-2 space-y-2">
+                      <div className="space-y-2">
+                        <Label>퇴사일</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Select
+                            value={experience.endYear}
+                            onValueChange={(value) => handleExperienceChange(index, "endYear", value)}
+                            disabled={experience.employmentStatus === "재직중"}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="년도" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {years.map(year => (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}년
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Select
+                            value={experience.endMonth}
+                            onValueChange={(value) => handleExperienceChange(index, "endMonth", value)}
+                            disabled={experience.employmentStatus === "재직중"}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="월" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {months.map(month => (
+                                <SelectItem key={month} value={month.toString()}>
+                                  {month}월
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
                         <Label htmlFor={`responsibilities${index}`}>담당 업무</Label>
                         <Input
                           id={`responsibilities${index}`}
@@ -1011,6 +1027,15 @@ const ResumeForm: React.FC = () => {
                     </div>
                   </div>
                 ))}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addNewExperience}
+                  className="w-full"
+                >
+                  경력 추가하기
+                </Button>
 
                 <div className="flex justify-between space-x-4 mt-6">
                   <Button onClick={handlePrevious} variant="outline">이전</Button>
