@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ChevronLeft, CheckCircle2, XCircle, User, AlertCircle } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
@@ -20,8 +21,8 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         <h2 className="text-lg font-semibold">맞춤형 공고 분석</h2>
       </div>
 
-      <div className="space-y-6">
-        <div className="text-center mb-8">
+      <div className="space-y-8"> {/* Increased spacing from space-y-6 to space-y-8 */}
+        <div className="text-center mb-10"> {/* Increased bottom margin */}
           <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
             맞춤형 공고 분석
           </div>
@@ -31,7 +32,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
             아래에서 자세한 내용을 확인해보세요.
           </p>
           <div className="mb-10">
-            <MatchScoreGauge score={analysis.totalScore} />
+            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" /> {/* Added fontSize prop */}
           </div>
         </div>
 

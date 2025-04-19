@@ -1,12 +1,12 @@
-
 import React from 'react';
 import { Progress } from "@/components/ui/progress";
 
 interface MatchScoreGaugeProps {
   score: number;
+  fontSize?: string; // New optional prop for font size
 }
 
-const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
+const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score, fontSize = 'text-3xl' }) => {
   // Determine color based on score
   const getColorClass = (score: number) => {
     if (score >= 80) return "bg-green-500";
@@ -34,7 +34,7 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
         
         {/* Score indicator */}
         <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <div className="text-3xl font-bold">{score}점</div>
+          <div className={`${fontSize} font-bold`}>{score}점</div>
           <div className="w-4 h-4 transform rotate-45 border-t-2 border-r-2 border-gray-400 mt-1"></div>
         </div>
       </div>
