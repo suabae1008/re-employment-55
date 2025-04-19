@@ -146,7 +146,7 @@ const JobDetail: React.FC = () => {
             )}
           </Button>
           <Button 
-            className="flex-1 py-3 text-lg font-medium"
+            className="flex-1 py-3 text-lg font-medium bg-[#FFE14D] hover:bg-[#FFD700] text-black"
             onClick={() => setShowApplyDialog(true)}
           >
             지원하기 <Briefcase className="ml-2" />
