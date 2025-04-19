@@ -25,13 +25,16 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
           <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
             맞춤형 공고 분석
           </div>
-          <h2 className="text-2xl font-bold mb-2">모집 공고문</h2>
+          <h2 className="text-2xl font-bold mb-2">매칭 점수 </h2>
+          <h4 className="mb-10">
+            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
+          </h4>
           <p className="text-gray-600 mb-4">
             나와 잘 맞는 공고인지 확인해보세요.
           </p>
-          <div className="mb-10">
+          {/* <div className="mb-10">
             <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-12">
