@@ -12,6 +12,7 @@ import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
 import { cn } from "@/lib/utils";
 import { Separator } from '../components/ui/separator';
+import { ResumePreview } from '../components/ResumePreview';
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
@@ -111,6 +112,8 @@ const ResumeForm: React.FC = () => {
     address: false,
   });
 
+  const [showPreview, setShowPreview] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -187,6 +190,9 @@ const ResumeForm: React.FC = () => {
         break;
       case "experience":
         setActiveTab("skills");
+        break;
+      case "skills":
+        setShowPreview(true);
         break;
       default:
         break;
@@ -299,6 +305,16 @@ const ResumeForm: React.FC = () => {
       certificates: prev.certificates.filter((_, i) => i !== index)
     }));
   };
+
+  if (showPreview) {
+    return (
+      <ResumePreview 
+        formData={formData} 
+        onEdit={() => setShowPreview(false)}
+        onSubmit={handleSubmit}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
