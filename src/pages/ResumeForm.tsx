@@ -64,7 +64,34 @@ const ResumeForm: React.FC = () => {
     skills: "",
     certificates: "",
     languages: "",
-    awards: ""
+    awards: "",
+    
+    experiences: [
+      {
+        companyName: "",
+        jobTitle: "",
+        customJobTitle: "",
+        contractType: "",
+        employmentStatus: "",
+        startYear: "",
+        startMonth: "",
+        endYear: "",
+        endMonth: "",
+        responsibilities: ""
+      },
+      {
+        companyName: "",
+        jobTitle: "",
+        customJobTitle: "",
+        contractType: "",
+        employmentStatus: "",
+        startYear: "",
+        startMonth: "",
+        endYear: "",
+        endMonth: "",
+        responsibilities: ""
+      }
+    ]
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -178,6 +205,34 @@ const ResumeForm: React.FC = () => {
   const years = Array.from({ length: 86 }, (_, i) => new Date().getFullYear() - 15 - i).reverse();
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  const jobTitles = [
+    "개발자",
+    "디자이너",
+    "기획자",
+    "마케터",
+    "영업",
+    "인사",
+    "회계",
+    "직접 입력"
+  ];
+
+  const contractTypes = [
+    "정규직",
+    "계약직",
+    "인턴",
+    "파견직",
+    "프리랜서"
+  ];
+
+  const handleExperienceChange = (index: number, field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      experiences: prev.experiences.map((exp, i) => 
+        i === index ? { ...exp, [field]: value } : exp
+      )
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -791,98 +846,171 @@ const ResumeForm: React.FC = () => {
           <Card>
             <CardContent className="pt-6">
               <div className="space-y-6">
-                <div className="border-b pb-4 mb-4">
-                  <h3 className="font-medium mb-4">경력 1</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="company1">회사명</Label>
-                      <Input 
-                        id="company1" 
-                        name="company1" 
-                        placeholder="회사명" 
-                        value={formData.company1} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="position1">직책/직무</Label>
-                      <Input 
-                        id="position1" 
-                        name="position1" 
-                        placeholder="직책/직무" 
-                        value={formData.position1} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="period1">재직 기간</Label>
-                      <Input 
-                        id="period1" 
-                        name="period1" 
-                        placeholder="YYYY.MM - YYYY.MM" 
-                        value={formData.period1} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="col-span-2 space-y-2">
-                      <Label htmlFor="description1">담당 업무</Label>
-                      <Input 
-                        id="description1" 
-                        name="description1" 
-                        placeholder="담당했던 업무를 간략히 설명해주세요" 
-                        value={formData.description1} 
-                        onChange={handleChange} 
-                      />
+                {formData.experiences.map((experience, index) => (
+                  <div key={index} className={cn("space-y-4", index > 0 && "border-t pt-6")}>
+                    <h3 className="font-medium text-lg">경력 {index + 1}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor={`companyName${index}`}>회사명</Label>
+                        <Input
+                          id={`companyName${index}`}
+                          value={experience.companyName}
+                          onChange={(e) => handleExperienceChange(index, "companyName", e.target.value)}
+                          placeholder="회사명을 입력하세요"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor={`jobTitle${index}`}>직무</Label>
+                        <Select
+                          value={experience.jobTitle}
+                          onValueChange={(value) => handleExperienceChange(index, "jobTitle", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="직무를 선택하세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {jobTitles.map((title) => (
+                              <SelectItem key={title} value={title}>
+                                {title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {experience.jobTitle === "직접 입력" && (
+                          <Input
+                            className="mt-2"
+                            value={experience.customJobTitle}
+                            onChange={(e) => handleExperienceChange(index, "customJobTitle", e.target.value)}
+                            placeholder="직무를 입력하세요"
+                          />
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor={`contractType${index}`}>계약 형태</Label>
+                        <Select
+                          value={experience.contractType}
+                          onValueChange={(value) => handleExperienceChange(index, "contractType", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="계약 형태를 선택하세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {contractTypes.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor={`employmentStatus${index}`}>상태</Label>
+                        <Select
+                          value={experience.employmentStatus}
+                          onValueChange={(value) => handleExperienceChange(index, "employmentStatus", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="상태를 선택하세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="재직중">재직중</SelectItem>
+                            <SelectItem value="퇴사">퇴사</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="col-span-2">
+                        <Label>근무 기간</Label>
+                        <div className="grid grid-cols-2 gap-4 mt-2">
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              <Select
+                                value={experience.startYear}
+                                onValueChange={(value) => handleExperienceChange(index, "startYear", value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="년도" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {years.map(year => (
+                                    <SelectItem key={year} value={year.toString()}>
+                                      {year}년
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select
+                                value={experience.startMonth}
+                                onValueChange={(value) => handleExperienceChange(index, "startMonth", value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="월" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {months.map(month => (
+                                    <SelectItem key={month} value={month.toString()}>
+                                      {month}월
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              <Select
+                                value={experience.endYear}
+                                onValueChange={(value) => handleExperienceChange(index, "endYear", value)}
+                                disabled={experience.employmentStatus === "재직중"}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="년도" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {years.map(year => (
+                                    <SelectItem key={year} value={year.toString()}>
+                                      {year}년
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select
+                                value={experience.endMonth}
+                                onValueChange={(value) => handleExperienceChange(index, "endMonth", value)}
+                                disabled={experience.employmentStatus === "재직중"}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="월" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {months.map(month => (
+                                    <SelectItem key={month} value={month.toString()}>
+                                      {month}월
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2 space-y-2">
+                        <Label htmlFor={`responsibilities${index}`}>담당 업무</Label>
+                        <Input
+                          id={`responsibilities${index}`}
+                          value={experience.responsibilities}
+                          onChange={(e) => handleExperienceChange(index, "responsibilities", e.target.value)}
+                          placeholder="담당했던 업무를 간략히 설명해주세요"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium mb-4">경력 2</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="company2">회사명</Label>
-                      <Input 
-                        id="company2" 
-                        name="company2" 
-                        placeholder="회사명" 
-                        value={formData.company2} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="position2">직책/직무</Label>
-                      <Input 
-                        id="position2" 
-                        name="position2" 
-                        placeholder="직책/직무" 
-                        value={formData.position2} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="period2">재직 기간</Label>
-                      <Input 
-                        id="period2" 
-                        name="period2" 
-                        placeholder="YYYY.MM - YYYY.MM" 
-                        value={formData.period2} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="col-span-2 space-y-2">
-                      <Label htmlFor="description2">담당 업무</Label>
-                      <Input 
-                        id="description2" 
-                        name="description2" 
-                        placeholder="담당했던 업무를 간략히 설명해주세요" 
-                        value={formData.description2} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                  </div>
-                </div>
-                
+                ))}
+
                 <div className="flex justify-between space-x-4 mt-6">
                   <Button onClick={handlePrevious} variant="outline">이전</Button>
                   <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
