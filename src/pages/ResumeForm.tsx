@@ -381,7 +381,7 @@ const ResumeForm: React.FC = () => {
                       className={formErrors.email ? "border-red-500" : ""} 
                     />
                     {formErrors.email && (
-                      <p className="text-red-500 text-xs">이메일을 입력해주세요</p>
+                      <p className="text-red-500 text-xs">이메일�� 입력해주세요</p>
                     )}
                   </div>
                   
