@@ -12,7 +12,7 @@ import { createResume } from '../services/resumeService';
 import { PostcodeSearch } from '../components/PostcodeSearch';
 import { cn } from "@/lib/utils";
 import { Separator } from '../components/ui/separator';
-import { ResumePreview } from '../components/ResumePreview';
+import ResumePreview from '../components/ResumePreview';
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();

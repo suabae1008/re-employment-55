@@ -131,4 +131,4 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, onEdit, onSubmi
   );
 };
 
-export default ResumePreview;
+export default ResumePreview;  // Ensuring default export
