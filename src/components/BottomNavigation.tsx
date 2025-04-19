@@ -22,8 +22,8 @@ const BottomNavigation: React.FC = () => {
     {
       path: '/cover-letter',
       label: '자기소개서',
-      activeIcon: "https://cdn.builder.io/api/v1/image/assets/082d62779b2d409c8433b3897df90f5e/63ca21358c20967f240b8652e02c8e19a4490889?placeholderIfAbsent=true",
-      inactiveIcon: "https://cdn.builder.io/api/v1/image/assets/082d62779b2d409c8433b3897df90f5e/04b0ce064fdd8e73ac4a1b375a65b8bdd63f66e8?placeholderIfAbsent=true"
+      activeIcon: "https://cdn.builder.io/api/v1/image/assets/082d62779b2d409c8433b3897df90f5e/04b0ce064fdd8e73ac4a1b375a65b8bdd63f66e8?placeholderIfAbsent=true",
+      inactiveIcon: "https://cdn.builder.io/api/v1/image/assets/082d62779b2d409c8433b3897df90f5e/63ca21358c20967f240b8652e02c8e19a4490889?placeholderIfAbsent=true"
     },
     {
       path: '/resume',
