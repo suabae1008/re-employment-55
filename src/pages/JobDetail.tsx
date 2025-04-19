@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Briefcase, Star, StarOff } from 'lucide-react';
+import { ArrowLeft, Briefcase } from 'lucide-react';
 import { Job } from '../components/JobList';
-import { getJobById, toggleFavoriteJob } from '../services/jobService';
+import { getJobById } from '../services/jobService';
 import { getMockMatchAnalysis } from '../services/matchingService';
 import BottomNavigation from '../components/BottomNavigation';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,6 @@ import MatchingAnalysis from '../components/MatchingAnalysis';
 import JobHeader from '../components/job/JobHeader';
 import JobInfo from '../components/job/JobInfo';
 import JobDescription from '../components/job/JobDescription';
-import MatchingScoreCard from '../components/job/MatchingScoreCard';
 import ApplyDialog from '../components/job/ApplyDialog';
 
 const JobDetail: React.FC = () => {
@@ -94,7 +93,7 @@ const JobDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <JobHeader job={job} handleToggleFavorite={handleToggleFavorite} />
+      <JobHeader job={job} />
 
       <main className="px-4 py-6">
         {fromFavorites && (
@@ -134,17 +133,6 @@ const JobDetail: React.FC = () => {
         </Tabs>
 
         <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
-          <Button 
-            variant="outline"
-            className="flex-none w-12 h-12 p-0"
-            onClick={handleToggleFavorite}
-          >
-            {job.isFavorite ? (
-              <Star className="w-5 h-5 text-yellow-500" />
-            ) : (
-              <StarOff className="w-5 h-5" />
-            )}
-          </Button>
           <Button 
             className="flex-1 py-3 text-lg font-medium bg-[#FFE14D] hover:bg-[#FFD700] text-black"
             onClick={() => setShowApplyDialog(true)}
