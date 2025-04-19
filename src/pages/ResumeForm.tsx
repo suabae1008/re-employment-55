@@ -976,3 +976,991 @@ const ResumeForm = () => {
                             readOnly
                             className="h-12"
                           />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="education" className="mt-4">
+              <Card className="border-none shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="max-w-[600px] mx-auto space-y-6">
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-bold mb-2">학력 정보</h2>
+                      <p className="text-gray-500">학력 정보를 입력해주세요.</p>
+                    </div>
+                    
+                    {renderEducationFields()}
+                    
+                    <div className="flex justify-end mt-8">
+                      <Button
+                        onClick={() => setActiveTab("experience")}
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        다음
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="experience" className="mt-4">
+              <Card className="border-none shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="max-w-[600px] mx-auto space-y-6">
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-bold mb-2">경력 정보</h2>
+                      <p className="text-gray-500">경력 정보를 입력해주세요.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="companyName" className="flex items-center gap-1">
+                          회사명
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="companyName"
+                          value={resumeData.experience[0].companyName}
+                          onChange={(e) => handleExperienceChange(0, 'companyName', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="jobTitle" className="flex items-center gap-1">
+                          직책
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="jobTitle"
+                          value={resumeData.experience[0].jobTitle}
+                          onChange={(e) => handleExperienceChange(0, 'jobTitle', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="employmentType" className="flex items-center gap-1">
+                          근무형태
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="employmentType"
+                          value={resumeData.experience[0].employmentType}
+                          onChange={(e) => handleExperienceChange(0, 'employmentType', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="department" className="flex items-center gap-1">
+                          부서
+                        </Label>
+                        <Input
+                          id="department"
+                          value={resumeData.experience[0].department}
+                          onChange={(e) => handleExperienceChange(0, 'department', e.target.value)}
+                          className="h-12"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="status" className="flex items-center gap-1">
+                          상태
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="status"
+                          value={resumeData.experience[0].status}
+                          onChange={(e) => handleExperienceChange(0, 'status', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="startDate" className="flex items-center gap-1">
+                          시작일
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.experience[0].startDate ? (
+                                format(resumeData.experience[0].startDate, 'yyyy-MM-dd')
+                              ) : (
+                                <span className="text-muted-foreground">날짜 선택</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={resumeData.experience[0].startDate || undefined}
+                              onSelect={(date) => handleExperienceChange(0, 'startDate', date)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="endDate" className="flex items-center gap-1">
+                          종료일
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.experience[0].endDate ? (
+                                format(resumeData.experience[0].endDate, 'yyyy-MM-dd')
+                              ) : (
+                                <span className="text-muted-foreground">날짜 선택</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={resumeData.experience[0].endDate || undefined}
+                              onSelect={(date) => handleExperienceChange(0, 'endDate', date)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="country" className="flex items-center gap-1">
+                          국가
+                        </Label>
+                        <Input
+                          id="country"
+                          value={resumeData.experience[0].country}
+                          onChange={(e) => handleExperienceChange(0, 'country', e.target.value)}
+                          className="h-12"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="achievements" className="flex items-center gap-1">
+                          달성내용
+                        </Label>
+                        <Textarea
+                          id="achievements"
+                          value={resumeData.experience[0].achievements}
+                          onChange={(e) => handleExperienceChange(0, 'achievements', e.target.value)}
+                          className="h-12"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end mt-8">
+                      <Button
+                        onClick={() => setActiveTab("certificates")}
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        다음
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="certificates" className="mt-4">
+              <Card className="border-none shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="max-w-[600px] mx-auto space-y-6">
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-bold mb-2">자격증 정보</h2>
+                      <p className="text-gray-500">자격증 정보를 입력해주세요.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="flex items-center gap-1">
+                          자격증명
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="name"
+                          value={resumeData.certificates[0].name}
+                          onChange={(e) => handleCertificateChange(0, 'name', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="grade" className="flex items-center gap-1">
+                          등급
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="grade"
+                          value={resumeData.certificates[0].grade}
+                          onChange={(e) => handleCertificateChange(0, 'grade', e.target.value)}
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="issueDate" className="flex items-center gap-1">
+                          발급일
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              {resumeData.certificates[0].issueDate ? (
+                                format(resumeData.certificates[0].issueDate, 'yyyy-MM-dd')
+                              ) : (
+                                <span className="text-muted-foreground">날짜 선택</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={resumeData.certificates[0].issueDate || undefined}
+                              onSelect={(date) => handleCertificateChange(0, 'issueDate', date)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="issuer" className="flex items-center gap-1">
+                          발급기관
+                        </Label>
+                        <Input
+                          id="issuer"
+                          value={resumeData.certificates[0].issuer}
+                          onChange={(e) => handleCertificateChange(0, 'issuer', e.target.value)}
+                          className="h-12"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end mt-8">
+                      <Button
+                        onClick={() => setActiveTab("confirmation")}
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        다음
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="confirmation" className="mt-4">
+              <Card className="border-none shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="max-w-[600px] mx-auto space-y-6">
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-bold mb-2">확인</h2>
+                      <p className="text-gray-500">이력서를 확인해주세요.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="flex items-center gap-1">
+                          성함
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="name"
+                          value={resumeData.basicInfo.name}
+                          readOnly
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="flex items-center gap-1">
+                          생년월일
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <div className="grid grid-cols-3 gap-3">
+                          <Select
+                            value={resumeData.basicInfo.birthYear.toString()}
+                            onValueChange={(value) => handleBirthDateChange('birthYear', parseInt(value))}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="연도" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {years.map(year => (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}년
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <Select
+                            value={resumeData.basicInfo.birthMonth.toString()}
+                            onValueChange={(value) => handleBirthDateChange('birthMonth', parseInt(value))}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="월" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {months.map(month => (
+                                <SelectItem key={month} value={month.toString()}>
+                                  {month}월
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <Select
+                            value={resumeData.basicInfo.birthDay.toString()}
+                            onValueChange={(value) => handleBirthDateChange('birthDay', parseInt(value))}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="일" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {days.map(day => (
+                                <SelectItem key={day} value={day.toString()}>
+                                  {day}일
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="flex items-center gap-1">
+                          이메일
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={resumeData.basicInfo.email}
+                          readOnly
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="phone" className="flex items-center gap-1">
+                          휴대폰
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <Input
+                          id="phone"
+                          value={resumeData.basicInfo.phone}
+                          readOnly
+                          className="h-12"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="address" className="flex items-center gap-1">
+                          주소
+                          <span className="text-[#ea384c] text-sm">필수</span>
+                        </Label>
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-3 gap-2">
+                            <Input
+                              value={address.postcode}
+                              placeholder="우편번호"
+                              readOnly
+                              className="h-12"
+                            />
+                            <div className="col-span-2">
+                              <PostcodeSearch onComplete={handlePostcodeComplete} />
+                            </div>
+                          </div>
+                          <Input
+                            value={address.roadAddress}
+                            placeholder="도로명 주소"
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="educationLevel">최종학력</Label>
+                          <Select
+                            value={resumeData.education.level}
+                            onValueChange={(value) => handleEducationChange('level', value)}
+                          >
+                            <SelectTrigger id="educationLevel" className="w-full">
+                              <SelectValue placeholder="선택하세요" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="">선택하세요</SelectItem>
+                              <SelectItem value="대학원">대학원</SelectItem>
+                              <SelectItem value="대학교">대학교</SelectItem>
+                              <SelectItem value="전문대학교">전문대학교</SelectItem>
+                              <SelectItem value="고등학교">고등학교</SelectItem>
+                              <SelectItem value="검정고시">검정고시</SelectItem>
+                              <SelectItem value="해당없음">해당없음</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {resumeData.education.level && resumeData.education.level !== '해당없음' && resumeData.education.level !== '검정고시' && (
+                          <div className="space-y-6">
+                            {shouldRenderField('고등학교') && (
+                              <div className="space-y-4 p-4 border rounded-lg">
+                                <h3 className="font-medium flex items-center gap-2">
+                                  고등학교 정보
+                                  {isRequired('고등학교') && (
+                                    <span className="text-[#ea384c] text-sm">필수</span>
+                                  )}
+                                </h3>
+                                <div>
+                                  <Label htmlFor="highSchool">학교명</Label>
+                                  <Input
+                                    id="highSchool"
+                                    value={resumeData.education.schoolName}
+                                    onChange={(e) => handleEducationChange('schoolName', e.target.value)}
+                                    required={isRequired('고등학교')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label>입학일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.startDate ? (
+                                            format(resumeData.education.startDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.startDate || undefined}
+                                          onSelect={(date) => handleEducationChange('startDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <div>
+                                    <Label>졸업일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.endDate ? (
+                                            format(resumeData.education.endDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.endDate || undefined}
+                                          onSelect={(date) => handleEducationChange('endDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {shouldRenderField('전문대학교') && (
+                              <div className="space-y-4 p-4 border rounded-lg">
+                                <h3 className="font-medium flex items-center gap-2">
+                                  전문대학교 정보
+                                  {isRequired('전문대학교') && (
+                                    <span className="text-[#ea384c] text-sm">필수</span>
+                                  )}
+                                </h3>
+                                <div>
+                                  <Label htmlFor="college">학교명</Label>
+                                  <Input
+                                    id="college"
+                                    value={resumeData.education.schoolName}
+                                    onChange={(e) => handleEducationChange('schoolName', e.target.value)}
+                                    required={isRequired('전문대학교')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div>
+                                  <Label htmlFor="collegeMajor">전공</Label>
+                                  <Input
+                                    id="collegeMajor"
+                                    value={resumeData.education.major}
+                                    onChange={(e) => handleEducationChange('major', e.target.value)}
+                                    required={isRequired('전문대학교')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label>입학일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.startDate ? (
+                                            format(resumeData.education.startDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.startDate || undefined}
+                                          onSelect={(date) => handleEducationChange('startDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <div>
+                                    <Label>졸업일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.endDate ? (
+                                            format(resumeData.education.endDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.endDate || undefined}
+                                          onSelect={(date) => handleEducationChange('endDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {shouldRenderField('대학교') && (
+                              <div className="space-y-4 p-4 border rounded-lg">
+                                <h3 className="font-medium flex items-center gap-2">
+                                  대학교 정보
+                                  {isRequired('대학교') && (
+                                    <span className="text-[#ea384c] text-sm">필수</span>
+                                  )}
+                                </h3>
+                                <div>
+                                  <Label htmlFor="university">학교명</Label>
+                                  <Input
+                                    id="university"
+                                    value={resumeData.education.schoolName}
+                                    onChange={(e) => handleEducationChange('schoolName', e.target.value)}
+                                    required={isRequired('대학교')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div>
+                                  <Label htmlFor="universityMajor">전공</Label>
+                                  <Input
+                                    id="universityMajor"
+                                    value={resumeData.education.major}
+                                    onChange={(e) => handleEducationChange('major', e.target.value)}
+                                    required={isRequired('대학교')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label>입학일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.startDate ? (
+                                            format(resumeData.education.startDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.startDate || undefined}
+                                          onSelect={(date) => handleEducationChange('startDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <div>
+                                    <Label>졸업일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.endDate ? (
+                                            format(resumeData.education.endDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.endDate || undefined}
+                                          onSelect={(date) => handleEducationChange('endDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {shouldRenderField('대학원') && (
+                              <div className="space-y-4 p-4 border rounded-lg">
+                                <h3 className="font-medium flex items-center gap-2">
+                                  대학원 정보
+                                  {isRequired('대학원') && (
+                                    <span className="text-[#ea384c] text-sm">필수</span>
+                                  )}
+                                </h3>
+                                <div>
+                                  <Label htmlFor="graduateSchool">학교명</Label>
+                                  <Input
+                                    id="graduateSchool"
+                                    value={resumeData.education.schoolName}
+                                    onChange={(e) => handleEducationChange('schoolName', e.target.value)}
+                                    required={isRequired('대학원')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div>
+                                  <Label htmlFor="graduateSchoolMajor">전공</Label>
+                                  <Input
+                                    id="graduateSchoolMajor"
+                                    value={resumeData.education.major}
+                                    onChange={(e) => handleEducationChange('major', e.target.value)}
+                                    required={isRequired('대학원')}
+                                    className="h-12"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label>입학일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.startDate ? (
+                                            format(resumeData.education.startDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.startDate || undefined}
+                                          onSelect={(date) => handleEducationChange('startDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <div>
+                                    <Label>졸업일</Label>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full justify-start text-left font-normal"
+                                        >
+                                          {resumeData.education.endDate ? (
+                                            format(resumeData.education.endDate, 'yyyy-MM-dd')
+                                          ) : (
+                                            <span className="text-muted-foreground">날짜 선택</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={resumeData.education.endDate || undefined}
+                                          onSelect={(date) => handleEducationChange('endDate', date)}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="companyName">회사명</Label>
+                          <Input
+                            id="companyName"
+                            value={resumeData.experience[0].companyName}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="jobTitle">직책</Label>
+                          <Input
+                            id="jobTitle"
+                            value={resumeData.experience[0].jobTitle}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="employmentType">근무형태</Label>
+                          <Input
+                            id="employmentType"
+                            value={resumeData.experience[0].employmentType}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="department">부서</Label>
+                          <Input
+                            id="department"
+                            value={resumeData.experience[0].department}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="status">상태</Label>
+                          <Input
+                            id="status"
+                            value={resumeData.experience[0].status}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="startDate">시작일</Label>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                {resumeData.experience[0].startDate ? (
+                                  format(resumeData.experience[0].startDate, 'yyyy-MM-dd')
+                                ) : (
+                                  <span className="text-muted-foreground">날짜 선택</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={resumeData.experience[0].startDate || undefined}
+                                onSelect={(date) => handleExperienceChange(0, 'startDate', date)}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="endDate">종료일</Label>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                {resumeData.experience[0].endDate ? (
+                                  format(resumeData.experience[0].endDate, 'yyyy-MM-dd')
+                                ) : (
+                                  <span className="text-muted-foreground">날짜 선택</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={resumeData.experience[0].endDate || undefined}
+                                onSelect={(date) => handleExperienceChange(0, 'endDate', date)}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="country">국가</Label>
+                          <Input
+                            id="country"
+                            value={resumeData.experience[0].country}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="achievements">달성내용</Label>
+                          <Textarea
+                            id="achievements"
+                            value={resumeData.experience[0].achievements}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="name">자격증명</Label>
+                          <Input
+                            id="name"
+                            value={resumeData.certificates[0].name}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="grade">등급</Label>
+                          <Input
+                            id="grade"
+                            value={resumeData.certificates[0].grade}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="issueDate">발급일</Label>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                {resumeData.certificates[0].issueDate ? (
+                                  format(resumeData.certificates[0].issueDate, 'yyyy-MM-dd')
+                                ) : (
+                                  <span className="text-muted-foreground">날짜 선택</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={resumeData.certificates[0].issueDate || undefined}
+                                onSelect={(date) => handleCertificateChange(0, 'issueDate', date)}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="issuer">발급기관</Label>
+                          <Input
+                            id="issuer"
+                            value={resumeData.certificates[0].issuer}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </header>
+    </div>
+  );
+};
+
+export default ResumeForm;
