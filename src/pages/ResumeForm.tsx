@@ -198,7 +198,12 @@ const ResumeForm: React.FC = () => {
         </div>
       </header>
 
-      <Tabs defaultValue="personal" value={activeTab} onValueChange={handleTabChange} className="max-w-[800px] mx-auto px-6 py-8">
+      <Tabs 
+        defaultValue="personal" 
+        value={activeTab} 
+        onValueChange={handleTabChange} 
+        className="max-w-[800px] mx-auto px-6 py-8"
+      >
         <TabsList className="grid w-full grid-cols-4 mb-8">
           <TabsTrigger value="personal" className="text-sm">기본 정보</TabsTrigger>
           <TabsTrigger value="education" className="text-sm">학력 사항</TabsTrigger>
@@ -365,7 +370,7 @@ const ResumeForm: React.FC = () => {
                       </Label>
                     </div>
                     {formData.isVeteran && (
-                      <div className="mt-2 ml-6 space-y-2">
+                      <div className="mt-2 space-y-2">
                         <Select
                           value={formData.veteranType}
                           onValueChange={(value) => handleSelectChange("veteranType", value)}
@@ -419,7 +424,7 @@ const ResumeForm: React.FC = () => {
                       </Label>
                     </div>
                     {formData.isDisabled && (
-                      <div className="mt-2 ml-6 space-y-2">
+                      <div className="mt-2 space-y-2">
                         <Select
                           value={formData.disabilityType}
                           onValueChange={(value) => handleSelectChange("disabilityType", value)}
@@ -477,7 +482,7 @@ const ResumeForm: React.FC = () => {
                       </Label>
                     </div>
                     {formData.isVulnerable && (
-                      <div className="mt-2 ml-6 space-y-2">
+                      <div className="mt-2 space-y-2">
                         <Select
                           value={formData.vulnerableType}
                           onValueChange={(value) => handleSelectChange("vulnerableType", value)}
@@ -540,7 +545,17 @@ const ResumeForm: React.FC = () => {
                   <Select 
                     name="highestEducation" 
                     value={formData.highestEducation} 
-                    onValueChange={(value) => handleSelectChange("highestEducation", value)}
+                    onValueChange={(value) => {
+                      handleSelectChange("highestEducation", value);
+                      if (value === "해당없음") {
+                        setFormData(prev => ({
+                          ...prev,
+                          highSchool: "",
+                          highSchoolMajor: "",
+                          highSchoolGradYear: "",
+                        }));
+                      }
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="최종 학력을 선택하세요" />
@@ -897,4 +912,45 @@ const ResumeForm: React.FC = () => {
                   <Input 
                     id="certificates" 
                     name="certificates" 
-                    placeholder="보유한
+                    placeholder="보유한 자격증을 입력하세요" 
+                    value={formData.certificates} 
+                    onChange={handleChange} 
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="languages">언어</Label>
+                  <Input 
+                    id="languages" 
+                    name="languages" 
+                    placeholder="보유한 언어를 입력하세요" 
+                    value={formData.languages} 
+                    onChange={handleChange} 
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="awards">수상</Label>
+                  <Input 
+                    id="awards" 
+                    name="awards" 
+                    placeholder="보유한 수상내역을 입력하세요" 
+                    value={formData.awards} 
+                    onChange={handleChange} 
+                  />
+                </div>
+                
+                <div className="flex justify-between space-x-4 mt-6">
+                  <Button onClick={handlePrevious} variant="outline">이전</Button>
+                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default ResumeForm;
