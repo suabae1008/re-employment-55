@@ -1,9 +1,8 @@
 
-import React, { useState } from 'react';
-import { ChevronLeft, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import React from 'react';
+import { ChevronLeft, CheckCircle2, XCircle, User } from 'lucide-react';
 import { MatchAnalysis } from '../services/matchingService';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import MatchScoreGauge from './MatchScoreGauge';
 
@@ -29,8 +28,8 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         </div>
       </div>
 
-      <div className="space-y-4">
-        <Collapsible className="mb-4">
+      <div className="grid grid-cols-2 gap-4">
+        <Collapsible className="col-span-2">
           <Card>
             <CollapsibleTrigger className="w-full text-left p-4">
               <div className="flex justify-between items-center">
@@ -59,20 +58,37 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
         </Collapsible>
 
         <Card className="p-4">
-          <div className="flex justify-between items-center">
-            <span className="font-medium">유사한 경험이 있어요</span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <User className="text-blue-500" />
+              <span className="font-medium">유사한 경험이 있어요</span>
+            </div>
+            <div className="text-sm text-gray-600">
+              <p>✓ 요양보호사 (3년)</p>
+              <p>✓ 간호조무사 (9개월)</p>
+            </div>
           </div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex justify-between items-center">
-            <span className="font-medium">
-              우대사항 {analysis.preferredQualifications.filter(q => q.isMatched).length}개 중 {analysis.preferredQualifications.length}개를 만족했어요
-            </span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="text-green-500" />
+              <span className="font-medium">
+                우대사항 {analysis.preferredQualifications.filter(q => q.isMatched).length}개 중 {analysis.preferredQualifications.length}개를 만족했어요
+              </span>
+            </div>
+            <div className="text-sm text-gray-600">
+              {analysis.preferredQualifications.map((qual, index) => (
+                <p key={qual.id}>
+                  {qual.isMatched ? "✓" : "✗"} {qual.name}
+                </p>
+              ))}
+            </div>
           </div>
         </Card>
 
-        <Card className="border-none bg-gray-100 p-4 rounded-lg mt-4">
+        <Card className="border-none bg-gray-100 p-4 rounded-lg">
           <div className="flex items-start">
             <div className="bg-blue-100 rounded-full p-1 mr-2">
               <AlertCircle size={18} className="text-blue-500" />
