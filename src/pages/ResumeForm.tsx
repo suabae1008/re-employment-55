@@ -183,18 +183,21 @@ const ResumeForm: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
         <div className="max-w-[800px] mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-xl font-semibold">이력서 작성</h1>
-              <p className="text-gray-500 text-sm">입력한 정보를 바탕으로 이력서를 작성합니다.</p>
-            </div>
-            <div>
-              <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">저장하기</Button>
-            </div>
+          <div className="flex flex-col items-start mb-6">
+            <img 
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true" 
+              className="w-[61px] h-[50px] mb-2.5" 
+              alt="Logo" 
+            />
+            <h1 className="text-[28px] text-black mb-2.5">김현숙님,</h1>
+            <p className="text-[15px] text-[#5A5A5A]">기본 정보를 확인해주세요.</p>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">저장하기</Button>
           </div>
         </div>
       </header>
-      
+
       <Tabs defaultValue="personal" value={activeTab} onValueChange={handleTabChange} className="max-w-[800px] mx-auto px-6 py-8">
         <TabsList className="grid w-full grid-cols-4 mb-8">
           <TabsTrigger value="personal" className="text-sm">기본 정보</TabsTrigger>
@@ -348,172 +351,170 @@ const ResumeForm: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-4 pt-4 border-t">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="isVeteran"
-                          checked={formData.isVeteran}
-                          onCheckedChange={() => handleCheckboxChange("isVeteran")}
-                        />
-                        <Label htmlFor="isVeteran" className="flex items-center gap-1">
-                          <Award className="w-4 h-4" />
-                          보훈 대상
-                        </Label>
-                      </div>
-                      {formData.isVeteran && (
-                        <div className="mt-2 ml-6 space-y-2">
-                          <Select
-                            value={formData.veteranType}
-                            onValueChange={(value) => handleSelectChange("veteranType", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="보훈 종류 선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="독립유공자">독립유공자</SelectItem>
-                              <SelectItem value="국가유공자">국가유공자</SelectItem>
-                              <SelectItem value="보훈보상대상자">보훈보상대상자</SelectItem>
-                              <SelectItem value="특수임무유공자">특수임무유공자</SelectItem>
-                              <SelectItem value="5.18민주유공자">5.18민주유공자</SelectItem>
-                              <SelectItem value="고엽제후유의증">고엽제후유의증</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="file"
-                              onChange={(e) => handleFileChange(e, "veteranDocument")}
-                              className="hidden"
-                              id="veteranDocument"
-                            />
-                            <Label
-                              htmlFor="veteranDocument"
-                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
-                            >
-                              <Upload className="w-4 h-4" />
-                              증빙서류 첨부
-                            </Label>
-                            {formData.veteranDocument && (
-                              <span className="text-sm text-gray-600">
-                                {formData.veteranDocument.name}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                <div className="space-y-6 pt-4 border-t">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="isVeteran"
+                        checked={formData.isVeteran}
+                        onCheckedChange={() => handleCheckboxChange("isVeteran")}
+                      />
+                      <Label htmlFor="isVeteran" className="flex items-center gap-1">
+                        <Award className="w-4 h-4" />
+                        보훈 대상
+                      </Label>
                     </div>
+                    {formData.isVeteran && (
+                      <div className="mt-2 ml-6 space-y-2">
+                        <Select
+                          value={formData.veteranType}
+                          onValueChange={(value) => handleSelectChange("veteranType", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="보훈 종류 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="독립유공자">독립유공자</SelectItem>
+                            <SelectItem value="국가유공자">국가유공자</SelectItem>
+                            <SelectItem value="보훈보상대상자">보훈보상대상자</SelectItem>
+                            <SelectItem value="특수임무유공자">특수임무유공자</SelectItem>
+                            <SelectItem value="5.18민주유공자">5.18민주유공자</SelectItem>
+                            <SelectItem value="고엽제후유의증">고엽제후유의증</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="file"
+                            onChange={(e) => handleFileChange(e, "veteranDocument")}
+                            className="hidden"
+                            id="veteranDocument"
+                          />
+                          <Label
+                            htmlFor="veteranDocument"
+                            className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                          >
+                            <Upload className="w-4 h-4" />
+                            증빙서류 첨부
+                          </Label>
+                          {formData.veteranDocument && (
+                            <span className="text-sm text-gray-600">
+                              {formData.veteranDocument.name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="isDisabled"
-                          checked={formData.isDisabled}
-                          onCheckedChange={() => handleCheckboxChange("isDisabled")}
-                        />
-                        <Label htmlFor="isDisabled" className="flex items-center gap-1">
-                          <Accessibility className="w-4 h-4" />
-                          장애 여부
-                        </Label>
-                      </div>
-                      {formData.isDisabled && (
-                        <div className="mt-2 ml-6 space-y-2">
-                          <Select
-                            value={formData.disabilityType}
-                            onValueChange={(value) => handleSelectChange("disabilityType", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="장애 종류 선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="지체장애">지체장애</SelectItem>
-                              <SelectItem value="시각장애">시각장애</SelectItem>
-                              <SelectItem value="청각장애">청각장애</SelectItem>
-                              <SelectItem value="언어장애">언어장애</SelectItem>
-                              <SelectItem value="지적장애">지적장애</SelectItem>
-                              <SelectItem value="자폐성장애">자폐성장애</SelectItem>
-                              <SelectItem value="정신장애">정신장애</SelectItem>
-                              <SelectItem value="신장장애">신장장애</SelectItem>
-                              <SelectItem value="심장장애">심장장애</SelectItem>
-                              <SelectItem value="호흡기장애">호흡기장애</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="file"
-                              onChange={(e) => handleFileChange(e, "disabilityDocument")}
-                              className="hidden"
-                              id="disabilityDocument"
-                            />
-                            <Label
-                              htmlFor="disabilityDocument"
-                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
-                            >
-                              <Upload className="w-4 h-4" />
-                              증빙서류 첨부
-                            </Label>
-                            {formData.disabilityDocument && (
-                              <span className="text-sm text-gray-600">
-                                {formData.disabilityDocument.name}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="isDisabled"
+                        checked={formData.isDisabled}
+                        onCheckedChange={() => handleCheckboxChange("isDisabled")}
+                      />
+                      <Label htmlFor="isDisabled" className="flex items-center gap-1">
+                        <Accessibility className="w-4 h-4" />
+                        장애 여부
+                      </Label>
                     </div>
+                    {formData.isDisabled && (
+                      <div className="mt-2 ml-6 space-y-2">
+                        <Select
+                          value={formData.disabilityType}
+                          onValueChange={(value) => handleSelectChange("disabilityType", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="장애 종류 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="지체장애">지체장애</SelectItem>
+                            <SelectItem value="시각장애">시각장애</SelectItem>
+                            <SelectItem value="청각장애">청각장애</SelectItem>
+                            <SelectItem value="언어장애">언어장애</SelectItem>
+                            <SelectItem value="지적장애">지적장애</SelectItem>
+                            <SelectItem value="자폐성장애">자폐성장애</SelectItem>
+                            <SelectItem value="정신장애">정신장애</SelectItem>
+                            <SelectItem value="신장장애">신장장애</SelectItem>
+                            <SelectItem value="심장장애">심장장애</SelectItem>
+                            <SelectItem value="호흡기장애">호흡기장애</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="file"
+                            onChange={(e) => handleFileChange(e, "disabilityDocument")}
+                            className="hidden"
+                            id="disabilityDocument"
+                          />
+                          <Label
+                            htmlFor="disabilityDocument"
+                            className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                          >
+                            <Upload className="w-4 h-4" />
+                            증빙서류 첨부
+                          </Label>
+                          {formData.disabilityDocument && (
+                            <span className="text-sm text-gray-600">
+                              {formData.disabilityDocument.name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="isVulnerable"
-                          checked={formData.isVulnerable}
-                          onCheckedChange={() => handleCheckboxChange("isVulnerable")}
-                        />
-                        <Label htmlFor="isVulnerable" className="flex items-center gap-1">
-                          <HandHeart className="w-4 h-4" />
-                          취약계층 여부
-                        </Label>
-                      </div>
-                      {formData.isVulnerable && (
-                        <div className="mt-2 ml-6 space-y-2">
-                          <Select
-                            value={formData.vulnerableType}
-                            onValueChange={(value) => handleSelectChange("vulnerableType", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="취약계층 종류 선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="기초생활수급자">기초생활수급자</SelectItem>
-                              <SelectItem value="차상위계층">차상위계층</SelectItem>
-                              <SelectItem value="한부모가족">한부모가족</SelectItem>
-                              <SelectItem value="북한이탈주민">북한이탈주민</SelectItem>
-                              <SelectItem value="결혼이민자">결혼이민자</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="file"
-                              onChange={(e) => handleFileChange(e, "vulnerableDocument")}
-                              className="hidden"
-                              id="vulnerableDocument"
-                            />
-                            <Label
-                              htmlFor="vulnerableDocument"
-                              className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
-                            >
-                              <Upload className="w-4 h-4" />
-                              증빙서류 첨부
-                            </Label>
-                            {formData.vulnerableDocument && (
-                              <span className="text-sm text-gray-600">
-                                {formData.vulnerableDocument.name}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="isVulnerable"
+                        checked={formData.isVulnerable}
+                        onCheckedChange={() => handleCheckboxChange("isVulnerable")}
+                      />
+                      <Label htmlFor="isVulnerable" className="flex items-center gap-1">
+                        <HandHeart className="w-4 h-4" />
+                        취약계층 여부
+                      </Label>
                     </div>
+                    {formData.isVulnerable && (
+                      <div className="mt-2 ml-6 space-y-2">
+                        <Select
+                          value={formData.vulnerableType}
+                          onValueChange={(value) => handleSelectChange("vulnerableType", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="취약계층 종류 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="기초생활수급자">기초생활수급자</SelectItem>
+                            <SelectItem value="차상위계층">차상위계층</SelectItem>
+                            <SelectItem value="한부모가족">한부모가족</SelectItem>
+                            <SelectItem value="북한이탈주민">북한이탈주민</SelectItem>
+                            <SelectItem value="결혼이민자">결혼이민자</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="file"
+                            onChange={(e) => handleFileChange(e, "vulnerableDocument")}
+                            className="hidden"
+                            id="vulnerableDocument"
+                          />
+                          <Label
+                            htmlFor="vulnerableDocument"
+                            className="flex items-center gap-2 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50"
+                          >
+                            <Upload className="w-4 h-4" />
+                            증빙서류 첨부
+                          </Label>
+                          {formData.vulnerableDocument && (
+                            <span className="text-sm text-gray-600">
+                              {formData.vulnerableDocument.name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -554,48 +555,50 @@ const ResumeForm: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div className="border-t pt-4">
-                  <h3 className="font-medium mb-4">고등학교 정보</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="highSchool">
-                        고등학교명
-                        {formData.highestEducation === "고등학교" && (
-                          <span className="text-red-500 text-xs ml-1">필수</span>
-                        )}
-                      </Label>
-                      <Input 
-                        id="highSchool" 
-                        name="highSchool" 
-                        placeholder="고등학교명" 
-                        value={formData.highSchool} 
-                        onChange={handleChange} 
-                        required={formData.highestEducation === "고등학교"}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="highSchoolMajor">전공계열</Label>
-                      <Input 
-                        id="highSchoolMajor" 
-                        name="highSchoolMajor" 
-                        placeholder="전공계열" 
-                        value={formData.highSchoolMajor} 
-                        onChange={handleChange} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="highSchoolGradYear">졸업년도</Label>
-                      <Input 
-                        id="highSchoolGradYear" 
-                        name="highSchoolGradYear" 
-                        placeholder="졸업년도" 
-                        value={formData.highSchoolGradYear} 
-                        onChange={handleChange} 
-                      />
+
+                {formData.highestEducation !== "해당없음" && (
+                  <div className="border-t pt-4">
+                    <h3 className="font-medium mb-4">고등학교 정보</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="highSchool">
+                          고등학교명
+                          {formData.highestEducation === "고등학교" && (
+                            <span className="text-red-500 text-xs ml-1">필수</span>
+                          )}
+                        </Label>
+                        <Input 
+                          id="highSchool" 
+                          name="highSchool" 
+                          placeholder="고등학교명" 
+                          value={formData.highSchool} 
+                          onChange={handleChange} 
+                          required={formData.highestEducation === "고등학교"}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="highSchoolMajor">전공계열</Label>
+                        <Input 
+                          id="highSchoolMajor" 
+                          name="highSchoolMajor" 
+                          placeholder="전공계열" 
+                          value={formData.highSchoolMajor} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="highSchoolGradYear">졸업년도</Label>
+                        <Input 
+                          id="highSchoolGradYear" 
+                          name="highSchoolGradYear" 
+                          placeholder="졸업년도" 
+                          value={formData.highSchoolGradYear} 
+                          onChange={handleChange} 
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 
                 {(formData.highestEducation === "전문대학" || 
                   formData.highestEducation === "대학교" || 
@@ -894,45 +897,4 @@ const ResumeForm: React.FC = () => {
                   <Input 
                     id="certificates" 
                     name="certificates" 
-                    placeholder="보유한 자격증을 입력하세요" 
-                    value={formData.certificates} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="languages">외국어 능력</Label>
-                  <Input 
-                    id="languages" 
-                    name="languages" 
-                    placeholder="구사 가능한 외국어와 수준을 입력하세��" 
-                    value={formData.languages} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="awards">수상 내역</Label>
-                  <Input 
-                    id="awards" 
-                    name="awards" 
-                    placeholder="수상 내역을 입력하세요" 
-                    value={formData.awards} 
-                    onChange={handleChange} 
-                  />
-                </div>
-                
-                <div className="flex justify-between space-x-4 mt-6">
-                  <Button onClick={handlePrevious} variant="outline">이전</Button>
-                  <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">저장하기</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default ResumeForm;
+                    placeholder="보유한
