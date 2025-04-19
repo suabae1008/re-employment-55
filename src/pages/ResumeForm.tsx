@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "../components/ui/card";
@@ -946,4 +947,328 @@ const ResumeForm: React.FC = () => {
                         <Label htmlFor={`companyName${index}`}>회사명</Label>
                         <Input
                           id={`companyName${index}`}
-                          value
+                          value={experience.companyName}
+                          onChange={(e) => handleExperienceChange(index, "companyName", e.target.value)}
+                          placeholder="회사명"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`jobTitle${index}`}>직무</Label>
+                          <Select
+                            value={experience.jobTitle}
+                            onValueChange={(value) => handleExperienceChange(index, "jobTitle", value)}
+                          >
+                            <SelectTrigger id={`jobTitle${index}`}>
+                              <SelectValue placeholder="직무 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {jobTitles.map((title) => (
+                                <SelectItem key={title} value={title}>{title}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {experience.jobTitle === "직접 입력" && (
+                          <div className="space-y-2">
+                            <Label htmlFor={`customJobTitle${index}`}>직접 입력</Label>
+                            <Input
+                              id={`customJobTitle${index}`}
+                              value={experience.customJobTitle}
+                              onChange={(e) => handleExperienceChange(index, "customJobTitle", e.target.value)}
+                              placeholder="직무명 입력"
+                            />
+                          </div>
+                        )}
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor={`contractType${index}`}>고용형태</Label>
+                          <Select
+                            value={experience.contractType}
+                            onValueChange={(value) => handleExperienceChange(index, "contractType", value)}
+                          >
+                            <SelectTrigger id={`contractType${index}`}>
+                              <SelectValue placeholder="고용형태 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {contractTypes.map((type) => (
+                                <SelectItem key={type} value={type}>{type}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>근무기간</Label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 gap-2">
+                            <Select
+                              value={experience.startYear}
+                              onValueChange={(value) => handleExperienceChange(index, "startYear", value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="년도" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {years.map(year => (
+                                  <SelectItem key={`start-year-${year}`} value={year.toString()}>{year}년</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Select
+                              value={experience.startMonth}
+                              onValueChange={(value) => handleExperienceChange(index, "startMonth", value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="월" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {months.map(month => (
+                                  <SelectItem key={`start-month-${month}`} value={month.toString()}>{month}월</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <Select
+                              value={experience.endYear}
+                              onValueChange={(value) => handleExperienceChange(index, "endYear", value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="년도" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {years.map(year => (
+                                  <SelectItem key={`end-year-${year}`} value={year.toString()}>{year}년</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Select
+                              value={experience.endMonth}
+                              onValueChange={(value) => handleExperienceChange(index, "endMonth", value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="월" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {months.map(month => (
+                                  <SelectItem key={`end-month-${month}`} value={month.toString()}>{month}월</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`responsibilities${index}`}>담당업무</Label>
+                        <Input
+                          id={`responsibilities${index}`}
+                          value={experience.responsibilities}
+                          onChange={(e) => handleExperienceChange(index, "responsibilities", e.target.value)}
+                          placeholder="담당 업무 내용을 입력하세요"
+                        />
+                      </div>
+                    </div>
+                    
+                    {index < formData.experiences.length - 1 && (
+                      <Separator className="my-6" />
+                    )}
+                  </div>
+                ))}
+                
+                <Button 
+                  variant="outline" 
+                  onClick={addNewExperience}
+                  className="w-full"
+                >
+                  + 경력 추가
+                </Button>
+                
+                <div className="flex justify-between space-x-4 mt-6">
+                  <Button onClick={handlePrevious} variant="outline">이전</Button>
+                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="skills">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-6">
+                <h3 className="font-medium text-lg mb-4">자격증</h3>
+                
+                {formData.certificates.map((certificate, index) => (
+                  <div key={index} className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">자격증 {index + 1}</h4>
+                      {formData.certificates.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteCertificate(index)}
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor={`certificateName${index}`}>자격증명</Label>
+                        <Input
+                          id={`certificateName${index}`}
+                          value={certificate.name}
+                          onChange={(e) => updateCertificate(index, "name", e.target.value)}
+                          placeholder="자격증 이름"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`certificateGrade${index}`}>등급</Label>
+                        <Input
+                          id={`certificateGrade${index}`}
+                          value={certificate.grade}
+                          onChange={(e) => updateCertificate(index, "grade", e.target.value)}
+                          placeholder="등급/점수"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`certificateOrganization${index}`}>발행기관</Label>
+                        <Input
+                          id={`certificateOrganization${index}`}
+                          value={certificate.organization}
+                          onChange={(e) => updateCertificate(index, "organization", e.target.value)}
+                          placeholder="발행기관"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor={`certificateIssueDate${index}`}>취득일</Label>
+                        <Input
+                          id={`certificateIssueDate${index}`}
+                          value={certificate.issueDate}
+                          onChange={(e) => updateCertificate(index, "issueDate", e.target.value)}
+                          placeholder="YYYY.MM.DD"
+                        />
+                      </div>
+                    </div>
+                    
+                    {index < formData.certificates.length - 1 && (
+                      <Separator className="my-4" />
+                    )}
+                  </div>
+                ))}
+                
+                <Button 
+                  variant="outline" 
+                  onClick={addCertificate}
+                  className="w-full mt-4"
+                >
+                  + 자격증 추가
+                </Button>
+                
+                <div className="border-t pt-6 mt-6">
+                  <h3 className="font-medium text-lg mb-4">컴퓨터 활용 능력</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="documentCreation"
+                        checked={formData.computerSkills.documentCreation}
+                        onCheckedChange={() => handleCheckboxChange("computerSkills.documentCreation")}
+                      />
+                      <Label htmlFor="documentCreation">문서 작성 (한글, MS워드 등)</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="spreadsheet"
+                        checked={formData.computerSkills.spreadsheet}
+                        onCheckedChange={() => handleCheckboxChange("computerSkills.spreadsheet")}
+                      />
+                      <Label htmlFor="spreadsheet">스프레드시트 (엑셀 등)</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="presentation"
+                        checked={formData.computerSkills.presentation}
+                        onCheckedChange={() => handleCheckboxChange("computerSkills.presentation")}
+                      />
+                      <Label htmlFor="presentation">프레젠테이션 (파워포인트 등)</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="accounting"
+                        checked={formData.computerSkills.accounting}
+                        onCheckedChange={() => handleCheckboxChange("computerSkills.accounting")}
+                      />
+                      <Label htmlFor="accounting">회계 프로그램</Label>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="otherComputerSkills">기타</Label>
+                      <Input
+                        id="otherComputerSkills"
+                        name="computerSkills.other"
+                        value={formData.computerSkills.other}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          computerSkills: {
+                            ...prev.computerSkills,
+                            other: e.target.value
+                          }
+                        }))}
+                        placeholder="기타 컴퓨터 활용 능력"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border-t pt-6">
+                  <h3 className="font-medium text-lg mb-4">운전 능력</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="drivingLicense"
+                        checked={formData.drivingAbility.license}
+                        onCheckedChange={() => handleCheckboxChange("drivingAbility.license")}
+                      />
+                      <Label htmlFor="drivingLicense">운전면허 보유</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="ownVehicle"
+                        checked={formData.drivingAbility.vehicle}
+                        onCheckedChange={() => handleCheckboxChange("drivingAbility.vehicle")}
+                      />
+                      <Label htmlFor="ownVehicle">차량 보유</Label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between space-x-4 mt-6">
+                  <Button onClick={handlePrevious} variant="outline">이전</Button>
+                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">다음</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default ResumeForm;
