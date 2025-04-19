@@ -31,10 +31,13 @@ interface ResumeData {
     address: string;
     veteran: boolean;
     veteranDocument?: File | null;
+    veteranType?: string;
     disability: boolean;
     disabilityDocument?: File | null;
+    disabilityType?: string;
     employmentSector: boolean;
     employmentSectorDocument?: File | null;
+    employmentSectorType?: string;
   };
   education: {
     level: string;
@@ -90,10 +93,13 @@ const ResumeForm = () => {
       address: '',
       veteran: false,
       veteranDocument: null,
+      veteranType: '',
       disability: false,
       disabilityDocument: null,
+      disabilityType: '',
       employmentSector: false,
-      employmentSectorDocument: null
+      employmentSectorDocument: null,
+      employmentSectorType: ''
     },
     education: {
       level: '',
@@ -587,37 +593,178 @@ const ResumeForm = () => {
                       </div>
 
                       <div className="pt-4 space-y-4">
-                        <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
-                          <Checkbox
-                            id="veteran"
-                            checked={resumeData.basicInfo.veteran}
-                            onCheckedChange={(checked) => handleBasicInfoChange('veteran', !!checked)}
-                          />
-                          <label htmlFor="veteran" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            보훈 대상
-                          </label>
+                        <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="veteran"
+                              checked={resumeData.basicInfo.veteran}
+                              onCheckedChange={(checked) => handleBasicInfoChange('veteran', !!checked)}
+                            />
+                            <label htmlFor="veteran" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              보훈 대상
+                            </label>
+                          </div>
+                          
+                          {resumeData.basicInfo.veteran && (
+                            <div className="pl-6 space-y-4">
+                              <Select
+                                value={resumeData.basicInfo.veteranType || ''}
+                                onValueChange={(value) => handleBasicInfoChange('veteranType', value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="보훈 대상 종류를 선택하세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="독립유공자">독립유공자</SelectItem>
+                                  <SelectItem value="국가유공자">국가유공자</SelectItem>
+                                  <SelectItem value="보훈보상대상자">보훈보상대상자</SelectItem>
+                                  <SelectItem value="5.18민주유공자">5.18민주유공자</SelectItem>
+                                  <SelectItem value="특수임무유공자">특수임무유공자</SelectItem>
+                                  <SelectItem value="고엽제후유의증">고엽제후유의증</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0] || null;
+                                    handleFileChange('veteranDocument', file);
+                                  }}
+                                  className="flex-1"
+                                />
+                                {resumeData.basicInfo.veteranDocument && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon"
+                                    type="button"
+                                    onClick={() => handleFileChange('veteranDocument', null)}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
-                        <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
-                          <Checkbox
-                            id="disability"
-                            checked={resumeData.basicInfo.disability}
-                            onCheckedChange={(checked) => handleBasicInfoChange('disability', !!checked)}
-                          />
-                          <label htmlFor="disability" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            장애 여부
-                          </label>
+                        <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="disability"
+                              checked={resumeData.basicInfo.disability}
+                              onCheckedChange={(checked) => handleBasicInfoChange('disability', !!checked)}
+                            />
+                            <label htmlFor="disability" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              장애 여부
+                            </label>
+                          </div>
+                          
+                          {resumeData.basicInfo.disability && (
+                            <div className="pl-6 space-y-4">
+                              <Select
+                                value={resumeData.basicInfo.disabilityType || ''}
+                                onValueChange={(value) => handleBasicInfoChange('disabilityType', value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="장애 종류를 선택하세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="지체장애">지체장애</SelectItem>
+                                  <SelectItem value="뇌병변장애">뇌병변장애</SelectItem>
+                                  <SelectItem value="시각장애">시각장애</SelectItem>
+                                  <SelectItem value="청각장애">청각장애</SelectItem>
+                                  <SelectItem value="언어장애">언어장애</SelectItem>
+                                  <SelectItem value="지적장애">지적장애</SelectItem>
+                                  <SelectItem value="자폐성장애">자폐성장애</SelectItem>
+                                  <SelectItem value="정신장애">정신장애</SelectItem>
+                                  <SelectItem value="신장장애">신장장애</SelectItem>
+                                  <SelectItem value="심장장애">심장장애</SelectItem>
+                                  <SelectItem value="호흡기장애">호흡기장애</SelectItem>
+                                  <SelectItem value="간장애">간장애</SelectItem>
+                                  <SelectItem value="안면장애">안면장애</SelectItem>
+                                  <SelectItem value="장루요루장애">장루요루장애</SelectItem>
+                                  <SelectItem value="뇌전증장애">뇌전증장애</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0] || null;
+                                    handleFileChange('disabilityDocument', file);
+                                  }}
+                                  className="flex-1"
+                                />
+                                {resumeData.basicInfo.disabilityDocument && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon"
+                                    type="button"
+                                    onClick={() => handleFileChange('disabilityDocument', null)}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
-                        <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
-                          <Checkbox
-                            id="employmentSector"
-                            checked={resumeData.basicInfo.employmentSector}
-                            onCheckedChange={(checked) => handleBasicInfoChange('employmentSector', !!checked)}
-                          />
-                          <label htmlFor="employmentSector" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            취업계층 여부
-                          </label>
+                        <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="employmentSector"
+                              checked={resumeData.basicInfo.employmentSector}
+                              onCheckedChange={(checked) => handleBasicInfoChange('employmentSector', !!checked)}
+                            />
+                            <label htmlFor="employmentSector" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              취업계층 여부
+                            </label>
+                          </div>
+                          
+                          {resumeData.basicInfo.employmentSector && (
+                            <div className="pl-6 space-y-4">
+                              <Select
+                                value={resumeData.basicInfo.employmentSectorType || ''}
+                                onValueChange={(value) => handleBasicInfoChange('employmentSectorType', value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="취업계층 종류를 선택하세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="저소득층">저소득층</SelectItem>
+                                  <SelectItem value="북한이탈주민">북한이탈주민</SelectItem>
+                                  <SelectItem value="여성가장">여성가장</SelectItem>
+                                  <SelectItem value="장기실직자">장기실직자</SelectItem>
+                                  <SelectItem value="결혼이민자">결혼이민자</SelectItem>
+                                  <SelectItem value="기초생활수급자">기초생활수급자</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0] || null;
+                                    handleFileChange('employmentSectorDocument', file);
+                                  }}
+                                  className="flex-1"
+                                />
+                                {resumeData.basicInfo.employmentSectorDocument && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon"
+                                    type="button"
+                                    onClick={() => handleFileChange('employmentSectorDocument', null)}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
