@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Briefcase } from 'lucide-react';
 import { Job } from '../components/JobList';
-import { getJobById } from '../services/jobService';
+import { getJobById, toggleFavoriteJob } from '../services/jobService';
 import { getMockMatchAnalysis } from '../services/matchingService';
 import BottomNavigation from '../components/BottomNavigation';
 import { Button } from '@/components/ui/button';

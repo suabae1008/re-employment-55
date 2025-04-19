@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { Job } from '../../components/JobList';
 
 interface JobHeaderProps {
   job: Job;
