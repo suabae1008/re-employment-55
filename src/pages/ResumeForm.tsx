@@ -79,18 +79,6 @@ const ResumeForm: React.FC = () => {
         endYear: "",
         endMonth: "",
         responsibilities: ""
-      },
-      {
-        companyName: "",
-        jobTitle: "",
-        customJobTitle: "",
-        contractType: "",
-        employmentStatus: "",
-        startYear: "",
-        startMonth: "",
-        endYear: "",
-        endMonth: "",
-        responsibilities: ""
       }
     ]
   });
@@ -419,7 +407,7 @@ const ResumeForm: React.FC = () => {
                       <Input 
                         id="addressDetail" 
                         name="addressDetail" 
-                        placeholder="상세 주소를 입력하세요" 
+                        placeholder="상세 주소를 입력하��요" 
                         value={formData.addressDetail} 
                         onChange={handleChange} 
                       />
@@ -866,9 +854,10 @@ const ResumeForm: React.FC = () => {
             <CardContent className="pt-6">
               <div className="space-y-6">
                 {formData.experiences.map((experience, index) => (
-                  <div key={index} className={cn("space-y-4", index > 0 && "border-t pt-6")}>
+                  <div key={index} className="space-y-4">
                     <h3 className="font-medium text-lg">경력 {index + 1}</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    
+                    <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor={`companyName${index}`}>회사명</Label>
                         <Input
@@ -876,6 +865,7 @@ const ResumeForm: React.FC = () => {
                           value={experience.companyName}
                           onChange={(e) => handleExperienceChange(index, "companyName", e.target.value)}
                           placeholder="회사명을 입력하세요"
+                          className="w-full"
                         />
                       </div>
 
@@ -885,7 +875,7 @@ const ResumeForm: React.FC = () => {
                           value={experience.jobTitle}
                           onValueChange={(value) => handleExperienceChange(index, "jobTitle", value)}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="직무를 선택하세요" />
                           </SelectTrigger>
                           <SelectContent>
@@ -912,7 +902,7 @@ const ResumeForm: React.FC = () => {
                           value={experience.contractType}
                           onValueChange={(value) => handleExperienceChange(index, "contractType", value)}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="계약 형태를 선택하세요" />
                           </SelectTrigger>
                           <SelectContent>
@@ -931,7 +921,7 @@ const ResumeForm: React.FC = () => {
                           value={experience.employmentStatus}
                           onValueChange={(value) => handleExperienceChange(index, "employmentStatus", value)}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="상태를 선택하세요" />
                           </SelectTrigger>
                           <SelectContent>
@@ -1016,12 +1006,13 @@ const ResumeForm: React.FC = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor={`responsibilities${index}`}>담당 업무</Label>
+                        <Label htmlFor={`responsibilities${index}`}>주요 성과</Label>
                         <Input
                           id={`responsibilities${index}`}
                           value={experience.responsibilities}
                           onChange={(e) => handleExperienceChange(index, "responsibilities", e.target.value)}
                           placeholder="담당했던 업무를 간략히 설명해주세요"
+                          className="w-full"
                         />
                       </div>
                     </div>
