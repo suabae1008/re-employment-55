@@ -57,36 +57,48 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({ analysis, onBack })
           </Card>
         </Collapsible>
 
-        <Card className="p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <User className="text-blue-500" />
-              <span className="font-medium">유사한 경험이 있어요</span>
-            </div>
-            <div className="text-sm text-gray-600">
-              <p>✓ 요양보호사 (3년)</p>
-              <p>✓ 간호조무사 (9개월)</p>
-            </div>
-          </div>
-        </Card>
+        <Collapsible>
+          <Card>
+            <CollapsibleTrigger className="w-full text-left p-4">
+              <div className="flex items-center gap-2">
+                <User className="text-blue-500" />
+                <span className="font-medium">유사한 경험이 있어요</span>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent className="pt-0">
+                <div className="text-sm text-gray-600 space-y-2">
+                  <p>✓ 요양보호사 (3년)</p>
+                  <p>✓ 간호조무사 (9개월)</p>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
 
-        <Card className="p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-green-500" />
-              <span className="font-medium">
-                우대사항 {analysis.preferredQualifications.filter(q => q.isMatched).length}개 중 {analysis.preferredQualifications.length}개를 만족했어요
-              </span>
-            </div>
-            <div className="text-sm text-gray-600">
-              {analysis.preferredQualifications.map((qual, index) => (
-                <p key={qual.id}>
-                  {qual.isMatched ? "✓" : "✗"} {qual.name}
-                </p>
-              ))}
-            </div>
-          </div>
-        </Card>
+        <Collapsible>
+          <Card>
+            <CollapsibleTrigger className="w-full text-left p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="text-green-500" />
+                <span className="font-medium">
+                  우대사항 {analysis.preferredQualifications.filter(q => q.isMatched).length}개 중 {analysis.preferredQualifications.length}개를 만족했어요
+                </span>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent className="pt-0">
+                <div className="text-sm text-gray-600 space-y-2">
+                  {analysis.preferredQualifications.map((qual) => (
+                    <p key={qual.id}>
+                      {qual.isMatched ? "✓" : "✗"} {qual.name}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
 
         <Card className="border-none bg-gray-100 p-4 rounded-lg">
           <div className="flex items-start">
