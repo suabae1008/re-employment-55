@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Briefcase } from 'lucide-react';
+import { ArrowLeft, Briefcase, Star, StarOff } from 'lucide-react';
 import { Job } from '../components/JobList';
 import { getJobById, toggleFavoriteJob } from '../services/jobService';
 import { getMockMatchAnalysis } from '../services/matchingService';
@@ -121,9 +122,21 @@ const JobDetail: React.FC = () => {
         <JobInfo job={job} />
         <JobDescription job={job} />
 
-        <div className="mt-6">
+        <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
           <Button 
-            className="w-full py-6 text-lg"
+            variant="outline"
+            className="flex-none w-12 h-12 p-0"
+            onClick={handleToggleFavorite}
+            aria-label={job.isFavorite ? "관심 공고에서 제거" : "관심 공고에 추가"}
+          >
+            {job.isFavorite ? (
+              <Star className="w-5 h-5 text-yellow-500" />
+            ) : (
+              <StarOff className="w-5 h-5" />
+            )}
+          </Button>
+          <Button 
+            className="flex-1 py-3 text-lg font-medium"
             onClick={() => setShowApplyDialog(true)}
           >
             지원하기 <Briefcase className="ml-2" />
