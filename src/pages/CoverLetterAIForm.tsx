@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Mic, MicOff, Plus, Edit2 } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,6 +38,7 @@ const CoverLetterAIForm = () => {
   const [position, setPosition] = useState(jobData.position || '');
   const [keywords, setKeywords] = useState<Keyword[]>(INITIAL_KEYWORDS);
   const [refreshCount, setRefreshCount] = useState(0);
+  const MAX_REFRESH_COUNT = 3;
   const [questions, setQuestions] = useState(
     location.state?.questions || [
       '지원 동기에 대하여 말씀해주세요.',
@@ -70,8 +71,8 @@ const CoverLetterAIForm = () => {
   };
   
   const handleRefreshKeywords = () => {
-    if (refreshCount >= 3) {
-      toast.error("키워드는 최대 3회까지만 새로고침이 가능합니다.");
+    if (refreshCount >= MAX_REFRESH_COUNT) {
+      toast.error(`키워드는 최대 ${MAX_REFRESH_COUNT}회까지만 새로고침이 가능합니다.`);
       return;
     }
     
@@ -88,7 +89,7 @@ const CoverLetterAIForm = () => {
     
     setKeywords(shuffledKeywords);
     setRefreshCount(prev => prev + 1);
-    toast.success(`키워드 새로고침 (${refreshCount + 1}/3)`);
+    toast.success(`키워드 새로고침 (${refreshCount + 1}/${MAX_REFRESH_COUNT})`);
   };
   
   const handleQuestionChange = (index: number, value: string) => {
@@ -269,17 +270,17 @@ const CoverLetterAIForm = () => {
         </Card>
         
         <div className="mb-6">
-          <h3 className="text-lg font-medium mb-4 text-center">
+          <h3 className="text-sm font-medium mb-4 text-center">
             강조하고 싶은 단어를 선택해주세요.(최대 3개)
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {keywords.map((keyword) => (
               <Badge
                 key={keyword.id}
                 variant={keyword.selected ? "default" : keyword.color}
-                className={`text-sm py-1 px-3 cursor-pointer transition-colors ${
+                className={`text-xs py-1 px-2 cursor-pointer transition-colors ${
                   keyword.selected 
-                    ? 'bg-blue-500 hover:bg-blue-600' 
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white' 
                     : 'hover:bg-gray-100'
                 }`}
                 onClick={() => handleKeywordClick(keyword.id)}
@@ -288,8 +289,16 @@ const CoverLetterAIForm = () => {
               </Badge>
             ))}
           </div>
-          <div className="text-right text-xs text-red-500 mt-2">
-            {refreshCount}/3
+          <div className="text-center text-xs text-red-500 mt-2 flex justify-center items-center">
+            <span className="mr-2">단어 새로고침 ({refreshCount}/{MAX_REFRESH_COUNT})</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefreshKeywords}
+              disabled={refreshCount >= MAX_REFRESH_COUNT}
+            >
+              <RefreshCw size={16} />
+            </Button>
           </div>
         </div>
 
