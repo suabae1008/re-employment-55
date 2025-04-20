@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Mic, MicOff, Plus, Edit2 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -7,14 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import { Badge, BadgeVariant } from "@/components/ui/badge";
 import BottomNavigation from '../components/BottomNavigation';
 
 interface Keyword {
   id: string;
   text: string;
   selected: boolean;
-  color: Badge["variant"];
+  color: BadgeVariant;
 }
 
 const INITIAL_KEYWORDS: Keyword[] = [
@@ -74,7 +75,7 @@ const CoverLetterAIForm = () => {
     const shuffledKeywords = [...INITIAL_KEYWORDS]
       .sort(() => Math.random() - 0.5)
       .map((keyword, index) => {
-        const colors: Badge["variant"][] = ["default", "secondary", "outline", "destructive"];
+        const colors: Array<"default" | "secondary" | "outline" | "destructive"> = ["default", "secondary", "outline", "destructive"];
         return { 
           ...keyword, 
           selected: false,
@@ -250,7 +251,7 @@ const CoverLetterAIForm = () => {
             <div>자기소개서에 강점 쏙!</div>
             <div>NAVI가 도와드릴게요</div>
           </div>
-          <Progress value={33} className="w-full h-2 mb-6" />
+          <Progress value={33} className="w-full h-1 mb-6" />
         </div>
       </header>
 

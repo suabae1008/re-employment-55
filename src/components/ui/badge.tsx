@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -22,6 +23,8 @@ const badgeVariants = cva(
     },
   }
 )
+
+export type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>['variant']>
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
