@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Briefcase, MapPin } from 'lucide-react';
 import { 
   Select,
@@ -69,8 +69,8 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
   ];
 
   return (
-    <div className="flex gap-2 w-full max-w-xl mx-auto mb-4">
-      <div className="flex-1 flex items-center gap-2 border rounded-full px-3 py-2 bg-white">
+    <div className="flex gap-3 w-full max-w-xl mx-auto mb-4">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
         <Briefcase size={16} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('jobType', value)}>
           <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
@@ -86,7 +86,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
         </Select>
       </div>
       
-      <div className="flex-1 flex items-center gap-2 border rounded-full px-3 py-2 bg-white">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
         <MapPin size={16} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('region', value)}>
           <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
