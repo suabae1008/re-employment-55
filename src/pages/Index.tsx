@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart, School, Sparkles, List } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import BottomNavigation from '../components/BottomNavigation';
 import JobCard from '../components/JobCard';
+import JobFilters from '../components/JobFilters'; // Add this import
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs, getEducationData } from '../services/jobService';
 import { Job } from '../components/JobList';
