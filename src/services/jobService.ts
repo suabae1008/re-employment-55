@@ -1,3 +1,71 @@
+// import axios from 'axios';
+// import { Job } from '@/types/job';
+
+// const API = 'http://localhost:3001/api/jobs';
+
+// export const fetchJobs = async (): Promise<Job[]> => {
+//   const res = await axios.get<Job[]>(API);
+//   return res.data.map((job) => ({
+//     ...job,
+//     category: job.employment_type || '기타',
+//     location: job.location || job.work_address || '',
+//   }));
+// };
+
+
+// export const getEducationData = () => {
+//   return Promise.resolve([
+//     {
+//       id: 1,
+//       title: '취업 준비 기본 교육',
+//       location: '서울시 강남구',
+//       period: '2024.05.01 ~ 2024.06.30',
+//     },
+//     {
+//       id: 2,
+//       title: '고령자를 위한 컴퓨터 기초',
+//       location: '서울시 은평구',
+//       period: '2024.04.01 ~ 2024.05.20',
+//     },
+//   ]);
+// };
+
+
+// export const getFavoriteJobs = () => {
+//   return Promise.resolve([
+//     {
+//       id: 1,
+//       title: '취업 준비 기본 교육',
+//       location: '서울시 강남구',
+//       period: '2024.05.01 ~ 2024.06.30',
+//     },
+//     {
+//       id: 2,
+//       title: '고령자를 위한 컴퓨터 기초',
+//       location: '서울시 은평구',
+//       period: '2024.04.01 ~ 2024.05.20',
+//     },
+//   ]);
+// };
+
+// export const toggleFavoriteJob = () => {
+//   return Promise.resolve([
+//     {
+//       id: 1,
+//       title: '취업 준비 기본 교육',
+//       location: '서울시 강남구',
+//       period: '2024.05.01 ~ 2024.06.30',
+//     },
+//     {
+//       id: 2,
+//       title: '고령자를 위한 컴퓨터 기초',
+//       location: '서울시 은평구',
+//       period: '2024.04.01 ~ 2024.05.20',
+//     },
+//   ]);
+// };
+
+
 import { fetchSeoulJobs } from './seoulJobsService';
 import { fetchJobsFromDB, JobDBEntry } from './supabaseClient';
 import { Job } from '../components/JobList';
