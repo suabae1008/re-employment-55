@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Download, Plus, Edit2, Trash, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,6 +29,7 @@ interface CoverLetter {
 const CoverLetter = () => {
   const [coverLetters, setCoverLetters] = useState<CoverLetter[]>([]);
   const [showEmptyState, setShowEmptyState] = useState(true);
+  const [jobCategories] = useState(['의료', '간호', '요양']);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -65,21 +67,33 @@ const CoverLetter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white py-4 px-4">
-        <div className="flex items-center mb-4">
-          <Link to="/" className="mr-4">
-            <ArrowLeft size={24} />
-          </Link>
-          <h1 className="text-xl font-bold">자기소개서</h1>
+    <div className="max-w-none w-[412px] h-[917px] flex flex-col items-center bg-white mx-auto max-md:max-w-[991px] max-sm:max-w-screen-sm">
+      <header className="flex flex-col items-start gap-3.5 w-[346px] mt-[17px]">
+        <Link to="/" className="mb-2">
+          <ArrowLeft size={24} />
+        </Link>
+        <img 
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true" 
+          alt="logo" 
+          className="w-[61px] h-[50px]" 
+        />
+        <h1 className="text-[28px] leading-10 text-black font-normal">
+          <span>더 성장하는 나,</span>
+          <br />
+          <span>나의 관심 직무는</span>
+        </h1>
+        <div className="text-[28px] leading-10 text-[#4B9FF8] font-bold">
+          {jobCategories.map(category => `#${category}`).join(' ')}
         </div>
-
-        <div className="text-center text-gray-500 border-b pb-4">
+        
+        <div className="w-[169px] h-0 border-t-[3px] border-[#D9D9D9] border-opacity-30 mt-3.5" />
+        
+        <p className="text-[15px] leading-[30px] text-[#212121]">
           자기소개서를 작성해보세요.
-        </div>
+        </p>
       </header>
 
-      <main className="px-4 py-6">
+      <main className="mt-[35px]">
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 자기소개서가 없습니다.</p>
