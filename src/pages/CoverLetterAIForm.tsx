@@ -38,10 +38,14 @@ const CoverLetterAIForm = () => {
   const [position, setPosition] = useState(jobData.position || '');
   const [keywords, setKeywords] = useState<Keyword[]>(INITIAL_KEYWORDS);
   const [refreshCount, setRefreshCount] = useState(0);
-  const [questions, setQuestions] = useState(['', '', '']);
+  const [questions, setQuestions] = useState(
+    location.state?.questions || [
+      '지원 동기에 대하여 말씀해주세요.',
+      '관련 경험 또는 유사 활동을 말씀해주세요.',
+      '직무 관련 강점에 대해 말씀해주세요.'
+    ]
+  );
   const [isRecording, setIsRecording] = useState(Array(3).fill(false));
-  const [customQuestions, setCustomQuestions] = useState<string[]>([]);
-  const [isEditingQuestions, setIsEditingQuestions] = useState(false);
   const navigate = useNavigate();
   
   const recognitionRefs = useRef<(SpeechRecognition | null)[]>([null, null, null]);
@@ -202,24 +206,8 @@ const CoverLetterAIForm = () => {
     }, 2000);
   };
   
-  const addCustomQuestion = () => {
-    setCustomQuestions(prev => [...prev, '']);
-  };
-
-  const updateCustomQuestion = (index: number, value: string) => {
-    setCustomQuestions(prev => {
-      const updated = [...prev];
-      updated[index] = value;
-      return updated;
-    });
-  };
-
-  const removeCustomQuestion = (index: number) => {
-    setCustomQuestions(prev => prev.filter((_, i) => i !== index));
-  };
-
   const handleEditQuestions = () => {
-    setIsEditingQuestions(!isEditingQuestions);
+    navigate('/cover-letter/questions/edit', { state: { questions } });
   };
 
   React.useEffect(() => {
@@ -310,19 +298,7 @@ const CoverLetterAIForm = () => {
             <Card key={index} className="relative">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-sm text-gray-600">
-                    {questionPlaceholders[index]}
-                  </h3>
-                  {isEditingQuestions && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeCustomQuestion(index)}
-                      className="h-8 w-8"
-                    >
-                      <Edit2 size={16} />
-                    </Button>
-                  )}
+                  <h3 className="text-sm text-gray-600">{question}</h3>
                 </div>
                 <div className="flex gap-2">
                   <Textarea
@@ -345,45 +321,9 @@ const CoverLetterAIForm = () => {
                     )}
                   </Button>
                 </div>
-                <div className="text-right text-xs text-gray-500 mt-1">
-                  {question.length}/50
-                </div>
               </CardContent>
             </Card>
           ))}
-
-          {customQuestions.map((question, index) => (
-            <Card key={`custom-${index}`} className="relative">
-              <CardContent className="p-4">
-                <div className="flex gap-2">
-                  <Textarea
-                    placeholder="질문을 입력해주세요"
-                    value={question}
-                    onChange={(e) => updateCustomQuestion(index, e.target.value)}
-                    className="resize-none"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeCustomQuestion(index)}
-                  >
-                    <Edit2 size={16} />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {isEditingQuestions && (
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={addCustomQuestion}
-            >
-              <Plus size={16} className="mr-2" />
-              질문 추가
-            </Button>
-          )}
         </div>
 
         <div className="flex gap-3 mt-8 mb-20">
@@ -392,8 +332,7 @@ const CoverLetterAIForm = () => {
             className="flex-1"
             onClick={handleEditQuestions}
           >
-            <Edit2 size={18} className="mr-2" />
-            {isEditingQuestions ? '완료' : '질문 수정'}
+            질문 수정
           </Button>
           <Button
             className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black"
