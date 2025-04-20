@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Mic, MicOff, Plus, Edit2 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
