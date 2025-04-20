@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Mic, MicOff, RefreshCcw, PenTool } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff, Plus, Edit2 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,14 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Badge, BadgeProps } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import BottomNavigation from '../components/BottomNavigation';
 
 interface Keyword {
   id: string;
   text: string;
   selected: boolean;
-  color: BadgeProps["variant"];
+  color: Badge["variant"];
 }
 
 const INITIAL_KEYWORDS: Keyword[] = [
@@ -40,6 +40,8 @@ const CoverLetterAIForm = () => {
   const [refreshCount, setRefreshCount] = useState(0);
   const [questions, setQuestions] = useState(['', '', '']);
   const [isRecording, setIsRecording] = useState(Array(3).fill(false));
+  const [customQuestions, setCustomQuestions] = useState<string[]>([]);
+  const [isEditingQuestions, setIsEditingQuestions] = useState(false);
   const navigate = useNavigate();
   
   const recognitionRefs = useRef<(SpeechRecognition | null)[]>([null, null, null]);
@@ -72,7 +74,7 @@ const CoverLetterAIForm = () => {
     const shuffledKeywords = [...INITIAL_KEYWORDS]
       .sort(() => Math.random() - 0.5)
       .map((keyword, index) => {
-        const colors: BadgeProps["variant"][] = ["default", "secondary", "outline", "destructive"];
+        const colors: Badge["variant"][] = ["default", "secondary", "outline", "destructive"];
         return { 
           ...keyword, 
           selected: false,
@@ -200,6 +202,26 @@ const CoverLetterAIForm = () => {
     }, 2000);
   };
   
+  const addCustomQuestion = () => {
+    setCustomQuestions(prev => [...prev, '']);
+  };
+
+  const updateCustomQuestion = (index: number, value: string) => {
+    setCustomQuestions(prev => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  };
+
+  const removeCustomQuestion = (index: number) => {
+    setCustomQuestions(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleEditQuestions = () => {
+    setIsEditingQuestions(!isEditingQuestions);
+  };
+
   React.useEffect(() => {
     return () => {
       stopAllRecordings();
@@ -228,7 +250,7 @@ const CoverLetterAIForm = () => {
             <div>자기소개서에 강점 쏙!</div>
             <div>NAVI가 도와드릴게요</div>
           </div>
-          <Progress value={33} className="w-full mb-6" />
+          <Progress value={33} className="w-full h-2 mb-6" />
         </div>
       </header>
 
@@ -287,9 +309,21 @@ const CoverLetterAIForm = () => {
           {questions.map((question, index) => (
             <Card key={index} className="relative">
               <CardContent className="p-4">
-                <h3 className="text-sm text-gray-600 mb-2">
-                  {questionPlaceholders[index]}
-                </h3>
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-sm text-gray-600">
+                    {questionPlaceholders[index]}
+                  </h3>
+                  {isEditingQuestions && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeCustomQuestion(index)}
+                      className="h-8 w-8"
+                    >
+                      <Edit2 size={16} />
+                    </Button>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <Textarea
                     placeholder="간단하게 50자 이내로 입력"
@@ -317,16 +351,49 @@ const CoverLetterAIForm = () => {
               </CardContent>
             </Card>
           ))}
+
+          {customQuestions.map((question, index) => (
+            <Card key={`custom-${index}`} className="relative">
+              <CardContent className="p-4">
+                <div className="flex gap-2">
+                  <Textarea
+                    placeholder="질문을 입력해주세요"
+                    value={question}
+                    onChange={(e) => updateCustomQuestion(index, e.target.value)}
+                    className="resize-none"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeCustomQuestion(index)}
+                  >
+                    <Edit2 size={16} />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {isEditingQuestions && (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={addCustomQuestion}
+            >
+              <Plus size={16} className="mr-2" />
+              질문 추가
+            </Button>
+          )}
         </div>
 
         <div className="flex gap-3 mt-8 mb-20">
           <Button
             variant="outline"
             className="flex-1"
-            onClick={() => navigate('/cover-letter')}
+            onClick={handleEditQuestions}
           >
-            <PenTool size={18} className="mr-2" />
-            질문 수정
+            <Edit2 size={18} className="mr-2" />
+            {isEditingQuestions ? '완료' : '질문 수정'}
           </Button>
           <Button
             className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black"
