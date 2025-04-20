@@ -10,3 +10,12 @@ export interface Job {
   work_address?: string;
   [key: string]: any;
 }
+
+export interface EducationProgram {
+  id: number;
+  title: string;
+  provider: string;
+  duration: string;
+  startDate: string;
+  category: string;
+}

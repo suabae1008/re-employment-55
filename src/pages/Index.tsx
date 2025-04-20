@@ -58,6 +58,8 @@ const Index = () => {
 
   const filteredJobs = React.useMemo(() => {
     if (!jobs) return [];
+
+    console.log("!!!!:"+jobs[0].company)
     
     return jobs.filter(job => {
       const matchesJobType = jobTypeFilter === 'all' || job.category === jobTypeFilter;

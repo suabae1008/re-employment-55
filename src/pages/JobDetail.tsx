@@ -1,7 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Briefcase, Star } from 'lucide-react';
 import { Job } from '../components/JobList';
 import { getJobById, toggleFavoriteJob } from '../services/jobService';
@@ -20,44 +18,55 @@ const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [matchScore, setMatchScore] = useState(0);
   const [activeTab, setActiveTab] = useState('info');
-  
+
   const fromFavorites = location.state?.fromFavorites || false;
 
   useEffect(() => {
-    if (id) {
+    const loadJob = async () => {
+      if (!id) return;
       setLoading(true);
-      const fetchedJob = getJobById(id);
-      setJob(fetchedJob);
-      
-      if (fromFavorites) {
-        const analysis = getMockMatchAnalysis(id);
-        setMatchScore(analysis.totalScore);
+      try {
+        const fetchedJob = await getJobById(id);
+        setJob(fetchedJob);
+
+        if (fromFavorites) {
+          const analysis = getMockMatchAnalysis(id);
+          setMatchScore(analysis.totalScore);
+        }
+      } catch (err) {
+        console.error('공고 불러오기 실패:', err);
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
-    }
+    };
+
+    loadJob();
   }, [id, fromFavorites]);
 
-  const handleToggleFavorite = () => {
-    if (job) {
-      const updatedJobs = toggleFavoriteJob(job.id);
+  const handleToggleFavorite = async () => {
+    if (!job) return;
+    try {
+      const updatedJobs = await toggleFavoriteJob(job.id);
       const updatedJob = updatedJobs.find(j => j.id === job.id);
       if (updatedJob) {
         setJob(updatedJob);
         toast(updatedJob.isFavorite ? '관심 공고에 추가되었습니다' : '관심 공고에서 제거되었습니다');
       }
+    } catch (error) {
+      console.error('관심 공고 토글 실패:', error);
     }
   };
 
   const handleCreateCoverLetter = () => {
     if (job) {
-      navigate('/cover-letter/ai-create', { 
-        state: { 
+      navigate('/cover-letter/ai-create', {
+        state: {
           company: job.company,
           position: job.title
         }
@@ -125,24 +134,24 @@ const JobDetail: React.FC = () => {
 
           {fromFavorites && (
             <TabsContent value="analysis">
-              <MatchingAnalysis 
-                analysis={getMockMatchAnalysis(id as string)} 
-                onBack={() => setActiveTab('info')} 
+              <MatchingAnalysis
+                analysis={getMockMatchAnalysis(id as string)}
+                onBack={() => setActiveTab('info')}
               />
             </TabsContent>
           )}
         </Tabs>
 
         <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handleToggleFavorite} 
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleToggleFavorite}
             className="text-gray-500 hover:text-yellow-500"
           >
             <Star fill={job?.isFavorite ? 'currentColor' : 'none'} />
           </Button>
-          <Button 
+          <Button
             className="flex-1 py-3 text-lg font-medium bg-[#FFE14D] hover:bg-[#FFD700] text-black"
             onClick={() => setShowApplyDialog(true)}
           >
@@ -151,8 +160,8 @@ const JobDetail: React.FC = () => {
         </div>
       </main>
 
-      <ApplyDialog 
-        open={showApplyDialog} 
+      <ApplyDialog
+        open={showApplyDialog}
         onOpenChange={setShowApplyDialog}
         jobTitle={job.title}
         company={job.company}
@@ -165,4 +174,3 @@ const JobDetail: React.FC = () => {
 };
 
 export default JobDetail;
-

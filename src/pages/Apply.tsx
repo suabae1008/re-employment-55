@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Job } from '../components/JobList';
 import JobList from '../components/JobList';
 import BottomNavigation from '../components/BottomNavigation';
-import { fetchJobs, getJobsFromStorage, toggleFavoriteJob } from '../services/jobService';
+import { fetchJobs, toggleFavoriteJob } from '../services/jobService';
 import { toast } from 'sonner';
 
 const Apply = () => {
@@ -24,9 +24,6 @@ const Apply = () => {
         toast.success("구직정보가 업데이트 되었습니다.");
       } catch (error) {
         console.error('Failed to load jobs:', error);
-        // Fallback to local storage
-        const localJobs = getJobsFromStorage();
-        setJobs(localJobs);
         toast.error("구직정보 업데이트에 실패했습니다. 로컬 데이터를 사용합니다.");
       } finally {
         setLoading(false);
@@ -36,8 +33,8 @@ const Apply = () => {
     loadJobs();
   }, []);
 
-  const handleToggleFavorite = (jobId: string | number) => {
-    const updatedJobs = toggleFavoriteJob(jobId);
+  const handleToggleFavorite = async (jobId: number) => {
+    const updatedJobs = await toggleFavoriteJob(jobId);
     setJobs(updatedJobs);
   };
 
