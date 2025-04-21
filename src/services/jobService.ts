@@ -41,27 +41,19 @@ const convertDBJobToJobFormat = (dbJob: any): Job => {
 // Supabase 우선 전체 구직 공고 불러오기 (fetchJobs)
 export const fetchJobs = async (): Promise<Job[]> => {
   try {
-    // 1. Supabase DB에서 우선 불러오기
-    const dbJobs = await fetchJobsFromDB();
-    if (dbJobs && Array.isArray(dbJobs) && dbJobs.length > 0) {
-      console.log("Supabase 구직 공고 로드됨:", dbJobs.length);
-      const formattedJobs = dbJobs.map(convertDBJobToJobFormat);
-      // localStorage 저장도 가능: saveJobsToStorage(formattedJobs);
-      return formattedJobs;
-    }
-    // 2. 기존 백엔드/API fallback (기존 로직)
+
     const res = await axios.get<Job[]>(JOB_API);
     return res.data.map(job => ({
       ...job,
-      category: job.employment_type_name || '기타',
-      location: job.work_location || job.company_address || '서울',
-      deadline: job.closing_date || '상시채용',
-      employmentType: job.employment_type_name || '정규직',
+      category: job.employment_type || '기타',
+      location: job.location || job.work_address || '서울',
+      deadline: job.receipt_close || '상시채용',
+      employmentType: job.employment_type || '정규직',
       isFavorite: false,
-      description: job.job_description || '',
-      company: job.company_name || '',
-      title: job.job_title || '',
-      id: job.id || job.regist_no || 0,
+      description: job.description || '',
+      company: job.company || '',
+      title: job.title || '',
+      id: job.id || 0,
     }));
   } catch (error) {
     console.error('Supabase/백엔드 구직 공고 로드 실패:', error);
