@@ -63,23 +63,27 @@ const JobCard: React.FC<JobCardProps> = ({
             <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
           </div>
         ) : (
-          <div className="h-12 flex items-center">
-            <Briefcase className="text-gray-500 mr-2" size={18} />
-            <span className="text-gray-700 font-medium">{company}</span>
+          <div className="flex justify-between items-start">
+            <h3 className="font-bold text-lg line-clamp-2">{title}</h3>
+            {highlight && (
+              <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ml-2"
+                   style={{ 
+                     color: highlight.includes("D-") && parseInt(highlight.replace("D-", "")) <= 7 
+                       ? "#ea384c" : "#0EA5E9" 
+                   }}
+              >
+                {highlight}
+              </div>
+            )}
           </div>
         )}
-        <div className="space-y-2">
-          <h3 className="font-bold text-lg line-clamp-2">{title}</h3>
+        <div className="space-y-2 mt-2">
+          <div className="text-gray-500 font-medium">{company}</div>
           
           <div className="flex flex-wrap items-center gap-2 mt-1">
             {category && (
               <div className="inline-flex items-center bg-app-light-blue text-app-blue px-2 py-1 rounded-full text-xs">
                 {category}
-              </div>
-            )}
-            {highlight && (
-              <div className="inline-flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
-                {highlight}
               </div>
             )}
           </div>
