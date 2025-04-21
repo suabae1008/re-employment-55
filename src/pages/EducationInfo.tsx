@@ -37,7 +37,7 @@ const EducationInfo = () => {
                 <CardHeader>
                   <div className="flex items-center mb-2">
                     <School className="text-app-blue mr-2" size={20} />
-                    <CardTitle>{program.edc_nm}</CardTitle>
+                    <CardTitle>{program.title}</CardTitle>
                   </div>
                   <CardDescription>{program.provider}</CardDescription>
                 </CardHeader>
