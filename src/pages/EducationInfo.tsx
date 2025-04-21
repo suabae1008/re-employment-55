@@ -6,16 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getEducationData } from '../services/jobService';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import BottomNavigation from '../components/BottomNavigation';
-
-// Define the education program type
-interface EducationProgram {
-  id: number;
-  title: string;
-  provider: string;
-  duration: string;
-  startDate: string;
-  category: string;
-}
+import { EducationProgram } from '@/types/job';
 
 const EducationInfo = () => {
   const { data: educationPrograms, isLoading } = useQuery<EducationProgram[]>({
@@ -46,23 +37,23 @@ const EducationInfo = () => {
                 <CardHeader>
                   <div className="flex items-center mb-2">
                     <School className="text-app-blue mr-2" size={20} />
-                    <CardTitle>{program.title}</CardTitle>
+                    <CardTitle>{program.edc_nm}</CardTitle>
                   </div>
                   <CardDescription>{program.provider}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                      <p className="font-medium">기간</p>
-                      <p>{program.duration}</p>
+                      <p className="font-medium">상태</p>
+                      <p>{program.sttus_nm}</p>
                     </div>
                     <div>
                       <p className="font-medium">시작일</p>
-                      <p>{program.startDate}</p>
+                      <p>{program.edc_begin_de_dt}</p>
                     </div>
                     <div className="col-span-2">
                       <p className="font-medium">분야</p>
-                      <p>{program.category}</p>
+                      <p>{program.sttus_nm}</p>
                     </div>
                   </div>
                 </CardContent>

@@ -15,7 +15,7 @@ export interface EducationProgram {
   id: number;
   title: string;
   provider: string;
-  duration: string;
-  startDate: string;
-  category: string;
+  edc_begin_de_dt: string;
+  edc_end_de_dt: string;
+  sttus_nm: string;
 }

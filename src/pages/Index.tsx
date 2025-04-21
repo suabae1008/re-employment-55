@@ -56,7 +56,7 @@ const Index = () => {
   });
 
   const { data: educationPrograms } = useQuery({
-    queryKey: ["education"],
+    queryKey: ["educationPrograms"],
     queryFn: () => getEducationData(),
   });
 

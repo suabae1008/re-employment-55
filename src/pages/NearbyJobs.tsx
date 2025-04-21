@@ -46,7 +46,6 @@ const NearbyJobs = () => {
                 company={job.company}
                 location={job.location}
                 category={job.category}
-                highlight={job.highlight}
               />
             ))}
           </div>

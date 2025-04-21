@@ -67,7 +67,7 @@ export const getJobsByType = async (type: string): Promise<Job[]> => {
 
   switch (type) {
     case 'part-time':
-      return allJobs.filter(job => job.employmentType === '파트타임');
+      return allJobs.filter(job => job.employment_type?.includes('시간제'));
     case 'nearby':
       return allJobs.filter(job => job.location?.includes('서울'));
     default:
