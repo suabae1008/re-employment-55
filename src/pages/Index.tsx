@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -325,9 +326,7 @@ const Index = () => {
                       </article>
                     );
                   })
-                ) : (
-                  null
-                )}
+                ) : null}
               </div>
             )}
 
@@ -354,3 +353,4 @@ const Index = () => {
 };
 
 export default Index;
+
