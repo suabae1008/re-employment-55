@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Star, StarOff } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -18,6 +17,7 @@ export interface Job {
   isFavorite?: boolean;
   highlight?: string; // Highlight property
   detailUrl?: string; // Added detailUrl property for Seoul API
+  companyLogo?: string; // Added companyLogo property
 }
 
 interface JobListProps {

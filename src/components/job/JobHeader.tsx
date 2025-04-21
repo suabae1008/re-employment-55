@@ -1,16 +1,14 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Star, StarOff } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Job } from '../../components/JobList';
-import { toast } from 'sonner';
 
 interface JobHeaderProps {
   job: Job;
-  handleToggleFavorite: () => void;
 }
 
-const JobHeader: React.FC<JobHeaderProps> = ({ job, handleToggleFavorite }) => {
+const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
   useEffect(() => {
     // Add entrance animation when component mounts
     const header = document.querySelector('.job-header');
@@ -28,27 +26,6 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, handleToggleFavorite }) => {
           </Link>
           <h1 className="text-xl font-bold">공고 상세</h1>
         </div>
-        <button 
-          onClick={() => {
-            handleToggleFavorite();
-            toast(job.isFavorite ? '관심 공고에서 제거되었습니다' : '관심 공고에 추가되었습니다');
-            
-            // Add animation when favorited
-            const btn = document.querySelector('.favorite-btn');
-            if (btn) {
-              btn.classList.add('scale-110');
-              setTimeout(() => btn.classList.remove('scale-110'), 200);
-            }
-          }}
-          className="p-2 hover:bg-gray-100 rounded-full favorite-btn transition-transform"
-          aria-label={job.isFavorite ? "관심 공고에서 제거" : "관심 공고에 추가"}
-        >
-          {job.isFavorite ? (
-            <Star className="text-yellow-500" size={24} />
-          ) : (
-            <StarOff size={24} />
-          )}
-        </button>
       </div>
     </header>
   );

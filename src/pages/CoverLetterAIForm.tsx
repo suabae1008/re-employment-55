@@ -1,22 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Mic, MicOff, RefreshCcw, PenTool } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import {
-  Badge,
-  BadgeProps
-} from "@/components/ui/badge";
+import { Badge, BadgeVariant } from "@/components/ui/badge";
 import BottomNavigation from '../components/BottomNavigation';
 
 interface Keyword {
   id: string;
   text: string;
   selected: boolean;
-  color: BadgeProps["variant"];
+  color: BadgeVariant;
 }
 
 const INITIAL_KEYWORDS: Keyword[] = [
@@ -40,7 +38,14 @@ const CoverLetterAIForm = () => {
   const [position, setPosition] = useState(jobData.position || '');
   const [keywords, setKeywords] = useState<Keyword[]>(INITIAL_KEYWORDS);
   const [refreshCount, setRefreshCount] = useState(0);
-  const [questions, setQuestions] = useState(['', '', '']);
+  const MAX_REFRESH_COUNT = 3;
+  const [questions, setQuestions] = useState(
+    location.state?.questions || [
+      '지원 동기에 대하여 말씀해주세요.',
+      '관련 경험 또는 유사 활동을 말씀해주세요.',
+      '직무 관련 강점에 대해 말씀해주세요.'
+    ]
+  );
   const [isRecording, setIsRecording] = useState(Array(3).fill(false));
   const navigate = useNavigate();
   
@@ -66,15 +71,15 @@ const CoverLetterAIForm = () => {
   };
   
   const handleRefreshKeywords = () => {
-    if (refreshCount >= 3) {
-      toast.error("키워드는 최대 3회까지만 새로고침이 가능합니다.");
+    if (refreshCount >= MAX_REFRESH_COUNT) {
+      toast.error(`키워드는 최대 ${MAX_REFRESH_COUNT}회까지만 새로고침이 가능합니다.`);
       return;
     }
     
     const shuffledKeywords = [...INITIAL_KEYWORDS]
       .sort(() => Math.random() - 0.5)
       .map((keyword, index) => {
-        const colors: BadgeProps["variant"][] = ["default", "secondary", "outline", "destructive"];
+        const colors: Array<"default" | "secondary" | "outline" | "destructive"> = ["default", "secondary", "outline", "destructive"];
         return { 
           ...keyword, 
           selected: false,
@@ -84,7 +89,7 @@ const CoverLetterAIForm = () => {
     
     setKeywords(shuffledKeywords);
     setRefreshCount(prev => prev + 1);
-    toast.success(`키워드 새로고침 (${refreshCount + 1}/3)`);
+    toast.success(`키워드 새로고침 (${refreshCount + 1}/${MAX_REFRESH_COUNT})`);
   };
   
   const handleQuestionChange = (index: number, value: string) => {
@@ -202,6 +207,10 @@ const CoverLetterAIForm = () => {
     }, 2000);
   };
   
+  const handleEditQuestions = () => {
+    navigate('/cover-letter/questions/edit', { state: { questions } });
+  };
+
   React.useEffect(() => {
     return () => {
       stopAllRecordings();
@@ -215,90 +224,101 @@ const CoverLetterAIForm = () => {
   ];
   
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white py-4 px-4">
-        <div className="flex items-center mb-4">
-          <Link to="/cover-letter" className="mr-4">
-            <ArrowLeft size={24} />
-          </Link>
-          <h1 className="text-xl font-bold">AI 자기소개서 작성</h1>
-        </div>
-        <div className="text-center text-gray-500 border-b pb-4">
-          AI가 도와드릴게요. <span className="text-blue-500">직무 내용과 키워드를 선택해주세요!</span>
+    <div className="max-w-none w-[412px] h-[917px] flex flex-col items-center bg-white mx-auto max-md:max-w-[991px] max-sm:max-w-screen-sm">
+      <header className="w-full bg-white px-4 pt-4">
+        <Link to="/cover-letter" className="mb-4 block">
+          <ArrowLeft size={24} />
+        </Link>
+        <div className="flex flex-col items-start max-w-[351px] mx-auto">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true"
+            alt="NAVI logo"
+            className="w-[61px] h-[50px]"
+          />
+          <div className="text-2xl font-normal mt-[53px] mb-6">
+            <div>자기소개서에 강점 쏙!</div>
+            <div>NAVI가 도와드릴게요</div>
+          </div>
+          <Progress value={33} className="w-full h-1 mb-6" />
         </div>
       </header>
 
-      <main className="px-4 py-6 space-y-6">
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="company" className="block text-sm font-medium mb-1">회사명</label>
-            <Input 
-              id="company" 
-              placeholder="회사명" 
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="position" className="block text-sm font-medium mb-1">채용 직무 내용</label>
-            <Input 
-              id="position" 
-              placeholder="채용 직무" 
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-            />
-          </div>
-        </div>
-        
-        <Card>
+      <main className="w-full px-4 flex-1 overflow-y-auto">
+        <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-medium">강조하고 싶은 단어를 선택해주세요. (최대 3개)</h3>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center"
-                onClick={handleRefreshKeywords}
-                disabled={refreshCount >= 3}
-              >
-                <RefreshCcw size={16} className="mr-1" />
-                <span>{refreshCount}/3</span>
-              </Button>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {keywords.map((keyword) => (
-                <Badge 
-                  key={keyword.id} 
-                  variant={keyword.selected ? "default" : keyword.color}
-                  className={`text-sm py-1 px-3 cursor-pointer ${
-                    keyword.selected ? 'bg-blue-500 hover:bg-blue-600' : ''
-                  }`}
-                  onClick={() => handleKeywordClick(keyword.id)}
-                >
-                  {keyword.text}
-                </Badge>
-              ))}
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-600 block">회사명</label>
+                <Input 
+                  placeholder="회사명을 입력하세요" 
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block">채용 직무</label>
+                <Input 
+                  placeholder="채용 직무 내용" 
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  className="mt-2"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
         
-        <div className="space-y-5">
+        <div className="mb-6">
+          <h3 className="text-sm font-medium mb-4 text-center">
+            강조하고 싶은 단어를 선택해주세요.(최대 3개)
+          </h3>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {keywords.map((keyword) => (
+              <Badge
+                key={keyword.id}
+                variant={keyword.selected ? "default" : keyword.color}
+                className={`text-xs py-1 px-2 cursor-pointer transition-colors ${
+                  keyword.selected 
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                    : 'hover:bg-gray-100'
+                }`}
+                onClick={() => handleKeywordClick(keyword.id)}
+              >
+                {keyword.text}
+              </Badge>
+            ))}
+          </div>
+          <div className="text-center text-xs text-red-500 mt-2 flex justify-center items-center">
+            <span className="mr-2">단어 새로고침 ({refreshCount}/{MAX_REFRESH_COUNT})</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefreshKeywords}
+              disabled={refreshCount >= MAX_REFRESH_COUNT}
+            >
+              <RefreshCw size={16} />
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-6">
           {questions.map((question, index) => (
-            <Card key={index}>
+            <Card key={index} className="relative">
               <CardContent className="p-4">
-                <h3 className="font-medium text-sm mb-2">{questionPlaceholders[index]}</h3>
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-sm text-gray-600">{question}</h3>
+                </div>
                 <div className="flex gap-2">
-                  <Textarea 
-                    placeholder={`간단하게 30자 이내로 입력`}
+                  <Textarea
+                    placeholder="간단하게 50자 이내로 입력"
                     value={question}
                     onChange={(e) => handleQuestionChange(index, e.target.value)}
-                    maxLength={30}
-                    className="resize-none"
+                    maxLength={50}
+                    className="resize-none pr-10"
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     className={isRecording[index] ? "bg-red-100" : ""}
                     onClick={() => toggleRecording(index)}
@@ -310,23 +330,19 @@ const CoverLetterAIForm = () => {
                     )}
                   </Button>
                 </div>
-                <div className="text-right text-xs text-gray-500 mt-1">
-                  {question.length}/30
-                </div>
               </CardContent>
             </Card>
           ))}
         </div>
-        
-        <div className="flex gap-3 mt-8">
+
+        <div className="flex gap-3 mt-8 mb-20">
           <Button
             variant="outline"
             className="flex-1"
+            onClick={handleEditQuestions}
           >
-            <PenTool size={18} className="mr-2" />
             질문 수정
           </Button>
-          
           <Button
             className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black"
             onClick={handleGenerateCoverLetter}

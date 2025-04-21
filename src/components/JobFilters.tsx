@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Briefcase, MapPin } from 'lucide-react';
 import { 
   Select,
@@ -37,11 +37,6 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
     { value: '생산', label: '생산' },
     { value: '공공·복지', label: '공공·복지' },
     { value: '운전·운송·배송', label: '운전·운송·배송' },
-    { value: 'nursing', label: '간호/요양' },
-    { value: 'education', label: '교육/보육' },
-    { value: 'office', label: '사무직' },
-    { value: 'service', label: '서비스/판매' },
-    { value: 'labor', label: '단순노무' },
   ];
 
   const seoulDistricts = [
@@ -74,8 +69,8 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
   ];
 
   return (
-    <div className="flex gap-2 w-full max-w-xl mx-auto mb-4">
-      <div className="flex-1 flex items-center gap-2 border rounded-full px-3 py-2 bg-white">
+    <div className="flex gap-3 w-full max-w-xl mx-auto mb-4">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
         <Briefcase size={16} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('jobType', value)}>
           <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
@@ -91,7 +86,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
         </Select>
       </div>
       
-      <div className="flex-1 flex items-center gap-2 border rounded-full px-3 py-2 bg-white">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
         <MapPin size={16} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('region', value)}>
           <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">

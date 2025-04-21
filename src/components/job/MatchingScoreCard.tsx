@@ -29,7 +29,7 @@ const MatchingScoreCard: React.FC<MatchingScoreCardProps> = ({
         onClick={onShowAnalysis}
       >
         <BarChart2 size={16} className="mr-2" />
-        자세히 분석 보기
+        분석 자세히 보기
       </Button>
     </div>
   );
