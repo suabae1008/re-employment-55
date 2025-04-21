@@ -4,17 +4,11 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Job } from "../components/JobList";
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
 import JobCard from "../components/JobCard";
 import BottomNavigation from "../components/BottomNavigation";
 import { getFavoriteJobs, toggleFavoriteJob } from "../services/jobService";
 import { getMockMatchAnalysis } from "../services/matchingService";
 import Header from "@/components/Header";
-=======
-import BottomNavigation from '../components/BottomNavigation';
-import { getFavoriteJobs, toggleFavoriteJob } from '../services/jobService';
-import { getMockMatchAnalysis } from '../services/matchingService';
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
 
 const Favorites = () => {
   const [favoriteJobs, setFavoriteJobs] = useState<Job[]>([]);

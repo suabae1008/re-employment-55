@@ -60,32 +60,13 @@ const Index = () => {
     queryFn: () => getEducationData(),
   });
 
-  const handleFilterChange = (filterType: 'jobType' | 'region', value: string) => {
-    if (filterType === 'jobType') {
-      setJobTypeFilter(value);
-    } else {
-      setRegionFilter(value);
-    }
-  };
-
-  const filteredJobs = React.useMemo(() => {
-    if (!jobs) return [];
-
-    console.log("!!!!:"+jobs[0].company)
-    
-    return jobs.filter(job => {
-      const matchesJobType = jobTypeFilter === 'all' || job.category === jobTypeFilter;
-      const matchesRegion = regionFilter === 'all' || job.location?.includes(regionFilter);
-      return matchesJobType && matchesRegion;
-    });
-  }, [jobs, jobTypeFilter, regionFilter]);
-
   const handleJobCardClick = (jobId: string | number) => {
     navigate(`/job/${jobId}`);
   };
 
   return (
     <div className="bg-white min-h-screen">
+      {/* Header */}
       <header className="pt-5 px-5">
         <div className="flex justify-center">
           <img
@@ -135,7 +116,7 @@ const Index = () => {
             <img
               src={
                 activeTab === "all"
-                  ? "/buttons/building.svg"
+                  ? "/buttons/building-active.svg"
                   : "/buttons/building-active.svg"
               }
               className="w-5 h-5 object-contain"
@@ -146,9 +127,11 @@ const Index = () => {
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="px-5">
         {activeTab === "recommended" && (
           <>
+            {/* Recommendations Section */}
             <section className="mt-4">
               <h1 className="text-2xl text-gray-800 font-bold leading-10">
                 {userName}님을 위한
@@ -159,12 +142,8 @@ const Index = () => {
                 내 이력과 적합한 공고를 확인해보세요.
               </p>
 
-<<<<<<< HEAD
               {/* Job Cards */}
               <article
-=======
-              <article 
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
                 className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => handleJobCardClick(1)}
               >
@@ -209,7 +188,9 @@ const Index = () => {
               </article>
             </section>
 
+            {/* Job Categories */}
             <div className="mt-5 flex flex-col gap-2">
+              {/* Part-time Jobs */}
               <Link to="/jobs/part-time" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -230,6 +211,7 @@ const Index = () => {
                 </article>
               </Link>
 
+              {/* Nearby Jobs */}
               <Link to="/jobs/nearby" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -250,6 +232,7 @@ const Index = () => {
                 </article>
               </Link>
 
+              {/* Education Information */}
               <Link to="/education" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -272,23 +255,15 @@ const Index = () => {
 
         {activeTab === "all" && (
           <div className="mb-6">
-            <JobFilters onFilterChange={handleFilterChange} />
             <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2>
             {isLoading ? (
               <p>로딩 중...</p>
             ) : (
               <div className="space-y-4">
-<<<<<<< HEAD
                 {jobs && jobs.length > 0 ? (
                   jobs.map((job) => (
                     <article
                       key={job.id}
-=======
-                {filteredJobs && filteredJobs.length > 0 ? (
-                  filteredJobs.map((job) => (
-                    <article 
-                      key={job.id} 
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
                       className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                       onClick={() => handleJobCardClick(job.id)}
                     >
@@ -324,6 +299,7 @@ const Index = () => {
         )}
       </main>
 
+      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );

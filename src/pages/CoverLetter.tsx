@@ -36,20 +36,17 @@ interface CoverLetter {
 const CoverLetter = () => {
   const [coverLetters, setCoverLetters] = useState<CoverLetter[]>([]);
   const [showEmptyState, setShowEmptyState] = useState(true);
-  const [jobCategories] = useState(['의료', '간호', '요양']);
+  const [jobCategories] = useState(["의료", "간호", "요양"]);
   const navigate = useNavigate();
 
+  // In a real app, this would fetch from a backend
+  // Here we're just simulating for the UI demonstration
   React.useEffect(() => {
-<<<<<<< HEAD
     // Simulate checking if user has cover letters
     const hasCoverLetters = localStorage.getItem("hasCoverLetters") === "true";
-=======
-    const hasCoverLetters = localStorage.getItem('hasCoverLetters') === 'true';
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
     setShowEmptyState(!hasCoverLetters);
 
     if (hasCoverLetters) {
-<<<<<<< HEAD
       // Mock data
       setCoverLetters([
         {
@@ -60,20 +57,10 @@ const CoverLetter = () => {
           date: "2025.03.26 작성",
         },
       ]);
-=======
-      setCoverLetters([{
-        id: '1',
-        company: '방문간호사',
-        position: '주식회사웰페어스테이션',
-        title: '방문간호사 모집 공고 (파트 타임)',
-        date: '2025.03.26 작성'
-      }]);
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
     }
   }, []);
 
   const handleCreateCoverLetter = () => {
-<<<<<<< HEAD
     // Navigate to cover letter creation form
     navigate("/cover-letter/create");
   };
@@ -81,25 +68,13 @@ const CoverLetter = () => {
   const handleCreateAICoverLetter = () => {
     // Navigate to AI cover letter creation page
     navigate("/cover-letter/ai-create");
-=======
-    navigate('/cover-letter/create');
-  };
-
-  const handleCreateAICoverLetter = () => {
-    navigate('/cover-letter/ai-create');
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
   };
 
   const handleDeleteCoverLetter = (id: string) => {
-<<<<<<< HEAD
     // Remove the cover letter from the state
     setCoverLetters((prev) => prev.filter((letter) => letter.id !== id));
 
     // If no cover letters left, update the empty state and localStorage
-=======
-    setCoverLetters(prev => prev.filter(letter => letter.id !== id));
-    
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
     if (coverLetters.length <= 1) {
       localStorage.setItem("hasCoverLetters", "false");
       setShowEmptyState(true);
@@ -109,51 +84,11 @@ const CoverLetter = () => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
-      {/* <header className="bg-white py-4 px-4">
-        <div className="flex items-center mb-4">
-          <Link to="/" className="mr-4">
-            <ArrowLeft size={24} />
-          </Link>
-          <h1 className="text-xl font-bold">자기소개서</h1>
-=======
-    <div className="max-w-none w-[412px] h-[917px] flex flex-col items-center bg-white mx-auto max-md:max-w-[991px] max-sm:max-w-screen-sm">
-      <header className="flex flex-col items-start gap-3.5 w-[346px] mt-[17px]">
-        <Link to="/" className="mb-2">
-          <ArrowLeft size={24} />
-        </Link>
-        <img 
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true" 
-          alt="logo" 
-          className="w-[61px] h-[50px]" 
-        />
-        <h1 className="text-[28px] leading-10 text-black font-normal">
-          <span>더 성장하는 나,</span>
-          <br />
-          <span>나의 관심 직무는</span>
-        </h1>
-        <div className="text-[28px] leading-10 text-[#4B9FF8] font-bold">
-          {jobCategories.map(category => `#${category}`).join(' ')}
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
-        </div>
-        
-        <div className="w-[169px] h-0 border-t-[3px] border-[#D9D9D9] border-opacity-30 mt-3.5" />
-        
-        <p className="text-[15px] leading-[30px] text-[#212121]">
-          자기소개서를 작성해보세요.
-<<<<<<< HEAD
-        </div>
-      </header> */}
-
       <Header title="자기소개서" />
-=======
-        </p>
-      </header>
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
 
-      <main className="mt-[35px]">
+      {/* Main Content */}
+      <main className="px-4 py-6">
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 자기소개서가 없습니다.</p>
@@ -161,11 +96,7 @@ const CoverLetter = () => {
             <div className="w-full max-w-md flex justify-center">
               <Button
                 onClick={handleCreateAICoverLetter}
-<<<<<<< HEAD
                 className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center gap-2"
-=======
-                className="bg-[#FFE14D] hover:bg-[#FFD700] text-black rounded-full py-3 px-6 flex items-center w-full justify-center"
->>>>>>> 488dc297ee845e40a276a7309c5505940efdd7f6
               >
                 <img
                   src="/buttons/Plus.svg"
@@ -239,7 +170,7 @@ const CoverLetter = () => {
             <div className="mt-8 space-y-4 flex flex-col items-center">
               <Button
                 onClick={handleCreateAICoverLetter}
-                className="bg-[#FFE14D] hover:bg-[#FFD700] text-black rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
+                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
               >
                 <Sparkles size={20} className="mr-2" />
                 AI 자기소개서 작성하기
@@ -249,6 +180,7 @@ const CoverLetter = () => {
         )}
       </main>
 
+      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
