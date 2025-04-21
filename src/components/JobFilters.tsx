@@ -70,10 +70,10 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
 
   return (
     <div className="flex gap-3 w-full max-w-xl mx-auto mb-4">
-      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
-        <Briefcase size={16} className="text-app-blue" />
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-1 bg-white">
+        <Briefcase size={20} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('jobType', value)}>
-          <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
+          <SelectTrigger className="border-0 p-0 h-10 text-xl font-bold shadow-none focus:ring-0">
             <SelectValue placeholder="직업 선택" />
           </SelectTrigger>
           <SelectContent className="max-h-[300px] overflow-y-auto">
@@ -86,10 +86,10 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
         </Select>
       </div>
       
-      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-2 bg-white">
-        <MapPin size={16} className="text-app-blue" />
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-1 bg-white">
+        <MapPin size={20} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('region', value)}>
-          <SelectTrigger className="border-0 p-0 h-auto shadow-none focus:ring-0">
+          <SelectTrigger className="border-0 p-0 h-10 text-xl font-bold shadow-none focus:ring-0">
             <SelectValue placeholder="지역별 선택" />
           </SelectTrigger>
           <SelectContent>
@@ -106,3 +106,4 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
 };
 
 export default JobFilters;
+
