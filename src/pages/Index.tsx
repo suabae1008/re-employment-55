@@ -261,7 +261,7 @@ const Index = () => {
                       className="w-full h-[182px] object-cover"
                     />
                     <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
-                      송파구시설관리공단 주임간호사 채용
+                      송파구시설관리공단 주임간호�� 채용
                     </h3>
                   </div>
                 </article>
@@ -289,43 +289,37 @@ const Index = () => {
 
         {activeTab === "all" && (
           <div className="mb-6">
-            {/* <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2> */}
             <JobFilters onFilterChange={handleFilterChange} />
-
             {isLoading ? (
               <p>로딩 중...</p>
             ) : (
               <div className="space-y-4">
                 {filteredJobs && filteredJobs.length > 0 ? (
                   filteredJobs.map((job) => {
-                    const dDayText = job.highlight || (job.deadline ? "" : "상시채용");
+                    const dDayText = job.highlight ?? (job.deadline ? "" : "상시채용");
                     const dDayColor = getDDayColor(dDayText);
                     const deadlineText = getDeadlineText(job.deadline);
 
                     return (
                       <article
                         key={job.id}
-                        className="flex items-start border-2 border-gray-200 rounded-2xl px-6 py-4 bg-white shadow-none hover:shadow transition relative cursor-pointer"
+                        className="relative bg-white border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:shadow transition flex flex-col"
                         onClick={() => handleJobCardClick(job.id)}
                       >
-                        {/* 관심공고(별) 자리 - 추후 관심 기능 붙일 때 */}
-                        {/* <Star className="absolute left-4 top-4 text-yellow-400" /> */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between">
-                            <div className="flex flex-col min-w-0">
-                              <h2 className="text-2xl font-bold text-[#222] mb-2 leading-tight break-words line-clamp-2">{job.title}</h2>
-                              <span className="text-xl text-gray-400 font-semibold leading-none break-words">{job.company}</span>
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1 min-w-0">
+                            <h2 className="text-lg font-bold text-[#222] leading-snug break-words mb-1 line-clamp-2">
+                              {job.title}
+                            </h2>
+                            <div className="text-base text-gray-400 font-semibold break-words leading-tight">
+                              {job.company}
                             </div>
-                            <div className={`ml-4 flex flex-col items-end mt-0`}>
-                              <span className={`text-2xl font-bold ${dDayColor} ml-2`}>
-                                {dDayText}
-                              </span>
-                              {deadlineText && (
-                                <span className="text-lg text-gray-300 font-bold mt-3">
-                                  {deadlineText}
-                                </span>
-                              )}
-                            </div>
+                          </div>
+                          <div className="ml-2 flex flex-col items-end gap-2 min-w-[70px]">
+                            <span className={`text-base font-bold ${dDayColor}`}>{dDayText}</span>
+                            {deadlineText && (
+                              <span className="text-xs text-gray-300 font-bold">{deadlineText}</span>
+                            )}
                           </div>
                         </div>
                       </article>
