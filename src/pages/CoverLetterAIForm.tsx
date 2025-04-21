@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw, Volume2 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Badge, BadgeVariant } from "@/components/ui/badge";
 import BottomNavigation from "../components/BottomNavigation";
+import { useSpeechSynthesis } from 'react-speech-kit';
 
 interface Keyword {
   id: string;
@@ -33,6 +34,7 @@ const INITIAL_KEYWORDS: Keyword[] = [
 const CoverLetterAIForm = () => {
   const location = useLocation();
   const jobData = location.state || {};
+  const { speak, cancel, speaking } = useSpeechSynthesis();
 
   const [company, setCompany] = useState(jobData.company || "");
   const [position, setPosition] = useState(jobData.position || "");
@@ -232,6 +234,14 @@ const CoverLetterAIForm = () => {
     "관련 경험 또는 유사 활동을 말씀해주세요.",
     "직무 관련 강점에 대해 말씀해주세요.",
   ];
+  
+  const handleSpeak = (text: string) => {
+    if (speaking) {
+      cancel();
+    } else {
+      speak({ text });
+    }
+  };
 
   return (
     <div className="max-w-none w-[412px] h-[917px] flex flex-col items-center bg-white mx-auto max-md:max-w-[991px] max-sm:max-w-screen-sm">
@@ -280,9 +290,19 @@ const CoverLetterAIForm = () => {
         </Card>
 
         <div className="mb-6">
-          <h3 className="text-sm mb-4 text-start font-bold">
-            강조하고 싶은 단어를 선택해주세요.(최대 3개)
-          </h3>
+          <div className="flex items-center mb-4">
+            <h3 className="text-sm text-start font-bold mr-2">
+              강조하고 싶은 단어를 선택해주세요.(최대 3개)
+            </h3>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-6 w-6 rounded-md bg-white border border-gray-200 hover:bg-gray-100"
+              onClick={() => handleSpeak("강조하고 싶은 단어를 선택해주세요. 최대 3개")}
+            >
+              <Volume2 size={14} className="text-blue-500" />
+            </Button>
+          </div>
           <div className="flex flex-wrap gap-2 justify-start">
             {keywords.map((keyword) => (
               <Badge
@@ -319,9 +339,19 @@ const CoverLetterAIForm = () => {
             <Card key={index} className="relative">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-sm font-bold text-black">
-                    {questionPlaceholders[index]}
-                  </h3>
+                  <div className="flex items-center">
+                    <h3 className="text-sm font-bold text-black mr-2">
+                      {questionPlaceholders[index]}
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 rounded-md bg-white border border-gray-200 hover:bg-gray-100"
+                      onClick={() => handleSpeak(questionPlaceholders[index])}
+                    >
+                      <Volume2 size={14} className="text-blue-500" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Textarea
