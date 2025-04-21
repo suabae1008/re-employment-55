@@ -70,7 +70,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
 
   return (
     <div className="flex gap-3 w-full max-w-xl mx-auto mb-4">
-      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-1 bg-white">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-5 py-2 bg-white h-10">
         <Briefcase size={20} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('jobType', value)}>
           <SelectTrigger className="border-0 p-0 h-10 text-xl font-bold shadow-none focus:ring-0">
@@ -86,7 +86,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
         </Select>
       </div>
       
-      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-3 py-1 bg-white">
+      <div className="flex-1 flex items-center gap-2 border-2 border-gray-300 rounded-full px-5 py-2 bg-white h-10">
         <MapPin size={20} className="text-app-blue" />
         <Select onValueChange={(value) => onFilterChange('region', value)}>
           <SelectTrigger className="border-0 p-0 h-10 text-xl font-bold shadow-none focus:ring-0">
