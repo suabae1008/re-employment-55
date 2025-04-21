@@ -79,6 +79,33 @@ const Index = () => {
       )
     : [];
 
+  function getDDayColor(highlight: string | undefined) {
+    if (!highlight || highlight === "상시채용") return "text-[#0EA5E9]";
+    if (/^D-(\d+)/.test(highlight)) {
+      const n = Number(highlight.replace("D-", ""));
+      if (!isNaN(n) && n <= 7) return "text-[#ea384c]";
+      return "text-[#0EA5E9]";
+    }
+    return "text-[#0EA5E9]";
+  }
+
+  function getDeadlineText(deadline: string | undefined) {
+    if (!deadline || deadline === "상시채용") return "";
+    try {
+      const date = new Date(deadline);
+      if (!isNaN(date.getTime())) {
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const weekDayNames = ["일", "월", "화", "수", "목", "금", "토"];
+        const weekDay = weekDayNames[date.getDay()];
+        return `~${month}/${day}(${weekDay})`;
+      }
+    } catch {
+      return "";
+    }
+    return "";
+  }
+
   return (
     <div className="bg-white min-h-screen">
       <header className="pt-5 px-5">
@@ -270,33 +297,40 @@ const Index = () => {
             ) : (
               <div className="space-y-4">
                 {filteredJobs && filteredJobs.length > 0 ? (
-                  filteredJobs.map((job) => (
-                    <article
-                      key={job.id}
-                      className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => handleJobCardClick(job.id)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <h3 className="text-base text-gray-600 font-bold">
-                          {job.company}
-                        </h3>
-                      </div>
-                      <div className="flex justify-between items-center mt-2">
-                        <h2 className="text-xl text-gray-900 font-bold">
-                          {job.title}
-                        </h2>
-                        {job.highlight ? (
-                          <span className="text-lg font-bold text-red-600">
-                            {job.highlight}
-                          </span>
-                        ) : (
-                          <span className="text-lg font-bold text-app-blue">
-                            상시채용
-                          </span>
-                        )}
-                      </div>
-                    </article>
-                  ))
+                  filteredJobs.map((job) => {
+                    const dDayText = job.highlight || (job.deadline ? "" : "상시채용");
+                    const dDayColor = getDDayColor(dDayText);
+                    const deadlineText = getDeadlineText(job.deadline);
+
+                    return (
+                      <article
+                        key={job.id}
+                        className="flex items-start border-2 border-gray-200 rounded-2xl px-6 py-4 bg-white shadow-none hover:shadow transition relative cursor-pointer"
+                        onClick={() => handleJobCardClick(job.id)}
+                      >
+                        {/* 관심공고(별) 자리 - 추후 관심 기능 붙일 때 */}
+                        {/* <Star className="absolute left-4 top-4 text-yellow-400" /> */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between">
+                            <div className="flex flex-col min-w-0">
+                              <h2 className="text-2xl font-bold text-[#222] mb-2 leading-tight break-words line-clamp-2">{job.title}</h2>
+                              <span className="text-xl text-gray-400 font-semibold leading-none break-words">{job.company}</span>
+                            </div>
+                            <div className={`ml-4 flex flex-col items-end mt-0`}>
+                              <span className={`text-2xl font-bold ${dDayColor} ml-2`}>
+                                {dDayText}
+                              </span>
+                              {deadlineText && (
+                                <span className="text-lg text-gray-300 font-bold mt-3">
+                                  {deadlineText}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })
                 ) : (
                   null
                 )}
