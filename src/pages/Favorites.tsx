@@ -114,7 +114,7 @@ const Favorites = () => {
                   </div>
                 </Link>
                 <button
-                  className="absolute top-1/2 -translate-y-1/2 left-3 text-yellow-500"
+                  className="absolute top-1/2 -translate-y-1/2 left-3 bg-[#FFE376]"
                   onClick={() => handleToggleFavorite(job.id)}
                   aria-label="관심 공고에서 제거"
                 >

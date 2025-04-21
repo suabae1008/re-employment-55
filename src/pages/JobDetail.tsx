@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Briefcase, Star } from 'lucide-react';
-import { Job } from '../components/JobList';
-import { getJobById, toggleFavoriteJob } from '../services/jobService';
-import { getMockMatchAnalysis } from '../services/matchingService';
-import BottomNavigation from '../components/BottomNavigation';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Briefcase, Star } from "lucide-react";
+import { Job } from "../components/JobList";
+import { getJobById, toggleFavoriteJob } from "../services/jobService";
+import { getMockMatchAnalysis } from "../services/matchingService";
+import BottomNavigation from "../components/BottomNavigation";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MatchingAnalysis from '../components/MatchingAnalysis';
-import JobHeader from '../components/job/JobHeader';
-import JobInfo from '../components/job/JobInfo';
-import JobDescription from '../components/job/JobDescription';
-import ApplyDialog from '../components/job/ApplyDialog';
+import MatchingAnalysis from "../components/MatchingAnalysis";
+import JobHeader from "../components/job/JobHeader";
+import JobInfo from "../components/job/JobInfo";
+import JobDescription from "../components/job/JobDescription";
+import ApplyDialog from "../components/job/ApplyDialog";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ const JobDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [matchScore, setMatchScore] = useState(0);
-  const [activeTab, setActiveTab] = useState('info');
+  const [activeTab, setActiveTab] = useState("info");
 
   const fromFavorites = location.state?.fromFavorites || false;
 
@@ -40,7 +40,7 @@ const JobDetail: React.FC = () => {
           setMatchScore(analysis.totalScore);
         }
       } catch (err) {
-        console.error('공고 불러오기 실패:', err);
+        console.error("공고 불러오기 실패:", err);
       } finally {
         setLoading(false);
       }
@@ -53,23 +53,27 @@ const JobDetail: React.FC = () => {
     if (!job) return;
     try {
       const updatedJobs = await toggleFavoriteJob(job.id);
-      const updatedJob = updatedJobs.find(j => j.id === job.id);
+      const updatedJob = updatedJobs.find((j) => j.id === job.id);
       if (updatedJob) {
         setJob(updatedJob);
-        toast(updatedJob.isFavorite ? '관심 공고에 추가되었습니다' : '관심 공고에서 제거되었습니다');
+        toast(
+          updatedJob.isFavorite
+            ? "관심 공고에 추가되었습니다"
+            : "관심 공고에서 제거되었습니다"
+        );
       }
     } catch (error) {
-      console.error('관심 공고 토글 실패:', error);
+      console.error("관심 공고 토글 실패:", error);
     }
   };
 
   const handleCreateCoverLetter = () => {
     if (job) {
-      navigate('/cover-letter/ai-create', {
+      navigate("/cover-letter/ai-create", {
         state: {
           company: job.company,
-          position: job.title
-        }
+          position: job.title,
+        },
       });
     }
   };
@@ -113,17 +117,25 @@ const JobDetail: React.FC = () => {
             </div>
             <h2 className="text-2xl font-bold mb-2">모집 공고문</h2>
             <p className="text-gray-600">
-              공고에 대한 상세 내용입니다. 
-              맞춤형 분석 탭에서 자세한 내용을 확인해보세요.
+              공고에 대한 상세 내용입니다. 맞춤형 분석 탭에서 자세한 내용을
+              확인해보세요.
             </p>
           </div>
         )}
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="w-full">
-            <TabsTrigger value="info" className="flex-1">공고 정보</TabsTrigger>
+            <TabsTrigger value="info" className="flex-1">
+              공고 정보
+            </TabsTrigger>
             {fromFavorites && (
-              <TabsTrigger value="analysis" className="flex-1">맞춤형 분석</TabsTrigger>
+              <TabsTrigger value="analysis" className="flex-1">
+                맞춤형 분석
+              </TabsTrigger>
             )}
           </TabsList>
 
@@ -136,7 +148,7 @@ const JobDetail: React.FC = () => {
             <TabsContent value="analysis">
               <MatchingAnalysis
                 analysis={getMockMatchAnalysis(id as string)}
-                onBack={() => setActiveTab('info')}
+                onBack={() => setActiveTab("info")}
               />
             </TabsContent>
           )}
@@ -147,15 +159,16 @@ const JobDetail: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={handleToggleFavorite}
-            className="text-gray-500 hover:text-yellow-500"
+            className="text-gray-500 hover:bg-[#FFE376]"
           >
-            <Star fill={job?.isFavorite ? 'currentColor' : 'none'} />
+            <Star fill={job?.isFavorite ? "currentColor" : "none"} />
           </Button>
           <Button
-            className="flex-1 py-3 text-lg font-medium bg-[#FFE14D] hover:bg-[#FFD700] text-black"
+            className="flex-1 py-3 text-lg font-medium bg-[#FFE376] hover:bg-[#FFE376] text-black"
             onClick={() => setShowApplyDialog(true)}
           >
-            지원하기 <Briefcase className="ml-2" />
+            <Briefcase className="ml-2" />
+            지원하기
           </Button>
         </div>
       </main>

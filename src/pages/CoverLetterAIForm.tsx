@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from "react";
+import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Badge, BadgeVariant } from "@/components/ui/badge";
-import BottomNavigation from '../components/BottomNavigation';
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Keyword {
   id: string;
@@ -18,49 +18,52 @@ interface Keyword {
 }
 
 const INITIAL_KEYWORDS: Keyword[] = [
-  { id: '1', text: '위기 대처 능력', selected: false, color: "default" },
-  { id: '2', text: '의사소통 능력', selected: false, color: "secondary" },
-  { id: '3', text: '협업 능력', selected: false, color: "default" },
-  { id: '4', text: '문제해결 능력', selected: false, color: "secondary" },
-  { id: '5', text: '도전정신', selected: false, color: "outline" },
-  { id: '6', text: '책임감', selected: false, color: "destructive" },
-  { id: '7', text: '성실함', selected: false, color: "default" },
-  { id: '8', text: '리더십', selected: false, color: "secondary" },
-  { id: '9', text: '창의성', selected: false, color: "outline" },
-  { id: '10', text: '전문성', selected: false, color: "destructive" },
+  { id: "1", text: "위기 대처 능력", selected: false, color: "default" },
+  { id: "2", text: "의사소통 능력", selected: false, color: "secondary" },
+  { id: "3", text: "협업 능력", selected: false, color: "default" },
+  { id: "4", text: "문제해결 능력", selected: false, color: "secondary" },
+  { id: "5", text: "도전정신", selected: false, color: "outline" },
+  { id: "6", text: "책임감", selected: false, color: "destructive" },
+  { id: "7", text: "성실함", selected: false, color: "default" },
+  { id: "8", text: "리더십", selected: false, color: "secondary" },
+  { id: "9", text: "창의성", selected: false, color: "outline" },
+  { id: "10", text: "전문성", selected: false, color: "destructive" },
 ];
 
 const CoverLetterAIForm = () => {
   const location = useLocation();
   const jobData = location.state || {};
-  
-  const [company, setCompany] = useState(jobData.company || '');
-  const [position, setPosition] = useState(jobData.position || '');
+
+  const [company, setCompany] = useState(jobData.company || "");
+  const [position, setPosition] = useState(jobData.position || "");
   const [keywords, setKeywords] = useState<Keyword[]>(INITIAL_KEYWORDS);
   const [refreshCount, setRefreshCount] = useState(0);
   const MAX_REFRESH_COUNT = 3;
-  const [questions, setQuestions] = useState(
-    location.state?.questions || [
-      '지원 동기에 대하여 말씀해주세요.',
-      '관련 경험 또는 유사 활동을 말씀해주세요.',
-      '직무 관련 강점에 대해 말씀해주세요.'
-    ]
-  );
+  // const [questions, setQuestions] = useState(
+  //   location.state?.questions || [
+  //     "지원 동기에 대하여 말씀해주세요.",
+  //     "관련 경험 또는 유사 활동을 말씀해주세요.",
+  //     "직무 관련 강점에 대해 말씀해주세요.",
+  //   ]
+  // );
   const [isRecording, setIsRecording] = useState(Array(3).fill(false));
   const navigate = useNavigate();
-  
-  const recognitionRefs = useRef<(SpeechRecognition | null)[]>([null, null, null]);
-  
+
+  const recognitionRefs = useRef<(SpeechRecognition | null)[]>([
+    null,
+    null,
+    null,
+  ]);
+
   const handleKeywordClick = (id: string) => {
-    const selectedCount = keywords.filter(k => k.selected).length;
-    
-    setKeywords(prevKeywords => 
-      prevKeywords.map(keyword => {
+    const selectedCount = keywords.filter((k) => k.selected).length;
+
+    setKeywords((prevKeywords) =>
+      prevKeywords.map((keyword) => {
         if (keyword.id === id) {
           if (keyword.selected) {
             return { ...keyword, selected: false };
-          } 
-          else if (selectedCount < 3) {
+          } else if (selectedCount < 3) {
             return { ...keyword, selected: true };
           }
           return keyword;
@@ -69,102 +72,109 @@ const CoverLetterAIForm = () => {
       })
     );
   };
-  
+
   const handleRefreshKeywords = () => {
     if (refreshCount >= MAX_REFRESH_COUNT) {
-      toast.error(`키워드는 최대 ${MAX_REFRESH_COUNT}회까지만 새로고침이 가능합니다.`);
+      toast.error(
+        `키워드는 최대 ${MAX_REFRESH_COUNT}회까지만 새로고침이 가능합니다.`
+      );
       return;
     }
-    
+
     const shuffledKeywords = [...INITIAL_KEYWORDS]
       .sort(() => Math.random() - 0.5)
       .map((keyword, index) => {
-        const colors: Array<"default" | "secondary" | "outline" | "destructive"> = ["default", "secondary", "outline", "destructive"];
-        return { 
-          ...keyword, 
+        const colors: Array<
+          "default" | "secondary" | "outline" | "destructive"
+        > = ["default", "secondary", "outline", "destructive"];
+        return {
+          ...keyword,
           selected: false,
-          color: colors[index % colors.length] 
+          color: colors[index % colors.length],
         };
       });
-    
+
     setKeywords(shuffledKeywords);
-    setRefreshCount(prev => prev + 1);
+    setRefreshCount((prev) => prev + 1);
     toast.success(`키워드 새로고침 (${refreshCount + 1}/${MAX_REFRESH_COUNT})`);
   };
-  
+
   const handleQuestionChange = (index: number, value: string) => {
     const newQuestions = [...questions];
     newQuestions[index] = value;
     setQuestions(newQuestions);
   };
-  
+
   const toggleRecording = (index: number) => {
     stopAllRecordings();
-    
+
     const newRecordingState = Array(3).fill(false);
-    
+
     if (!isRecording[index]) {
       newRecordingState[index] = true;
       startRecording(index);
     }
-    
+
     setIsRecording(newRecordingState);
   };
-  
+
   const startRecording = (index: number) => {
     try {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      
+      const SpeechRecognitionAPI =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
       if (!SpeechRecognitionAPI) {
         toast.error("음성 인식이 지원되지 않는 브라우저입니다.");
         return;
       }
-      
+
       const recognition = new SpeechRecognitionAPI();
-      recognition.lang = 'ko-KR';
+      recognition.lang = "ko-KR";
       recognition.continuous = false;
       recognition.interimResults = true;
-      
+
       recognition.onresult = (event) => {
         const transcript = Array.from(event.results)
-          .map(result => result[0].transcript)
-          .join('');
-        
+          .map((result) => result[0].transcript)
+          .join("");
+
         handleQuestionChange(index, transcript);
       };
-      
+
       recognition.onend = () => {
-        setIsRecording(prev => {
+        setIsRecording((prev) => {
           const newState = [...prev];
           newState[index] = false;
           return newState;
         });
       };
-      
+
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        console.error('Speech recognition error', event.error);
+        console.error("Speech recognition error", event.error);
         toast.error(`음성 인식 오류: ${event.error}`);
-        setIsRecording(prev => {
+        setIsRecording((prev) => {
           const newState = [...prev];
           newState[index] = false;
           return newState;
         });
       };
-      
+
       recognition.start();
       recognitionRefs.current[index] = recognition;
       toast.success("음성 인식을 시작합니다. 말씀해주세요.");
     } catch (error) {
-      console.error('Speech recognition error:', error);
+      console.error("Speech recognition error:", error);
       toast.error("음성 인식 시작 중 오류가 발생했습니다.");
-      setIsRecording(prev => {
+      setIsRecording((prev) => {
         const newState = [...prev];
         newState[index] = false;
         return newState;
       });
     }
   };
-  
+
+  const [questions, setQuestions] = useState<string[]>(["", "", ""]);
+
   const stopAllRecordings = () => {
     recognitionRefs.current.forEach((recognition, index) => {
       if (recognition) {
@@ -173,42 +183,42 @@ const CoverLetterAIForm = () => {
       }
     });
   };
-  
+
   const handleGenerateCoverLetter = () => {
     if (!company.trim()) {
       toast.error("회사명을 입력해주세요.");
       return;
     }
-    
+
     if (!position.trim()) {
       toast.error("채용 직무를 입력해주세요.");
       return;
     }
-    
+
     if (!questions[0].trim() && !questions[1].trim() && !questions[2].trim()) {
       toast.error("적어도 하나의 질문을 입력해주세요.");
       return;
     }
-    
+
     const selectedKeywords = keywords
-      .filter(k => k.selected)
-      .map(k => k.text);
-      
+      .filter((k) => k.selected)
+      .map((k) => k.text);
+
     if (selectedKeywords.length === 0) {
       toast.error("강조하고 싶은 단어를 선택해주세요.");
       return;
     }
-    
+
     toast.success("자기소개서 생성 중입니다...");
-    
+
     setTimeout(() => {
-      localStorage.setItem('hasCoverLetters', 'true');
-      navigate('/cover-letter');
+      localStorage.setItem("hasCoverLetters", "true");
+      navigate("/cover-letter");
     }, 2000);
   };
-  
+
   const handleEditQuestions = () => {
-    navigate('/cover-letter/questions/edit', { state: { questions } });
+    navigate("/cover-letter/questions/edit", { state: { questions } });
   };
 
   React.useEffect(() => {
@@ -216,13 +226,13 @@ const CoverLetterAIForm = () => {
       stopAllRecordings();
     };
   }, []);
-  
+
   const questionPlaceholders = [
     "지원 동기에 대하여 말씀해주세요.",
     "관련 경험 또는 유사 활동을 말씀해주세요.",
-    "직무 관련 강점에 대해 말씀해주세요."
+    "직무 관련 강점에 대해 말씀해주세요.",
   ];
-  
+
   return (
     <div className="max-w-none w-[412px] h-[917px] flex flex-col items-center bg-white mx-auto max-md:max-w-[991px] max-sm:max-w-screen-sm">
       <header className="w-full bg-white px-4 pt-4">
@@ -249,8 +259,8 @@ const CoverLetterAIForm = () => {
             <div className="space-y-4">
               <div>
                 <label className="text-sm text-gray-600 block">회사명</label>
-                <Input 
-                  placeholder="회사명을 입력하세요" 
+                <Input
+                  placeholder="회사명을 입력하세요"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   className="mt-2"
@@ -258,8 +268,8 @@ const CoverLetterAIForm = () => {
               </div>
               <div>
                 <label className="text-sm text-gray-600 block">채용 직무</label>
-                <Input 
-                  placeholder="채용 직무 내용" 
+                <Input
+                  placeholder="채용 직무 내용"
                   value={position}
                   onChange={(e) => setPosition(e.target.value)}
                   className="mt-2"
@@ -268,20 +278,20 @@ const CoverLetterAIForm = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <div className="mb-6">
-          <h3 className="text-sm font-medium mb-4 text-center">
+          <h3 className="text-sm mb-4 text-start font-bold">
             강조하고 싶은 단어를 선택해주세요.(최대 3개)
           </h3>
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-2 justify-start">
             {keywords.map((keyword) => (
               <Badge
                 key={keyword.id}
                 variant={keyword.selected ? "default" : keyword.color}
-                className={`text-xs py-1 px-2 cursor-pointer transition-colors ${
-                  keyword.selected 
-                    ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                    : 'hover:bg-gray-100'
+                className={`text-xs py-1 px-2 cursor-pointer transition-colors border rounded-full ${
+                  keyword.selected
+                    ? "bg-blue-500 text-white border-blue-500 hover:bg-blue-600"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
                 }`}
                 onClick={() => handleKeywordClick(keyword.id)}
               >
@@ -290,10 +300,12 @@ const CoverLetterAIForm = () => {
             ))}
           </div>
           <div className="text-center text-xs text-red-500 mt-2 flex justify-center items-center">
-            <span className="mr-2">단어 새로고침 ({refreshCount}/{MAX_REFRESH_COUNT})</span>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <span className="mr-2">
+              단어 새로고침 ({refreshCount}/{MAX_REFRESH_COUNT})
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleRefreshKeywords}
               disabled={refreshCount >= MAX_REFRESH_COUNT}
             >
@@ -303,17 +315,21 @@ const CoverLetterAIForm = () => {
         </div>
 
         <div className="space-y-6">
-          {questions.map((question, index) => (
+          {questions.map((answer, index) => (
             <Card key={index} className="relative">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-sm text-gray-600">{question}</h3>
+                  <h3 className="text-sm font-bold text-black">
+                    {questionPlaceholders[index]}
+                  </h3>
                 </div>
                 <div className="flex gap-2">
                   <Textarea
-                    placeholder="간단하게 50자 이내로 입력"
-                    value={question}
-                    onChange={(e) => handleQuestionChange(index, e.target.value)}
+                    placeholder="50자 이내로 입력하세요"
+                    value={answer}
+                    onChange={(e) =>
+                      handleQuestionChange(index, e.target.value)
+                    }
                     maxLength={50}
                     className="resize-none pr-10"
                   />

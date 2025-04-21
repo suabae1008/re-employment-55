@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { createResume } from '../services/resumeService';
-import { PersonalInfoForm } from '../components/resume/PersonalInfoForm';
-import { EducationForm } from '../components/resume/EducationForm';
-import { ExperienceForm } from '../components/resume/ExperienceForm';
-import { SkillsForm } from '../components/resume/SkillsForm';
-import ResumePreview from '../components/ResumePreview';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
+import { createResume } from "../services/resumeService";
+import { PersonalInfoForm } from "../components/resume/PersonalInfoForm";
+import { EducationForm } from "../components/resume/EducationForm";
+import { ExperienceForm } from "../components/resume/ExperienceForm";
+import { SkillsForm } from "../components/resume/SkillsForm";
+import ResumePreview from "../components/ResumePreview";
+import Header from "@/components/Header";
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("personal");
   const [showPreview, setShowPreview] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,7 +29,7 @@ const ResumeForm: React.FC = () => {
     postcode: "",
     address: "",
     addressDetail: "",
-    
+
     isVeteran: false,
     veteranType: "",
     veteranDocument: null,
@@ -33,7 +39,7 @@ const ResumeForm: React.FC = () => {
     isVulnerable: false,
     vulnerableType: "",
     vulnerableDocument: null,
-    
+
     highestEducation: "대학교",
     highSchool: "",
     highSchoolMajor: "",
@@ -50,7 +56,7 @@ const ResumeForm: React.FC = () => {
     gradSchoolMajor: "",
     gradSchoolGPA: "",
     gradSchoolGradYear: "",
-    
+
     company1: "",
     position1: "",
     period1: "",
@@ -59,9 +65,9 @@ const ResumeForm: React.FC = () => {
     position2: "",
     period2: "",
     description2: "",
-    
+
     skills: "",
-    
+
     experiences: [
       {
         companyName: "",
@@ -73,17 +79,19 @@ const ResumeForm: React.FC = () => {
         startMonth: "",
         endYear: "",
         endMonth: "",
-        responsibilities: ""
-      }
+        responsibilities: "",
+      },
     ],
-    
-    certificates: [{
-      name: "",
-      grade: "",
-      issueDate: "",
-      organization: ""
-    }],
-    
+
+    certificates: [
+      {
+        name: "",
+        grade: "",
+        issueDate: "",
+        organization: "",
+      },
+    ],
+
     computerSkills: {
       documentCreation: false,
       spreadsheet: false,
@@ -91,11 +99,11 @@ const ResumeForm: React.FC = () => {
       accounting: false,
       other: "",
     },
-    
+
     drivingAbility: {
       license: false,
       vehicle: false,
-    }
+    },
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -110,32 +118,35 @@ const ResumeForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (formErrors[name as keyof typeof formErrors]) {
-      setFormErrors(prev => ({ ...prev, [name]: false }));
+      setFormErrors((prev) => ({ ...prev, [name]: false }));
     }
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddressComplete = (data: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       postcode: data.zonecode,
       address: data.address,
     }));
-    setFormErrors(prev => ({ ...prev, address: false }));
+    setFormErrors((prev) => ({ ...prev, address: false }));
   };
 
   const handleCheckboxChange = (name: string) => {
-    setFormData(prev => ({ ...prev, [name]: !prev[name] }));
+    setFormData((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: string
+  ) => {
     const file = e.target.files?.[0] || null;
-    setFormData(prev => ({ ...prev, [fieldName]: file }));
+    setFormData((prev) => ({ ...prev, [fieldName]: file }));
   };
 
   const validateBasicInfo = () => {
@@ -148,9 +159,9 @@ const ResumeForm: React.FC = () => {
       birthDay: !formData.birthDay,
       address: !formData.address,
     };
-    
+
     setFormErrors(errors);
-    return !Object.values(errors).some(error => error);
+    return !Object.values(errors).some((error) => error);
   };
 
   const handleTabChange = (value: string) => {
@@ -166,9 +177,9 @@ const ResumeForm: React.FC = () => {
     try {
       const resumeData = Object.values(formData) as string[];
       await createResume(resumeData);
-      navigate('/resume');
+      navigate("/resume");
     } catch (error) {
-      console.error('Error creating resume:', error);
+      console.error("Error creating resume:", error);
     }
   };
 
@@ -176,8 +187,8 @@ const ResumeForm: React.FC = () => {
     if (activeTab === "personal" && !validateBasicInfo()) {
       return;
     }
-    
-    switch(activeTab) {
+
+    switch (activeTab) {
       case "personal":
         setActiveTab("education");
         break;
@@ -196,7 +207,7 @@ const ResumeForm: React.FC = () => {
   };
 
   const handlePrevious = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case "education":
         setActiveTab("personal");
         break;
@@ -212,7 +223,7 @@ const ResumeForm: React.FC = () => {
   };
 
   const addNewExperience = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       experiences: [
         ...prev.experiences,
@@ -226,20 +237,25 @@ const ResumeForm: React.FC = () => {
           startMonth: "",
           endYear: "",
           endMonth: "",
-          responsibilities: ""
-        }
-      ]
+          responsibilities: "",
+        },
+      ],
     }));
   };
 
   const deleteExperience = (indexToDelete: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      experiences: prev.experiences.filter((_, index) => index !== indexToDelete)
+      experiences: prev.experiences.filter(
+        (_, index) => index !== indexToDelete
+      ),
     }));
   };
 
-  const years = Array.from({ length: 86 }, (_, i) => new Date().getFullYear() - 15 - i).reverse();
+  const years = Array.from(
+    { length: 86 },
+    (_, i) => new Date().getFullYear() - 15 - i
+  ).reverse();
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -251,28 +267,26 @@ const ResumeForm: React.FC = () => {
     "영업",
     "인사",
     "회계",
-    "직접 입력"
+    "직접 입력",
   ];
 
-  const contractTypes = [
-    "정규직",
-    "계약직",
-    "인턴",
-    "파견직",
-    "프리랜서"
-  ];
+  const contractTypes = ["정규직", "계약직", "인턴", "파견직", "프리랜서"];
 
-  const handleExperienceChange = (index: number, field: string, value: string) => {
-    setFormData(prev => ({
+  const handleExperienceChange = (
+    index: number,
+    field: string,
+    value: string
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      experiences: prev.experiences.map((exp, i) => 
+      experiences: prev.experiences.map((exp, i) =>
         i === index ? { ...exp, [field]: value } : exp
-      )
+      ),
     }));
   };
 
   const addCertificate = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       certificates: [
         ...prev.certificates,
@@ -280,32 +294,32 @@ const ResumeForm: React.FC = () => {
           name: "",
           grade: "",
           issueDate: "",
-          organization: ""
-        }
-      ]
+          organization: "",
+        },
+      ],
     }));
   };
 
   const updateCertificate = (index: number, field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      certificates: prev.certificates.map((cert, i) => 
+      certificates: prev.certificates.map((cert, i) =>
         i === index ? { ...cert, [field]: value } : cert
-      )
+      ),
     }));
   };
 
   const deleteCertificate = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      certificates: prev.certificates.filter((_, i) => i !== index)
+      certificates: prev.certificates.filter((_, i) => i !== index),
     }));
   };
 
   if (showPreview) {
     return (
-      <ResumePreview 
-        formData={formData} 
+      <ResumePreview
+        formData={formData}
         onEdit={() => setShowPreview(false)}
         onSubmit={handleSubmit}
       />
@@ -314,33 +328,44 @@ const ResumeForm: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b">
-        <div className="max-w-[800px] mx-auto">
+      <Header title="이력서" />
+      {/* <header className="bg-white py-6 px-6 sticky top-0 z-10 shadow-sm border-b"> */}
+      {/* <div className="max-w-[800px] mx-auto">
           <div className="flex flex-col items-start">
-            <img 
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true" 
-              className="w-[61px] h-[50px] mb-2.5" 
-              alt="Logo" 
-            />
-            <h1 className="text-[28px] text-black mb-2.5">김현숙님,</h1>
-            <p className="text-[15px] text-[#5A5A5A]">기본 정보를 확인해주세요.</p>
-          </div>
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f50b1e03a1fea690ea1c5626170f7597a96442e?placeholderIfAbsent=true"
+              className="w-[61px] h-[50px] mb-2.5"
+              alt="Logo"
+            /> */}
+      {/* <h1 className="text-[28px] text-black mb-2.5">김현숙님,</h1>
+            <p className="text-[15px] text-[#5A5A5A]">
+              기본 정보를 확인해주세요.
+            </p> */}
+      {/* </div>
         </div>
-      </header>
+      </header> */}
 
-      <Tabs 
-        defaultValue="personal" 
-        value={activeTab} 
-        onValueChange={handleTabChange} 
+      <Tabs
+        defaultValue="personal"
+        value={activeTab}
+        onValueChange={handleTabChange}
         className="max-w-[800px] mx-auto px-6 py-8"
       >
         <TabsList className="grid w-full grid-cols-4 mb-8">
-          <TabsTrigger value="personal" className="text-sm">기본 정보</TabsTrigger>
-          <TabsTrigger value="education" className="text-sm">학력 사항</TabsTrigger>
-          <TabsTrigger value="experience" className="text-sm">경력 사항</TabsTrigger>
-          <TabsTrigger value="skills" className="text-sm">자격증 & 기타</TabsTrigger>
+          <TabsTrigger value="personal" className="text-sm">
+            기본 정보
+          </TabsTrigger>
+          <TabsTrigger value="education" className="text-sm">
+            학력 사항
+          </TabsTrigger>
+          <TabsTrigger value="experience" className="text-sm">
+            경력 사항
+          </TabsTrigger>
+          <TabsTrigger value="skills" className="text-sm">
+            자격증 & 기타
+          </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="personal">
           <PersonalInfoForm
             formData={formData}
@@ -353,7 +378,7 @@ const ResumeForm: React.FC = () => {
             handleNext={handleNext}
           />
         </TabsContent>
-        
+
         <TabsContent value="education">
           <EducationForm
             formData={formData}
@@ -363,7 +388,7 @@ const ResumeForm: React.FC = () => {
             handleNext={handleNext}
           />
         </TabsContent>
-        
+
         <TabsContent value="experience">
           <ExperienceForm
             formData={formData}
@@ -374,7 +399,7 @@ const ResumeForm: React.FC = () => {
             handleNext={handleNext}
           />
         </TabsContent>
-        
+
         <TabsContent value="skills">
           <SkillsForm
             formData={formData}

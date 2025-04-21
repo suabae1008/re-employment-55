@@ -78,7 +78,7 @@ const Resume = () => {
             <p className="text-gray-500 mb-10">작성된 이력서가 없습니다.</p>
             <Button
               onClick={handleCreateResume}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center gap-2"
+              className="bg-[#FFE376] hover:bg-[#FFE376] text-black rounded-full py-3 px-6 flex items-center gap-2"
             >
               <img
                 src="/buttons/Plus.svg"
@@ -145,7 +145,7 @@ const Resume = () => {
             <div className="mt-8 flex justify-center">
               <Button
                 onClick={handleCreateResume}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
+                className="bg-[#FFE376] hover:bg-[#FFE376] text-black rounded-full py-3 px-6 flex items-center"
               >
                 <Plus size={20} className="mr-2" />새 이력서 작성하기
               </Button>

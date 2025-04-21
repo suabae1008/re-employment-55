@@ -1,13 +1,18 @@
-
-import React from 'react';
+import React from "react";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { Award, Accessibility, HandHeart, Upload } from "lucide-react";
-import { PostcodeSearch } from '../PostcodeSearch';
+import { PostcodeSearch } from "../PostcodeSearch";
 
 interface PersonalInfoFormProps {
   formData: any;
@@ -15,7 +20,10 @@ interface PersonalInfoFormProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSelectChange: (name: string, value: string) => void;
   handleCheckboxChange: (name: string) => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => void;
+  handleFileChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: string
+  ) => void;
   handleAddressComplete: (data: any) => void;
   handleNext: () => void;
 }
@@ -28,9 +36,12 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
   handleCheckboxChange,
   handleFileChange,
   handleAddressComplete,
-  handleNext
+  handleNext,
 }) => {
-  const years = Array.from({ length: 86 }, (_, i) => new Date().getFullYear() - 15 - i).reverse();
+  const years = Array.from(
+    { length: 86 },
+    (_, i) => new Date().getFullYear() - 15 - i
+  ).reverse();
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -40,14 +51,17 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="name">
+              <Label
+                htmlFor="name"
+                className="block text-sm font-bold text-black"
+              >
                 이름 <span className="text-red-500 text-xs">필수</span>
               </Label>
-              <Input 
-                id="name" 
-                name="name" 
-                placeholder="이름을 입력하세요" 
-                value={formData.name} 
+              <Input
+                id="name"
+                name="name"
+                placeholder="이름을 입력하세요"
+                value={formData.name}
                 onChange={handleChange}
                 className={formErrors.name ? "border-red-500" : ""}
               />
@@ -58,35 +72,41 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
 
             {/* Email field */}
             <div className="space-y-2">
-              <Label htmlFor="email">
+              <Label
+                htmlFor="email"
+                className="block text-sm font-bold text-black"
+              >
                 이메일 <span className="text-red-500 text-xs">필수</span>
               </Label>
-              <Input 
-                id="email" 
-                name="email" 
-                type="email" 
-                placeholder="이메일을 입력하세요" 
-                value={formData.email} 
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="이메일을 입력하세요"
+                value={formData.email}
                 onChange={handleChange}
-                className={formErrors.email ? "border-red-500" : ""} 
+                className={formErrors.email ? "border-red-500" : ""}
               />
               {formErrors.email && (
                 <p className="text-red-500 text-xs">이메일을 입력해주세요</p>
               )}
             </div>
-            
+
             {/* Phone field */}
             <div className="space-y-2">
-              <Label htmlFor="phone">
+              <Label
+                htmlFor="phone"
+                className="block text-sm font-bold text-black"
+              >
                 연락처 <span className="text-red-500 text-xs">필수</span>
               </Label>
-              <Input 
-                id="phone" 
-                name="phone" 
-                placeholder="연락처를 입력하세요" 
-                value={formData.phone} 
+              <Input
+                id="phone"
+                name="phone"
+                placeholder="연락처를 입력하세요"
+                value={formData.phone}
                 onChange={handleChange}
-                className={formErrors.phone ? "border-red-500" : ""} 
+                className={formErrors.phone ? "border-red-500" : ""}
               />
               {formErrors.phone && (
                 <p className="text-red-500 text-xs">연락처를 입력해주세요</p>
@@ -95,86 +115,109 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
 
             {/* Birth date fields */}
             <div className="space-y-2">
-              <Label>
+              <Label className="block text-sm font-bold text-black">
                 생년월일 <span className="text-red-500 text-xs">필수</span>
               </Label>
               <div className="grid grid-cols-3 gap-4">
-                <Select 
+                <Select
                   value={formData.birthYear}
-                  onValueChange={(value) => handleSelectChange("birthYear", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange("birthYear", value)
+                  }
                 >
-                  <SelectTrigger className={formErrors.birthYear ? "border-red-500" : ""}>
+                  <SelectTrigger
+                    className={formErrors.birthYear ? "border-red-500" : ""}
+                  >
                     <SelectValue placeholder="년도" />
                   </SelectTrigger>
                   <SelectContent>
-                    {years.map(year => (
-                      <SelectItem key={year} value={year.toString()}>{year}년</SelectItem>
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}년
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <Select 
+                <Select
                   value={formData.birthMonth}
-                  onValueChange={(value) => handleSelectChange("birthMonth", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange("birthMonth", value)
+                  }
                 >
-                  <SelectTrigger className={formErrors.birthMonth ? "border-red-500" : ""}>
+                  <SelectTrigger
+                    className={formErrors.birthMonth ? "border-red-500" : ""}
+                  >
                     <SelectValue placeholder="월" />
                   </SelectTrigger>
                   <SelectContent>
-                    {months.map(month => (
-                      <SelectItem key={month} value={month.toString()}>{month}월</SelectItem>
+                    {months.map((month) => (
+                      <SelectItem key={month} value={month.toString()}>
+                        {month}월
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <Select 
+                <Select
                   value={formData.birthDay}
-                  onValueChange={(value) => handleSelectChange("birthDay", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange("birthDay", value)
+                  }
                 >
-                  <SelectTrigger className={formErrors.birthDay ? "border-red-500" : ""}>
+                  <SelectTrigger
+                    className={formErrors.birthDay ? "border-red-500" : ""}
+                  >
                     <SelectValue placeholder="일" />
                   </SelectTrigger>
                   <SelectContent>
-                    {days.map(day => (
-                      <SelectItem key={day} value={day.toString()}>{day}일</SelectItem>
+                    {days.map((day) => (
+                      <SelectItem key={day} value={day.toString()}>
+                        {day}일
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              {(formErrors.birthYear || formErrors.birthMonth || formErrors.birthDay) && (
+              {(formErrors.birthYear ||
+                formErrors.birthMonth ||
+                formErrors.birthDay) && (
                 <p className="text-red-500 text-xs">생년월일을 입력해주세요</p>
               )}
             </div>
 
             {/* Address fields */}
             <div className="space-y-2">
-              <Label htmlFor="address">
+              <Label
+                htmlFor="address"
+                className="block text-sm font-bold text-black"
+              >
                 주소 <span className="text-red-500 text-xs">필수</span>
               </Label>
               <div className="space-y-2">
                 <div className="grid grid-cols-[1fr_120px] gap-2">
-                  <Input 
-                    id="postcode" 
-                    name="postcode" 
-                    placeholder="우편번호" 
-                    value={formData.postcode} 
-                    readOnly 
-                    className={formErrors.address ? "border-red-500" : ""} 
+                  <Input
+                    id="postcode"
+                    name="postcode"
+                    placeholder="우편번호"
+                    value={formData.postcode}
+                    readOnly
+                    className={formErrors.address ? "border-red-500" : ""}
                   />
                   <PostcodeSearch onComplete={handleAddressComplete} />
                 </div>
-                <Input 
-                  id="address" 
-                  name="address" 
-                  placeholder="도로명 주소" 
-                  value={formData.address} 
-                  readOnly 
-                  className={formErrors.address ? "border-red-500" : ""} 
+                <Input
+                  id="address"
+                  name="address"
+                  placeholder="도로명 주소"
+                  value={formData.address}
+                  readOnly
+                  className={formErrors.address ? "border-red-500" : ""}
                 />
-                <Input 
-                  id="addressDetail" 
-                  name="addressDetail" 
-                  placeholder="상세 주소를 입력하세요" 
-                  value={formData.addressDetail} 
-                  onChange={handleChange} 
+                <Input
+                  id="addressDetail"
+                  name="addressDetail"
+                  placeholder="상세 주소를 입력하세요"
+                  value={formData.addressDetail}
+                  onChange={handleChange}
                 />
               </div>
               {formErrors.address && (
@@ -202,7 +245,9 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                 <div className="mt-2 space-y-2">
                   <Select
                     value={formData.veteranType}
-                    onValueChange={(value) => handleSelectChange("veteranType", value)}
+                    onValueChange={(value) =>
+                      handleSelectChange("veteranType", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="보훈 종류 선택" />
@@ -210,10 +255,18 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                     <SelectContent>
                       <SelectItem value="독립유공자">독립유공자</SelectItem>
                       <SelectItem value="국가유공자">국가유공자</SelectItem>
-                      <SelectItem value="보훈보상대상자">보훈보상대상자</SelectItem>
-                      <SelectItem value="특수임무유공자">특수임무유공자</SelectItem>
-                      <SelectItem value="5.18민주유공자">5.18민주유공자</SelectItem>
-                      <SelectItem value="고엽제후유의증">고엽제후유의증</SelectItem>
+                      <SelectItem value="보훈보상대상자">
+                        보훈보상대상자
+                      </SelectItem>
+                      <SelectItem value="특수임무유공자">
+                        특수임무유공자
+                      </SelectItem>
+                      <SelectItem value="5.18민주유공자">
+                        5.18민주유공자
+                      </SelectItem>
+                      <SelectItem value="고엽제후유의증">
+                        고엽제후유의증
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <div className="flex items-center gap-2">
@@ -257,7 +310,9 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                 <div className="mt-2 space-y-2">
                   <Select
                     value={formData.disabilityType}
-                    onValueChange={(value) => handleSelectChange("disabilityType", value)}
+                    onValueChange={(value) =>
+                      handleSelectChange("disabilityType", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="장애 종류 선택" />
@@ -278,7 +333,9 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                   <div className="flex items-center gap-2">
                     <Input
                       type="file"
-                      onChange={(e) => handleFileChange(e, "disabilityDocument")}
+                      onChange={(e) =>
+                        handleFileChange(e, "disabilityDocument")
+                      }
                       className="hidden"
                       id="disabilityDocument"
                     />
@@ -307,7 +364,10 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                   checked={formData.isVulnerable}
                   onCheckedChange={() => handleCheckboxChange("isVulnerable")}
                 />
-                <Label htmlFor="isVulnerable" className="flex items-center gap-1">
+                <Label
+                  htmlFor="isVulnerable"
+                  className="flex items-center gap-1"
+                >
                   <HandHeart className="w-4 h-4" />
                   취약계층 여부
                 </Label>
@@ -316,13 +376,17 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                 <div className="mt-2 space-y-2">
                   <Select
                     value={formData.vulnerableType}
-                    onValueChange={(value) => handleSelectChange("vulnerableType", value)}
+                    onValueChange={(value) =>
+                      handleSelectChange("vulnerableType", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="취약계층 종류 선택" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="기초생활수급자">기초생활수급자</SelectItem>
+                      <SelectItem value="기초생활수급자">
+                        기초생활수급자
+                      </SelectItem>
                       <SelectItem value="차상위계층">차상위계층</SelectItem>
                       <SelectItem value="한부모가족">한부모가족</SelectItem>
                       <SelectItem value="북한이탈주민">북한이탈주민</SelectItem>
@@ -332,7 +396,9 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                   <div className="flex items-center gap-2">
                     <Input
                       type="file"
-                      onChange={(e) => handleFileChange(e, "vulnerableDocument")}
+                      onChange={(e) =>
+                        handleFileChange(e, "vulnerableDocument")
+                      }
                       className="hidden"
                       id="vulnerableDocument"
                     />
@@ -355,8 +421,8 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
           </div>
 
           <div className="flex justify-end space-x-4 mt-6">
-            <Button 
-              onClick={handleNext} 
+            <Button
+              onClick={handleNext}
               className="bg-blue-600 hover:bg-blue-700"
             >
               다음

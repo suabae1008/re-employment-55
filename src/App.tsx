@@ -1,5 +1,5 @@
 import React from "react";
-import { Toaster } from "@/components/ui/toaster";
+// import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ import EducationInfo from "./pages/EducationInfo";
 import NotFound from "./pages/NotFound";
 import ResumeForm from "./pages/ResumeForm";
 import QuestionEditPage from "./pages/QuestionEditPage";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,13 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          duration={2000}
+          offset={40}
+          richColors
+          closeButton
+        />
         <Sonner />
         <BrowserRouter>
           <Routes>
@@ -37,8 +44,14 @@ const App: React.FC = () => {
             <Route path="/resume/create" element={<ResumeForm />} />
             <Route path="/resume/edit/:id" element={<ResumeForm />} />
             <Route path="/cover-letter" element={<CoverLetter />} />
-            <Route path="/cover-letter/ai-create" element={<CoverLetterAIForm />} />
-            <Route path="/cover-letter/questions/edit" element={<QuestionEditPage />} />
+            <Route
+              path="/cover-letter/ai-create"
+              element={<CoverLetterAIForm />}
+            />
+            <Route
+              path="/cover-letter/questions/edit"
+              element={<QuestionEditPage />}
+            />
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/jobs/part-time" element={<PartTimeJobs />} />
             <Route path="/jobs/nearby" element={<NearbyJobs />} />
