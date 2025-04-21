@@ -264,7 +264,6 @@ const Index = () => {
           <div className="mb-6">
             <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2>
             <JobFilters onFilterChange={handleFilterChange} />
-            <SearchBar />
 
             {isLoading ? (
               <p>로딩 중...</p>
@@ -299,9 +298,7 @@ const Index = () => {
                     </article>
                   ))
                 ) : (
-                  <p className="text-center py-4">
-                    해당 조건의 구직 공고가 없습니다.
-                  </p>
+                  null
                 )}
               </div>
             )}
