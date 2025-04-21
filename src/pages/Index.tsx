@@ -262,7 +262,7 @@ const Index = () => {
 
         {activeTab === "all" && (
           <div className="mb-6">
-            <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2>
+            {/* <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2> */}
             <JobFilters onFilterChange={handleFilterChange} />
 
             {isLoading ? (
