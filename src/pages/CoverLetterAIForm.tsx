@@ -29,7 +29,7 @@ const INITIAL_KEYWORDS: Keyword[] = [
   { id: "9", text: "창의성", selected: false, color: "outline" },
   { id: "10", text: "전문성", selected: false, color: "destructive" },
 ];
-
+// OPENAPI 연결
 const CoverLetterAIForm = () => {
   const location = useLocation();
   const jobData = location.state || {};
