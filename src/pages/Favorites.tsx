@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Job } from '../components/JobList';
 import { Button } from "@/components/ui/button";
-import JobCard from '../components/JobCard';
 import BottomNavigation from '../components/BottomNavigation';
 import { getFavoriteJobs, toggleFavoriteJob } from '../services/jobService';
 import { getMockMatchAnalysis } from '../services/matchingService';
@@ -21,10 +20,11 @@ const Favorites = () => {
     loadFavoriteJobs();
   }, []);
 
-  const loadFavoriteJobs = () => {
+  const loadFavoriteJobs = async () => {
     try {
       setLoading(true);
-      const favorites = getFavoriteJobs();
+      // Await the Promise to get the actual favorites array
+      const favorites = await getFavoriteJobs();
       setFavoriteJobs(favorites);
       
       // Calculate match scores for each favorite job
