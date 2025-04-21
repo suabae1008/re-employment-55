@@ -16,26 +16,24 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import BottomNavigation from "../components/BottomNavigation";
 import JobCard from "../components/JobCard";
+import JobFilters from "../components/JobFilters";
+import SearchBar from "../components/SearchBar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchJobs, getEducationData } from "../services/jobService";
 import { Job } from "../components/JobList";
 import { toast } from "sonner";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"recommended" | "all">(
-    "recommended"
-  );
+  const [activeTab, setActiveTab] = useState<"recommended" | "all">("recommended");
   const [userName, setUserName] = useState<string>("김현숙");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check localStorage for user name
     const storedName = localStorage.getItem("userName");
     if (storedName) {
       setUserName(storedName);
     }
 
-    // Add event listener for name changes
     const handleStorageChange = () => {
       const updatedName = localStorage.getItem("userName");
       if (updatedName) {
@@ -64,9 +62,25 @@ const Index = () => {
     navigate(`/job/${jobId}`);
   };
 
+  const [filters, setFilters] = useState<{ jobType: string; region: string }>({
+    jobType: "all",
+    region: "all",
+  });
+
+  const handleFilterChange = (filterType: "jobType" | "region", value: string) => {
+    setFilters((prev) => ({ ...prev, [filterType]: value }));
+  };
+
+  const filteredJobs = jobs
+    ? jobs.filter(
+        (job) =>
+          (filters.jobType === "all" || job.category === filters.jobType) &&
+          (filters.region === "all" || (job.location && job.location.includes(filters.region)))
+      )
+    : [];
+
   return (
     <div className="bg-white min-h-screen">
-      {/* Header */}
       <header className="pt-5 px-5">
         <div className="flex justify-center">
           <img
@@ -127,11 +141,9 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-5">
         {activeTab === "recommended" && (
           <>
-            {/* Recommendations Section */}
             <section className="mt-4">
               <h1 className="text-2xl text-gray-800 font-bold leading-10">
                 {userName}님을 위한
@@ -142,7 +154,6 @@ const Index = () => {
                 내 이력과 적합한 공고를 확인해보세요.
               </p>
 
-              {/* Job Cards */}
               <article
                 className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => handleJobCardClick(1)}
@@ -188,9 +199,7 @@ const Index = () => {
               </article>
             </section>
 
-            {/* Job Categories */}
             <div className="mt-5 flex flex-col gap-2">
-              {/* Part-time Jobs */}
               <Link to="/jobs/part-time" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -211,7 +220,6 @@ const Index = () => {
                 </article>
               </Link>
 
-              {/* Nearby Jobs */}
               <Link to="/jobs/nearby" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -232,7 +240,6 @@ const Index = () => {
                 </article>
               </Link>
 
-              {/* Education Information */}
               <Link to="/education" className="block">
                 <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
                   <div className="px-2">
@@ -256,12 +263,15 @@ const Index = () => {
         {activeTab === "all" && (
           <div className="mb-6">
             <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2>
+            <JobFilters onFilterChange={handleFilterChange} />
+            <SearchBar />
+
             {isLoading ? (
               <p>로딩 중...</p>
             ) : (
               <div className="space-y-4">
-                {jobs && jobs.length > 0 ? (
-                  jobs.map((job) => (
+                {filteredJobs && filteredJobs.length > 0 ? (
+                  filteredJobs.map((job) => (
                     <article
                       key={job.id}
                       className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
@@ -295,11 +305,24 @@ const Index = () => {
                 )}
               </div>
             )}
+
+            <h2 className="text-[rgba(44,44,44,1)] text-2xl font-bold leading-loose mt-10">
+              이 공고, 놓치지 마세요!
+            </h2>
+            <div className="mt-4">
+              <JobCard
+                id="notice-1"
+                highlight="D-2"
+                title="방문간호사 모집 공고 (파트 타임)"
+                company="주식회사웰케어스테이션"
+                location="서울특별시 서초구"
+                category="간호"
+              />
+            </div>
           </div>
         )}
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
