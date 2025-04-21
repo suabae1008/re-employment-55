@@ -1,10 +1,16 @@
-
-import React, { useState } from 'react';
-import { ArrowLeft, Download, Plus, Edit2, Trash, Sparkles } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  ArrowLeft,
+  Download,
+  Plus,
+  Edit2,
+  Trash,
+  Sparkles,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -16,7 +22,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import BottomNavigation from '../components/BottomNavigation';
+import BottomNavigation from "../components/BottomNavigation";
+import Header from "../components/Header";
 
 interface CoverLetter {
   id: string;
@@ -35,48 +42,50 @@ const CoverLetter = () => {
   // Here we're just simulating for the UI demonstration
   React.useEffect(() => {
     // Simulate checking if user has cover letters
-    const hasCoverLetters = localStorage.getItem('hasCoverLetters') === 'true';
+    const hasCoverLetters = localStorage.getItem("hasCoverLetters") === "true";
     setShowEmptyState(!hasCoverLetters);
-    
+
     if (hasCoverLetters) {
       // Mock data
-      setCoverLetters([{
-        id: '1',
-        company: '방문간호사',
-        position: '주식회사웰페어스테이션',
-        title: '방문간호사 모집 공고 (파트 타임)',
-        date: '2025.03.26 작성'
-      }]);
+      setCoverLetters([
+        {
+          id: "1",
+          company: "방문간호사",
+          position: "주식회사웰페어스테이션",
+          title: "방문간호사 모집 공고 (파트 타임)",
+          date: "2025.03.26 작성",
+        },
+      ]);
     }
   }, []);
 
   const handleCreateCoverLetter = () => {
     // Navigate to cover letter creation form
-    navigate('/cover-letter/create');
+    navigate("/cover-letter/create");
   };
 
   const handleCreateAICoverLetter = () => {
     // Navigate to AI cover letter creation page
-    navigate('/cover-letter/ai-create');
+    navigate("/cover-letter/ai-create");
   };
-  
+
   const handleDeleteCoverLetter = (id: string) => {
     // Remove the cover letter from the state
-    setCoverLetters(prev => prev.filter(letter => letter.id !== id));
-    
+    setCoverLetters((prev) => prev.filter((letter) => letter.id !== id));
+
     // If no cover letters left, update the empty state and localStorage
     if (coverLetters.length <= 1) {
-      localStorage.setItem('hasCoverLetters', 'false');
+      localStorage.setItem("hasCoverLetters", "false");
       setShowEmptyState(true);
     }
-    
+
     toast.success("자기소개서가 삭제되었습니다.");
   };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <header className="bg-white py-4 px-4">
+      {/* <header className="bg-white py-4 px-4">
         <div className="flex items-center mb-4">
           <Link to="/" className="mr-4">
             <ArrowLeft size={24} />
@@ -87,31 +96,40 @@ const CoverLetter = () => {
         <div className="text-center text-gray-500 border-b pb-4">
           자기소개서를 작성해보세요.
         </div>
-      </header>
+      </header> */}
+
+      <Header title="자기소개서" />
 
       {/* Main Content */}
       <main className="px-4 py-6">
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 자기소개서가 없습니다.</p>
-            <div className="space-y-4 w-full max-w-md">
-              <Button 
+
+            <div className="w-full max-w-md flex justify-center">
+              <Button
                 onClick={handleCreateAICoverLetter}
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full justify-center"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center gap-2"
               >
-                <Sparkles size={20} className="mr-2" />
-                AI 자기소개서 작성하기
+                <img
+                  src="/buttons/Plus.svg"
+                  alt="AI로 자기소개서 작성"
+                  className="w-5 h-5"
+                />
+                <span className="font-bold">AI로 자기소개서 작성</span>
               </Button>
             </div>
           </div>
         ) : (
           <div>
-            {coverLetters.map(letter => (
+            {coverLetters.map((letter) => (
               <Card key={letter.id} className="mb-4">
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <div className="text-sm text-gray-500">{letter.position}</div>
+                      <div className="text-sm text-gray-500">
+                        {letter.position}
+                      </div>
                       <h3 className="font-semibold text-lg">{letter.title}</h3>
                     </div>
                     <div className="flex gap-2">
@@ -128,12 +146,13 @@ const CoverLetter = () => {
                           <AlertDialogHeader>
                             <AlertDialogTitle>자기소개서 삭제</AlertDialogTitle>
                             <AlertDialogDescription>
-                              이 자기소개서를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                              이 자기소개서를 삭제하시겠습니까? 이 작업은 되돌릴
+                              수 없습니다.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>취소</AlertDialogCancel>
-                            <AlertDialogAction 
+                            <AlertDialogAction
                               className="bg-red-500 hover:bg-red-600"
                               onClick={() => handleDeleteCoverLetter(letter.id)}
                             >
@@ -146,11 +165,13 @@ const CoverLetter = () => {
                   </div>
                   <p className="text-sm text-gray-500 mt-1">{letter.date}</p>
                   <div className="flex justify-end mt-4">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="flex items-center"
-                      onClick={() => navigate(`/cover-letter/edit/${letter.id}`)}
+                      onClick={() =>
+                        navigate(`/cover-letter/edit/${letter.id}`)
+                      }
                     >
                       <Edit2 size={16} className="mr-1" />
                       수정
@@ -160,7 +181,7 @@ const CoverLetter = () => {
               </Card>
             ))}
             <div className="mt-8 space-y-4 flex flex-col items-center">
-              <Button 
+              <Button
                 onClick={handleCreateAICoverLetter}
                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 px-6 flex items-center w-full max-w-md justify-center"
               >

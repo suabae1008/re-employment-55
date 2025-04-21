@@ -1,48 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, Clock, Calendar, Star, Filter, Heart, School, Sparkles, List } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../components/Logo';
-import BottomNavigation from '../components/BottomNavigation';
-import JobCard from '../components/JobCard';
-import { useQuery } from '@tanstack/react-query';
-import { fetchJobs, getEducationData } from '../services/jobService';
-import { Job } from '../components/JobList';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  MapPin,
+  Briefcase,
+  Clock,
+  Calendar,
+  Star,
+  Filter,
+  Heart,
+  School,
+  Sparkles,
+  List,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../components/Logo";
+import BottomNavigation from "../components/BottomNavigation";
+import JobCard from "../components/JobCard";
+import { useQuery } from "@tanstack/react-query";
+import { fetchJobs, getEducationData } from "../services/jobService";
+import { Job } from "../components/JobList";
+import { toast } from "sonner";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<'recommended' | 'all'>('recommended');
-  const [userName, setUserName] = useState<string>('김현숙');
+  const [activeTab, setActiveTab] = useState<"recommended" | "all">(
+    "recommended"
+  );
+  const [userName, setUserName] = useState<string>("김현숙");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Check localStorage for user name
-    const storedName = localStorage.getItem('userName');
+    const storedName = localStorage.getItem("userName");
     if (storedName) {
       setUserName(storedName);
     }
-    
+
     // Add event listener for name changes
     const handleStorageChange = () => {
-      const updatedName = localStorage.getItem('userName');
+      const updatedName = localStorage.getItem("userName");
       if (updatedName) {
         setUserName(updatedName);
       }
     };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
+
+    window.addEventListener("storage", handleStorageChange);
+
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-  
+
   const { data: jobs, isLoading } = useQuery({
-    queryKey: ['jobs'],
+    queryKey: ["jobs"],
     queryFn: fetchJobs,
   });
 
   const { data: educationPrograms } = useQuery({
-    queryKey: ['education'],
+    queryKey: ["education"],
     queryFn: () => getEducationData(),
   });
 
@@ -68,35 +82,43 @@ const Index = () => {
             className="w-5 h-5 object-contain mr-10"
             alt="Search icon"
           />
-          <div className="text-gray-500 text-xl font-semibold">공고를 검색해주세요.</div>
+          <div className="text-gray-500 text-xl font-semibold">
+            공고를 검색해주세요.
+          </div>
         </div>
 
         <div className="flex mt-6 w-full gap-3 mb-1">
-          <button 
-            onClick={() => setActiveTab('recommended')}
+          <button
+            onClick={() => setActiveTab("recommended")}
             className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-xl font-bold ${
-              activeTab === 'recommended' 
-                ? 'bg-app-blue text-white' 
-                : 'bg-white text-gray-600 border-2 border-gray-300'
+              activeTab === "recommended"
+                ? "bg-app-blue text-white"
+                : "bg-white text-gray-600 border-2 border-gray-300"
             }`}
           >
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/99ff82deca2bbbefe53ecc2ef855ef055ca8d29a?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
-              className="w-5 h-5 object-contain"
-              alt="Recommended icon"
+              src={
+                activeTab === "recommended"
+                  ? "/buttons/recommend.svg"
+                  : "/buttons/recommend-active.svg"
+              }
             />
             <span className="self-stretch my-auto">추천 구직 공고</span>
           </button>
-          <button 
-            onClick={() => setActiveTab('all')}
+          <button
+            onClick={() => setActiveTab("all")}
             className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-xl font-bold ${
-              activeTab === 'all' 
-                ? 'bg-app-blue text-white' 
-                : 'bg-white text-gray-600 border-2 border-gray-300'
+              activeTab === "all"
+                ? "bg-app-blue text-white"
+                : "bg-white text-gray-600 border-2 border-gray-300"
             }`}
           >
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/e40b44359d8cfa5848cd1930f57ccda137f7d339?placeholderIfAbsent=true&apiKey=005c88254743412a8fbdeef29d674822"
+              src={
+                activeTab === "all"
+                  ? "/buttons/building.svg"
+                  : "/buttons/building-active.svg"
+              }
               className="w-5 h-5 object-contain"
               alt="All jobs icon"
             />
@@ -107,12 +129,13 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="px-5">
-        {activeTab === 'recommended' && (
+        {activeTab === "recommended" && (
           <>
             {/* Recommendations Section */}
             <section className="mt-4">
               <h1 className="text-2xl text-gray-800 font-bold leading-10">
-                {userName}님을 위한<br />
+                {userName}님을 위한
+                <br />
                 오늘의 추천 구직 공고
               </h1>
               <p className="text-base text-gray-600 leading-8 mt-2">
@@ -120,37 +143,47 @@ const Index = () => {
               </p>
 
               {/* Job Cards */}
-              <article 
+              <article
                 className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => handleJobCardClick(1)}
               >
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base text-gray-600 font-bold">주식회사웰케어스테이션</h3>
+                  <h3 className="text-base text-gray-600 font-bold">
+                    주식회사웰케어스테이션
+                  </h3>
                   <div className="bg-gray-100 rounded-full px-2 py-1 text-sm font-bold">
                     <span className="text-gray-800 mr-1">Ai매치</span>
                     <span className="text-app-blue">84%</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center mt-2">
-                  <h2 className="text-xl text-gray-900 font-bold">방문간호사 모집 공고 (파트 타임)</h2>
+                  <h2 className="text-xl text-gray-900 font-bold">
+                    방문간호사 모집 공고 (파트 타임)
+                  </h2>
                   <span className="text-lg font-bold text-red-600">D-2</span>
                 </div>
               </article>
 
-              <article 
+              <article
                 className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => handleJobCardClick(2)}
               >
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base text-gray-600 font-bold">이화여자대학교 산학협력단</h3>
+                  <h3 className="text-base text-gray-600 font-bold">
+                    이화여자대학교 산학협력단
+                  </h3>
                   <div className="bg-gray-100 rounded-full px-2 py-1 text-sm font-bold">
                     <span className="text-gray-800 mr-1">Ai매치</span>
                     <span className="text-app-blue">82%</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center mt-2">
-                  <h2 className="text-xl text-gray-900 font-bold">[서울금연지원센터] 입원환자 ...</h2>
-                  <span className="text-lg font-bold text-app-blue">상시채용</span>
+                  <h2 className="text-xl text-gray-900 font-bold">
+                    [서울금연지원센터] 입원환자 ...
+                  </h2>
+                  <span className="text-lg font-bold text-app-blue">
+                    상시채용
+                  </span>
                 </div>
               </article>
             </section>
@@ -220,7 +253,7 @@ const Index = () => {
           </>
         )}
 
-        {activeTab === 'all' && (
+        {activeTab === "all" && (
           <div className="mb-6">
             <h2 className="text-2xl font-bold my-4">전체 구직 공고</h2>
             {isLoading ? (
@@ -229,26 +262,36 @@ const Index = () => {
               <div className="space-y-4">
                 {jobs && jobs.length > 0 ? (
                   jobs.map((job) => (
-                    <article 
-                      key={job.id} 
+                    <article
+                      key={job.id}
                       className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                       onClick={() => handleJobCardClick(job.id)}
                     >
                       <div className="flex justify-between items-center">
-                        <h3 className="text-base text-gray-600 font-bold">{job.company}</h3>
+                        <h3 className="text-base text-gray-600 font-bold">
+                          {job.company}
+                        </h3>
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <h2 className="text-xl text-gray-900 font-bold">{job.title}</h2>
+                        <h2 className="text-xl text-gray-900 font-bold">
+                          {job.title}
+                        </h2>
                         {job.highlight ? (
-                          <span className="text-lg font-bold text-red-600">{job.highlight}</span>
+                          <span className="text-lg font-bold text-red-600">
+                            {job.highlight}
+                          </span>
                         ) : (
-                          <span className="text-lg font-bold text-app-blue">상시채용</span>
+                          <span className="text-lg font-bold text-app-blue">
+                            상시채용
+                          </span>
                         )}
                       </div>
                     </article>
                   ))
                 ) : (
-                  <p className="text-center py-4">해당 조건의 구직 공고가 없습니다.</p>
+                  <p className="text-center py-4">
+                    해당 조건의 구직 공고가 없습니다.
+                  </p>
                 )}
               </div>
             )}

@@ -1,14 +1,13 @@
-
 import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './index.html',
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./index.html",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -26,7 +25,7 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        "app-blue": "#4D68FF",
+        "app-blue": "#4B9FF8",
         "app-light-blue": "#EDF3FF",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -68,18 +67,21 @@ const config = {
           to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+            opacity: "1",
+          },
           to: { height: "0", opacity: "0" },
         },
         "fade-in": {
           "0%": {
             opacity: "0",
-            transform: "translateY(10px)"
+            transform: "translateY(10px)",
           },
           "100%": {
             opacity: "1",
-            transform: "translateY(0)"
-          }
+            transform: "translateY(0)",
+          },
         },
       },
       animation: {
@@ -88,10 +90,11 @@ const config = {
         "fade-in": "fade-in 0.3s ease-out",
       },
     },
+    fontFamily: {
+      sans: ['"Nanum Gothic"', "sans-serif"],
+    },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-  ],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;

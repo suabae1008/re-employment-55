@@ -1,10 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Download, Plus, Edit2, Trash } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { ArrowLeft, Download, Plus, Edit2, Trash } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -16,7 +15,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import BottomNavigation from '../components/BottomNavigation';
+import BottomNavigation from "../components/BottomNavigation";
+import Header from "@/components/Header";
 
 interface Resume {
   id: string;
@@ -34,70 +34,65 @@ const Resume = () => {
   // Here we're just simulating for the UI demonstration
   useEffect(() => {
     // Simulate checking if user has resumes
-    const hasResumes = localStorage.getItem('hasResumes') === 'true';
+    const hasResumes = localStorage.getItem("hasResumes") === "true";
     setShowEmptyState(!hasResumes);
-    
+
     if (hasResumes) {
       // Mock data
-      setResumes([{
-        id: '1',
-        title: '기본 이력서',
-        date: '2025.03.26 작성',
-        content: '경력 및 학력 정보...'
-      }]);
+      setResumes([
+        {
+          id: "1",
+          title: "기본 이력서",
+          date: "2025.03.26 작성",
+          content: "경력 및 학력 정보...",
+        },
+      ]);
     }
   }, []);
 
   const handleCreateResume = () => {
     // Navigate to the resume form page
-    navigate('/resume/create');
+    navigate("/resume/create");
   };
-  
+
   const handleDeleteResume = (id: string) => {
     // Remove the resume from the state
-    setResumes(prev => prev.filter(resume => resume.id !== id));
-    
+    setResumes((prev) => prev.filter((resume) => resume.id !== id));
+
     // If no resumes left, update the empty state and localStorage
     if (resumes.length <= 1) {
-      localStorage.setItem('hasResumes', 'false');
+      localStorage.setItem("hasResumes", "false");
       setShowEmptyState(true);
     }
-    
+
     toast.success("이력서가 삭제되었습니다.");
   };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <header className="bg-white py-4 px-4">
-        <div className="flex items-center mb-4">
-          <Link to="/" className="mr-4">
-            <ArrowLeft size={24} />
-          </Link>
-          <h1 className="text-xl font-bold">이력서</h1>
-        </div>
-
-        <div className="text-center text-gray-500 border-b pb-4">
-          이력서를 작성해보세요.
-        </div>
-      </header>
+      <Header title="이력서" />
 
       {/* Main Content */}
       <main className="px-4 py-6">
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 이력서가 없습니다.</p>
-            <Button 
+            <Button
               onClick={handleCreateResume}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center gap-2"
             >
-              <Plus size={20} className="mr-2" />
-              이력서 작성하기
+              <img
+                src="/buttons/Plus.svg"
+                alt="이력서 작성하기"
+                className="w-5 h-5"
+              />
+              <span className="font-bold">이력서 작성하기</span>
             </Button>
           </div>
         ) : (
           <div>
-            {resumes.map(resume => (
+            {resumes.map((resume) => (
               <Card key={resume.id} className="mb-4">
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center">
@@ -116,12 +111,13 @@ const Resume = () => {
                           <AlertDialogHeader>
                             <AlertDialogTitle>이력서 삭제</AlertDialogTitle>
                             <AlertDialogDescription>
-                              이 이력서를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                              이 이력서를 삭제하시겠습니까? 이 작업은 되돌릴 수
+                              없습니다.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>취소</AlertDialogCancel>
-                            <AlertDialogAction 
+                            <AlertDialogAction
                               className="bg-red-500 hover:bg-red-600"
                               onClick={() => handleDeleteResume(resume.id)}
                             >
@@ -134,8 +130,8 @@ const Resume = () => {
                   </div>
                   <p className="text-sm text-gray-500">{resume.date}</p>
                   <div className="flex justify-end mt-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="flex items-center"
                       onClick={() => navigate(`/resume/edit/${resume.id}`)}
@@ -148,12 +144,11 @@ const Resume = () => {
               </Card>
             ))}
             <div className="mt-8 flex justify-center">
-              <Button 
+              <Button
                 onClick={handleCreateResume}
                 className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full py-3 px-6 flex items-center"
               >
-                <Plus size={20} className="mr-2" />
-                새 이력서 작성하기
+                <Plus size={20} className="mr-2" />새 이력서 작성하기
               </Button>
             </div>
           </div>
