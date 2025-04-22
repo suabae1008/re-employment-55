@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -32,7 +31,9 @@ const JobCard: React.FC<JobCardProps> = ({
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await toggleFavoriteJob(id);
-    onFavoriteClick?.(id);
+    if (onFavoriteClick) {
+      onFavoriteClick(id);
+    }
   };
 
   const getDeadlineText = (deadline: string | undefined) => {
