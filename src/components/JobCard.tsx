@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toggleFavoriteJob } from '@/services/jobService';
@@ -28,9 +29,12 @@ const JobCard: React.FC<JobCardProps> = ({
   onClick,
   onFavoriteClick
 }) => {
+  const [isFavoriteState, setIsFavoriteState] = useState(isFavorite);
+
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await toggleFavoriteJob(id);
+    setIsFavoriteState(prev => !prev);
     if (onFavoriteClick) {
       onFavoriteClick(id);
     }
@@ -66,7 +70,7 @@ const JobCard: React.FC<JobCardProps> = ({
           size={24}
           className={cn(
             "transition-colors",
-            isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+            isFavoriteState ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
           )}
         />
       </button>
