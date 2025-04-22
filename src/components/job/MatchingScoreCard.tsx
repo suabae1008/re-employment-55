@@ -2,7 +2,6 @@
 import React from "react";
 import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MatchScoreGauge from "../MatchScoreGauge";
 
 interface MatchingScoreCardProps {
   matchScore: number;
@@ -10,7 +9,6 @@ interface MatchingScoreCardProps {
 }
 
 const MatchingScoreCard: React.FC<MatchingScoreCardProps> = ({
-  matchScore,
   onShowAnalysis,
 }) => {
   return (
@@ -18,10 +16,6 @@ const MatchingScoreCard: React.FC<MatchingScoreCardProps> = ({
       <div className="flex items-center justify-center mb-4">
         <h3 className="text-lg font-semibold mr-2">나와 적합한 공고인지 알아봤어요</h3>
         <Info className="text-orange-500 w-5 h-5" />
-      </div>
-      
-      <div className="flex justify-center mb-2">
-        <MatchScoreGauge score={matchScore} />
       </div>
 
       <Button
