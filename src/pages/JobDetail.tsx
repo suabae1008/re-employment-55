@@ -6,7 +6,6 @@ import { getJobById, toggleFavoriteJob } from "../services/jobService";
 import { getMockMatchAnalysis } from "../services/matchingService";
 import BottomNavigation from "../components/BottomNavigation";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MatchingAnalysis from "../components/MatchingAnalysis";
 import JobHeader from "../components/job/JobHeader";
@@ -56,11 +55,6 @@ const JobDetail: React.FC = () => {
       const updatedJob = updatedJobs.find((j) => j.id === job.id);
       if (updatedJob) {
         setJob(updatedJob);
-        toast(
-          updatedJob.isFavorite
-            ? "관심 공고에 추가되었습니다"
-            : "관심 공고에서 제거되었습니다"
-        );
       }
     } catch (error) {
       console.error("관심 공고 토글 실패:", error);
