@@ -38,7 +38,7 @@ const Profile = () => {
     desiredJob: "바리스타",
     desiredLocation: "서울시",
     desiredWorkingHours: "평일 가능",
-    desiredSalary: "월 210 만원",
+    personality: "차분함",
   });
 
   // 전체 섹션 편집 상태 관리
@@ -190,7 +190,7 @@ const Profile = () => {
               "희망 근무 가능 시간",
               profile.desiredWorkingHours
             )}
-            {renderProfileField("희망 급여", profile.desiredSalary)}
+            {renderProfileField("성향", profile.personality)}
           </div>
         </div>
       </main>
