@@ -20,7 +20,6 @@ interface Experience {
 
 export interface MatchAnalysis {
   requiredScore: number;
-  experienceScore: number;
   preferredScore: number;
   totalScore: number;
   requiredQualifications: RequiredQualification[];
@@ -28,56 +27,29 @@ export interface MatchAnalysis {
   experiences: Experience[];
 }
 
-// Get weight based on duration in months
-const getDurationWeight = (months: number): number => {
-  if (months >= 24) return 1.0;
-  if (months >= 12) return 0.8;
-  if (months >= 6) return 0.6;
-  if (months >= 3) return 0.4;
-  return 0.2;
-};
-
 // Calculate score for job matching analysis
 export const calculateMatchScore = (
   requiredQualifications: RequiredQualification[],
   experiences: Experience[],
   preferredQualifications: PreferredQualification[]
 ): MatchAnalysis => {
-  // Calculate required qualifications score (50 points max)
+  // Calculate required qualifications score (70 points max)
   const matchedRequired = requiredQualifications.filter(q => q.isMatched).length;
   const requiredScore = requiredQualifications.length > 0
-    ? Math.round((matchedRequired / requiredQualifications.length) * 50)
-    : 50; // If no required qualifications, give full score
+    ? Math.round((matchedRequired / requiredQualifications.length) * 70)
+    : 70; // If no required qualifications, give full score
 
-  // Calculate experience score (30 points max)
-  let experienceScore = 0;
-  if (experiences.length > 0) {
-    let totalWeightedScore = 0;
-    let totalWeight = 0;
-
-    experiences.forEach(exp => {
-      const weight = getDurationWeight(exp.duration);
-      totalWeightedScore += exp.similarity * weight;
-      totalWeight += weight;
-    });
-
-    experienceScore = totalWeight > 0
-      ? Math.round(totalWeightedScore / totalWeight)
-      : 0;
-  }
-
-  // Calculate preferred qualifications score (20 points max)
+  // Calculate preferred qualifications score (30 points max)
   const matchedPreferred = preferredQualifications.filter(q => q.isMatched).length;
   const preferredScore = preferredQualifications.length > 0
-    ? Math.round((matchedPreferred / preferredQualifications.length) * 20)
-    : 20; // If no preferred qualifications, give full score
+    ? Math.round((matchedPreferred / preferredQualifications.length) * 30)
+    : 30; // If no preferred qualifications, give full score
 
   // Calculate total score
-  const totalScore = requiredScore + experienceScore + preferredScore;
+  const totalScore = requiredScore + preferredScore;
 
   return {
     requiredScore,
-    experienceScore,
     preferredScore,
     totalScore,
     requiredQualifications,

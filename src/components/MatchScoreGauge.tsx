@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Info } from "lucide-react";
 
 interface MatchScoreGaugeProps {
   score: number;
@@ -47,7 +46,7 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
         </svg>
       </div>
       
-      {/* Score text - now centered */}
+      {/* Score text - centered */}
       <div className="absolute bottom-0 left-0 right-0 text-center text-sm">
         {score}점
       </div>
