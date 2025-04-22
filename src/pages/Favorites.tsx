@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Search, RefreshCw } from "lucide-react";
+import { Star } from 'lucide-react';
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Job } from "../components/JobList";
+import { Job } from "../types/job";
 import { Button } from "@/components/ui/button";
-import JobCard from "../components/JobCard";
 import BottomNavigation from "../components/BottomNavigation";
 import { getFavoriteJobs, toggleFavoriteJob } from "../services/jobService";
 import { getMockMatchAnalysis } from "../services/matchingService";
@@ -26,11 +26,9 @@ const Favorites = () => {
   const loadFavoriteJobs = async () => {
     try {
       setLoading(true);
-      // Await the Promise to get the actual favorites array
       const favorites = await getFavoriteJobs();
       setFavoriteJobs(favorites);
 
-      // Calculate match scores for each favorite job
       const scores: Record<string | number, number> = {};
       favorites.forEach((job) => {
         const analysis = getMockMatchAnalysis(job.id.toString());
@@ -54,9 +52,7 @@ const Favorites = () => {
 
   const handleToggleFavorite = (jobId: string | number) => {
     toggleFavoriteJob(jobId);
-    // Remove the job from the favorites list directly
     setFavoriteJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-    // Also remove the job score
     setJobScores((prevScores) => {
       const newScores = { ...prevScores };
       delete newScores[jobId];
@@ -78,14 +74,11 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <Header
         title="관심 공고"
-        // onRefresh={handleRefresh}
         refreshing={refreshing}
       />
 
-      {/* Main Content */}
       <main className="px-4 py-2">
         {loading ? (
           <div className="text-center py-10">
@@ -114,19 +107,17 @@ const Favorites = () => {
                   </div>
                 </Link>
                 <button
-                  className="absolute top-1/2 -translate-y-1/2 left-3 bg-[#FFE376]"
+                  className="absolute top-1/2 -translate-y-1/2 left-3"
                   onClick={() => handleToggleFavorite(job.id)}
                   aria-label="관심 공고에서 제거"
                 >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
-                  </svg>
+                  <Star
+                    size={24}
+                    className={cn(
+                      "transition-colors",
+                      "fill-yellow-400 text-yellow-400"
+                    )}
+                  />
                 </button>
               </div>
             ))}
@@ -142,7 +133,6 @@ const Favorites = () => {
         )}
       </main>
 
-      {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
   );
