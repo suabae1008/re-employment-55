@@ -103,7 +103,7 @@ const Index = () => {
         <div className="flex mt-6 w-full gap-3 mb-1">
           <button
             onClick={() => setActiveTab("recommended")}
-            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-m md:text-base font-bold overflow-hidden ${
+            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-lg md:text-base font-bold overflow-hidden ${
               activeTab === "recommended"
                 ? "bg-app-blue text-white"
                 : "bg-white text-gray-600 border-2 border-gray-300"
@@ -122,7 +122,7 @@ const Index = () => {
           </button>
           <button
             onClick={() => setActiveTab("all")}
-            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-m md:text-base font-bold overflow-hidden ${
+            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-lg md:text-base font-bold overflow-hidden ${
               activeTab === "all"
                 ? "bg-app-blue text-white"
                 : "bg-white text-gray-600 border-2 border-gray-300"
@@ -144,7 +144,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="px-5">
+      <main className="px-4 pb-20">
         {activeTab === "recommended" && (
           <RecommendedJobsSection
             userName={userName}

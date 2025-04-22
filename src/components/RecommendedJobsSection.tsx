@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -27,14 +26,16 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
           className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={() => onJobCardClick(1)}
         >
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl text-gray-900 font-bold">
+          <div className="flex justify-between items-start">
+            <h2 className="text-xl text-gray-900 font-bold max-w-[75%] truncate">
               방문간호사 모집 공고 (파트 타임)
             </h2>
-            <span className="text-lg font-bold text-red-600">D-2</span>
+            <span className="text-m font-semibold text-red-600 shrink-0">
+              D-2
+            </span>
           </div>
           <div className="mt-2">
-            <h3 className="text-base text-gray-600 font-bold">
+            <h3 className="text-base text-gray-600 font-bold truncate">
               주식회사웰케어스테이션
             </h3>
           </div>
@@ -44,16 +45,16 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
           className="mt-4 bg-white rounded-xl border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={() => onJobCardClick(2)}
         >
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl text-gray-900 font-bold">
+          <div className="flex justify-between items-start">
+            <h2 className="text-xl text-gray-900 font-bold max-w-[75%] truncate">
               [서울금연지원센터] 입원환자 ...
             </h2>
-            <span className="text-lg font-bold text-[#0EA5E9]">
+            <span className="text-m font-semibold text-[#0EA5E9] shrink-0">
               상시채용
             </span>
           </div>
           <div className="mt-2">
-            <h3 className="text-base text-gray-600 font-bold">
+            <h3 className="text-base text-gray-600 font-bold truncate">
               이화여자대학교 산학협력단
             </h3>
           </div>
@@ -64,7 +65,7 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
         <Link to="/jobs/part-time" className="block">
           <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
             <div className="px-2">
-              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-red-100 w-full">
+              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-red-100 w-full truncate">
                 🎈 파트 타임 모집 공고
               </h2>
             </div>
@@ -74,7 +75,7 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
                 alt="파트타임 일자리"
                 className="w-full h-[182px] object-cover"
               />
-              <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
+              <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent truncate">
                 서울북부교육청 학습비타민 지원가 모집 (주 3회)
               </h3>
             </div>
@@ -84,7 +85,7 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
         <Link to="/jobs/nearby" className="block">
           <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
             <div className="px-2">
-              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-green-100 w-full">
+              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-green-100 w-full truncate">
                 🏡 집에서 가까운 모집 공고
               </h2>
             </div>
@@ -94,8 +95,8 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
                 alt="근처 일자리"
                 className="w-full h-[182px] object-cover"
               />
-              <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent">
-                송파구시설관리공단 주임간호�� 채용
+              <h3 className="absolute bottom-0 left-0 right-0 p-2 text-white font-extrabold text-base leading-8 bg-gradient-to-t from-black/50 to-transparent truncate">
+                송파구시설관리공단 주임간호사 채용
               </h3>
             </div>
           </article>
@@ -104,7 +105,7 @@ const RecommendedJobsSection: React.FC<RecommendedJobsSectionProps> = ({
         <Link to="/education" className="block">
           <article className="bg-white rounded-xl overflow-hidden shadow-sm mb-4 cursor-pointer hover:shadow-md transition-all">
             <div className="px-2">
-              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-yellow-100 w-full">
+              <h2 className="text-xl font-bold text-gray-900 py-2 px-2 rounded-xl mb-2 bg-yellow-100 w-full truncate">
                 📝 취업 준비 교육 정보
               </h2>
             </div>
