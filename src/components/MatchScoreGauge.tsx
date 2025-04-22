@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Info } from "lucide-react";
 
 interface MatchScoreGaugeProps {
   score: number;
