@@ -15,12 +15,14 @@ interface MatchingScoreSectionProps {
   score?: number;
   isLoading?: boolean;
   onStartAnalysis?: () => void;
+  showButton?: boolean;
 }
 
 const MatchingScoreSection: React.FC<MatchingScoreSectionProps> = ({ 
   score,
   isLoading = false,
-  onStartAnalysis
+  onStartAnalysis,
+  showButton = true
 }) => {
   if (isLoading) {
     return (
@@ -29,13 +31,15 @@ const MatchingScoreSection: React.FC<MatchingScoreSectionProps> = ({
           <div className="blur-sm">
             <MatchScoreGauge score={0} />
           </div>
-          <Button
-            variant="outline"
-            onClick={onStartAnalysis}
-            className="mt-4 text-blue-500 border-blue-500 hover:bg-blue-50"
-          >
-            나와 적합한 공고인지 알아봐요
-          </Button>
+          {showButton && (
+            <Button
+              variant="outline"
+              onClick={onStartAnalysis}
+              className="mt-4 text-blue-500 border-blue-500 hover:bg-blue-50"
+            >
+              나와 적합한 공고인지 알아봐요
+            </Button>
+          )}
         </div>
       </div>
     );

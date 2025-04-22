@@ -30,6 +30,7 @@ const JobAnalysisTab: React.FC<JobAnalysisTabProps> = ({
         <MatchingScoreSection 
           isLoading={true}
           onStartAnalysis={onStartAnalysis}
+          showButton={false} // Don't show button in the MatchingScoreSection
         />
       </div>
       <Button

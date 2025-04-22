@@ -38,7 +38,14 @@ const JobDetail: React.FC = () => {
         if (fromFavorites) {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
-          setIsAnalysisReady(id.toString().length % 2 === 0);
+          
+          if (fetchedJob && fetchedJob.company === "은빛재가복지센터") {
+            setIsAnalysisReady(true);
+          } else if (location.state?.isAnalysisReady) {
+            setIsAnalysisReady(true);
+          } else {
+            setIsAnalysisReady(id.toString().length % 2 === 0);
+          }
         }
       } catch (err) {
         console.error("공고 불러오기 실패:", err);
@@ -48,7 +55,7 @@ const JobDetail: React.FC = () => {
     };
 
     loadJob();
-  }, [id, fromFavorites]);
+  }, [id, fromFavorites, location.state]);
 
   const handleToggleFavorite = async () => {
     if (!job) return;
