@@ -40,8 +40,37 @@ const convertDBJobToJobFormat = (dbJob: any): Job => {
 export const fetchJobs = async (): Promise<Job[]> => {
   try {
     const dbJobs = await fetchJobsFromDB();
-    if (!dbJobs) return [];
-    return dbJobs.map(convertDBJobToJobFormat);
+    
+    // Add sample visiting nurse job posting
+    const sampleJob: Job = {
+      id: 'VN001',
+      title: '방문간호사 모집 (파트타임)',
+      company: '주식회사 웰케어스테이션',
+      location: '서울 강남구',
+      category: '파트타임',
+      employmentType: '시간제',
+      deadline: '2025-05-22',
+      description: `[주요업무]
+- 재가환자 방문간호 서비스 제공
+- 환자 건강상태 체크 및 기록
+- 투약 관리 및 처치
+
+[자격요건]
+- 간호사 면허 소지자 (필수)
+- 방문간호 경력 1년 이상
+- 운전 가능자 우대
+
+[근무조건]
+- 근무시간: 주 3일 (월,수,금) / 9:00-15:00
+- 급여: 시급 25,000원
+- 교통비 별도 지급
+- 4대보험 가입`,
+      isFavorite: false,
+      highlight: 'D-30'
+    };
+
+    if (!dbJobs) return [sampleJob];
+    return [sampleJob, ...dbJobs];
   } catch (error) {
     console.error('Error fetching jobs from Supabase:', error);
     return [];
