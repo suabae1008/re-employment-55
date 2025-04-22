@@ -7,6 +7,8 @@ interface JobCardProps {
   id: string | number;
   title: string;
   company: string;
+  location?: string;
+  category?: string;
   highlight?: string;
   deadline?: string;
   isFavorite?: boolean;
@@ -17,6 +19,8 @@ interface JobCardProps {
 const JobCard: React.FC<JobCardProps> = ({
   title,
   company,
+  location,
+  category,
   highlight,
   deadline,
   isFavorite = false,
@@ -54,6 +58,16 @@ const JobCard: React.FC<JobCardProps> = ({
           <p className="text-gray-600 font-medium">
             {company}
           </p>
+          {location && (
+            <p className="text-gray-500 text-sm mt-1">
+              {location}
+            </p>
+          )}
+          {category && (
+            <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded mt-2">
+              {category}
+            </span>
+          )}
         </div>
         {highlight && (
           <span 
