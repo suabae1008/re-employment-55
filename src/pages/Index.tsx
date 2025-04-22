@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import BottomNavigation from "../components/BottomNavigation";
 import JobCard from "../components/JobCard";
@@ -9,7 +8,9 @@ import { fetchJobs, toggleFavoriteJob } from "../services/jobService";
 import RecommendedJobsSection from "../components/RecommendedJobsSection";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"recommended" | "all">("recommended");
+  const location = useLocation();
+  const initialTab = location.state?.activeTab || "recommended";
+  const [activeTab, setActiveTab] = useState<"recommended" | "all">(initialTab);
   const [userName, setUserName] = useState<string>("김현숙");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -33,6 +34,12 @@ const Index = () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
 
   const { data: jobs = [], isLoading, refetch } = useQuery({
     queryKey: ["jobs"],
@@ -59,7 +66,6 @@ const Index = () => {
   );
 
   const handleFavoriteToggle = async (jobId: string | number) => {
-    // Invalidate and refetch to ensure the UI reflects the current state
     await queryClient.invalidateQueries({ queryKey: ["jobs"] });
     refetch();
   };
