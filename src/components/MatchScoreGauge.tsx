@@ -7,55 +7,48 @@ interface MatchScoreGaugeProps {
 
 const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
   // Calculate rotation angle based on score (0-100)
-  // 0 score = -90 degrees (left), 100 score = 90 degrees (right)
-  const rotationAngle = (score / 100) * 180 - 90;
+  const rotationAngle = -90 + (score / 100) * 180;
   
-  // Determine color zones
-  const getZoneColor = (zoneIndex: number) => {
-    if (zoneIndex === 2) return "#4ADE80"; // green zone (right)
-    if (zoneIndex === 1) return "#FDE047"; // yellow zone (middle)
-    return "#FCA5A5"; // red zone (left)
-  };
-
   return (
-    <div className="relative w-40 h-24 mx-auto">
+    <div className="relative w-40 h-20">
       {/* Semicircle gauge background */}
-      <div className="relative w-full h-20 overflow-hidden">
-        <div className="absolute w-full h-40 rounded-full overflow-hidden">
-          {/* Left section (red) */}
-          <div 
-            className="absolute left-0 top-0 w-1/3 h-20 rounded-tl-full"
-            style={{ backgroundColor: getZoneColor(0) }}
+      <div className="absolute inset-0">
+        <svg viewBox="0 0 100 50" className="w-full h-full">
+          {/* Red section */}
+          <path
+            d="M 10 50 A 40 40 0 0 1 50 10"
+            fill="none"
+            stroke="#FCA5A5"
+            strokeWidth="12"
+            strokeLinecap="round"
           />
-          {/* Middle section (yellow) */}
-          <div 
-            className="absolute left-1/3 top-0 w-1/3 h-20"
-            style={{ backgroundColor: getZoneColor(1) }}
+          {/* Yellow section */}
+          <path
+            d="M 50 10 A 40 40 0 0 1 90 50"
+            fill="none"
+            stroke="#FDE047"
+            strokeWidth="12"
+            strokeLinecap="round"
           />
-          {/* Right section (green) */}
-          <div 
-            className="absolute right-0 top-0 w-1/3 h-20 rounded-tr-full"
-            style={{ backgroundColor: getZoneColor(2) }}
+          {/* Needle */}
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="20"
+            stroke="#374151"
+            strokeWidth="3"
+            strokeLinecap="round"
+            transform={`rotate(${rotationAngle}, 50, 50)`}
           />
-        </div>
+          {/* Needle base */}
+          <circle cx="50" cy="50" r="4" fill="#374151" />
+        </svg>
       </div>
       
-      {/* Needle */}
-      <div 
-        className="absolute top-20 left-1/2 w-1 h-16 bg-gray-700 rounded-full origin-top"
-        style={{ 
-          transform: `translateX(-50%) rotate(${rotationAngle}deg)`,
-          transformOrigin: 'top center',
-          zIndex: 10
-        }}
-      >
-        {/* Needle base circle */}
-        <div className="absolute top-0 left-1/2 w-4 h-4 rounded-full bg-gray-700 transform -translate-x-1/2 -translate-y-1/2" />
-      </div>
-
-      {/* Score display */}
-      <div className="absolute bottom-0 left-0 right-0 text-center font-medium">
-        매칭점수 {score}점
+      {/* Score text */}
+      <div className="absolute -bottom-6 left-0 right-0 text-center">
+        매치 점수 {score}점
       </div>
     </div>
   );
