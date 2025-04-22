@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,11 +16,17 @@ const MatchingScoreCard: React.FC<MatchingScoreCardProps> = ({
   return (
     <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
       <div className="text-center mb-2">
-        <h3 className="text-lg font-semibold">맞춤형 공고 분석</h3>
-        <p className="text-sm text-gray-600 mt-1 mb-3">
-          나와 잘 맞는 공고인지 알아보세요
-        </p>
-        <div className="mb-6">
+        <div className="mb-3 flex items-center justify-center">
+          <h3 className="text-lg font-semibold">나와 적합한 공고인지 알아봤어요</h3>
+          <div className="text-orange-500 ml-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+        </div>
+        <div className="mb-4">
           <MatchScoreGauge score={matchScore} />
         </div>
       </div>

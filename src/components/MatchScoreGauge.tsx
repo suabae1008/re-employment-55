@@ -1,47 +1,61 @@
+
 import React from "react";
-import { Progress } from "@/components/ui/progress";
 
 interface MatchScoreGaugeProps {
   score: number;
-  fontSize?: string; // New optional prop for font size
 }
 
-const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({
-  score,
-  fontSize = "text-3xl",
-}) => {
-  // Determine color based on score
-  const getColorClass = (score: number) => {
-    if (score >= 80) return "bg-green-500";
-    if (score >= 60) return "bg-yellow-500";
-    return "bg-red-500";
+const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
+  // Calculate rotation angle based on score (0-100)
+  // 0 score = -90 degrees, 100 score = 90 degrees
+  const rotationAngle = (score / 100) * 180 - 90;
+  
+  // Determine color zones
+  const getZoneColor = (zoneIndex: number) => {
+    if (zoneIndex === 2) return "#4ADE80"; // green zone (right)
+    if (zoneIndex === 1) return "#FDE047"; // yellow zone (middle)
+    return "#FCA5A5"; // red zone (left)
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="relative w-52 h-26 mb-4">
-        {/* Semi-circular gauge visualization */}
-        <div className="absolute w-full">
-          <div className="flex justify-between w-full px-1 text-xs text-gray-500">
-            <span>0</span>
-            <span>50</span>
-            <span>100</span>
-          </div>
-          <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className={`h-full ${getColorClass(
-                score
-              )} transition-all duration-500`}
-              style={{ width: `${score}%` }}
-            />
-          </div>
+    <div className="relative w-40 h-32 mx-auto">
+      {/* Semicircle gauge background */}
+      <div className="relative w-full h-20 overflow-hidden">
+        <div className="absolute w-full h-40 rounded-full overflow-hidden">
+          {/* Left section (red) */}
+          <div 
+            className="absolute left-0 top-0 w-1/3 h-20 rounded-tl-full"
+            style={{ backgroundColor: getZoneColor(0) }}
+          />
+          {/* Middle section (yellow) */}
+          <div 
+            className="absolute left-1/3 top-0 w-1/3 h-20"
+            style={{ backgroundColor: getZoneColor(1) }}
+          />
+          {/* Right section (green) */}
+          <div 
+            className="absolute right-0 top-0 w-1/3 h-20 rounded-tr-full"
+            style={{ backgroundColor: getZoneColor(2) }}
+          />
         </div>
-
-        {/* Score indicator */}
-        <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <div className={`${fontSize} font-bold`}>{score}점</div>
-          {/* Direction indicator removed */}
-        </div>
+      </div>
+      
+      {/* Needle */}
+      <div 
+        className="absolute top-20 left-1/2 w-1 h-16 bg-gray-700 rounded-full origin-top"
+        style={{ 
+          transform: `translateX(-50%) rotate(${rotationAngle}deg)`,
+          transformOrigin: 'top center',
+          zIndex: 10
+        }}
+      >
+        {/* Needle base circle */}
+        <div className="absolute top-0 left-1/2 w-4 h-4 rounded-full bg-gray-700 transform -translate-x-1/2 -translate-y-1/2" />
+      </div>
+      
+      {/* Score display */}
+      <div className="absolute bottom-0 left-0 right-0 text-center">
+        <span className="text-lg font-medium">매칭 점수 {score}점</span>
       </div>
     </div>
   );

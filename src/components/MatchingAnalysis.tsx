@@ -76,14 +76,67 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({
             </Dialog>
           </div>
           <h4 className="mb-10">
-            <MatchScoreGauge score={analysis.totalScore} fontSize="text-2xl" />
+            <MatchScoreGauge score={analysis.totalScore} />
           </h4>
-          <p className="text-gray-600 mb-4 whitespace-normal break-words  after:content-none before:content-none">
+          <p className="text-gray-600 mb-4 whitespace-normal break-words after:content-none before:content-none">
             나와 잘 맞는 공고인지 확인해보세요.
           </p>
         </div>
+        
+        {/* 점수 향상 가이드 섹션 */}
+        <div className="mt-8 mb-8">
+          <h3 className="text-lg font-semibold mb-4">이렇게 점수를 올려요</h3>
+          <div className="overflow-x-auto pb-4">
+            <div className="flex gap-4" style={{ minWidth: 'max-content' }}>
+              {/* 자격사항 카드 - 부족한 자격사항 표시 */}
+              {analysis.requiredQualifications.filter(q => !q.isMatched).map((qual) => (
+                <div key={`req-${qual.id}`} className="flex-shrink-0 w-60 p-4 rounded-lg" style={{ backgroundColor: "#D3E4FD" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="bg-blue-100 p-2 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                      </svg>
+                    </div>
+                    <div className="font-medium">자격 사항</div>
+                  </div>
+                  <p className="text-sm">{qual.name}</p>
+                </div>
+              ))}
+              
+              {/* 우대사항 카드 - 부족한 우대사항 표시 */}
+              {analysis.preferredQualifications.filter(q => !q.isMatched).map((qual) => (
+                <div key={`pref-${qual.id}`} className="flex-shrink-0 w-60 p-4 rounded-lg" style={{ backgroundColor: "#E5DEFF" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="bg-purple-100 p-2 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                      </svg>
+                    </div>
+                    <div className="font-medium">우대 사항</div>
+                  </div>
+                  <p className="text-sm">{qual.name}</p>
+                </div>
+              ))}
+              
+              {/* 경험 관련 카드 */}
+              <div className="flex-shrink-0 w-60 p-4 rounded-lg" style={{ backgroundColor: "#F2FCE2" }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                  </div>
+                  <div className="font-medium">관련 경험</div>
+                </div>
+                <p className="text-sm">유사한 직무 경험을 더 쌓아보세요</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div className="mt-12">
+        <div className="mt-6">
           <Collapsible>
             <Card>
               <CollapsibleTrigger className="w-full text-left p-4">
@@ -193,21 +246,7 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({
           </Card>
         </Collapsible>
 
-        <Card className="border-none bg-gray-50 p-4 rounded-lg">
-          <div className="flex items-start">
-            <div className="bg-blue-100 rounded-full p-1 mr-2">
-              <AlertCircle size={18} className="text-blue-500" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-700">
-                자격 사항 관련 경험 1년을 쌓아요
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                관련 경험이 더 많을수록 채용 확률이 커집니다
-              </p>
-            </div>
-          </div>
-        </Card>
+        {/* Card removed as requested */}
       </div>
     </div>
   );
