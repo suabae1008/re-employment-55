@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,6 +7,7 @@ import JobCard from "../components/JobCard";
 import JobFilters from "../components/JobFilters";
 import { fetchJobs, toggleFavoriteJob } from "../services/jobService";
 import RecommendedJobsSection from "../components/RecommendedJobsSection";
+import { Job } from "../types/job";
 
 const Index = () => {
   const location = useLocation();
@@ -45,7 +47,7 @@ const Index = () => {
     data: jobs = [],
     isLoading,
     refetch,
-  } = useQuery({
+  } = useQuery<Job[]>({
     queryKey: ["jobs"],
     queryFn: fetchJobs,
   });
