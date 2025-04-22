@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -77,11 +78,6 @@ const JobCard: React.FC<JobCardProps> = ({
           <p className="text-gray-600 font-medium">
             {company}
           </p>
-          {location && (
-            <p className="text-gray-500 text-sm mt-1">
-              {location}
-            </p>
-          )}
           {category && (
             <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded mt-2">
               {category}
