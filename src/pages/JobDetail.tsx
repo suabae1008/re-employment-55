@@ -23,7 +23,6 @@ const JobDetail: React.FC = () => {
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [matchScore, setMatchScore] = useState(0);
   const [activeTab, setActiveTab] = useState("info");
-
   const fromFavorites = location.state?.fromFavorites || false;
 
   useEffect(() => {
@@ -153,7 +152,11 @@ const JobDetail: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={handleToggleFavorite}
-            className="text-gray-500 hover:bg-[#FFE376]"
+            className={`text-gray-500 hover:bg-[#FFE376] ${
+              job?.isFavorite 
+                ? "bg-[#FFE376] text-black" 
+                : "hover:bg-[#FFE376]"
+            }`}
           >
             <Star fill={job?.isFavorite ? "currentColor" : "none"} />
           </Button>
