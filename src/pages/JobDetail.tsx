@@ -1,26 +1,23 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Briefcase, Star } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Job } from "../components/JobList";
 import { getJobById, toggleFavoriteJob } from "../services/jobService";
 import { getMockMatchAnalysis } from "../services/matchingService";
-import BottomNavigation from "../components/BottomNavigation";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MatchingAnalysis from "../components/MatchingAnalysis";
 import JobHeader from "../components/job/JobHeader";
-import JobInfo from "../components/job/JobInfo";
-import JobDescription from "../components/job/JobDescription";
+import JobTabs from "../components/job/JobTabs";
+import JobActions from "../components/job/JobActions";
 import ApplyDialog from "../components/job/ApplyDialog";
-import MatchingScoreSection from "../components/matching/MatchingScoreSection";
 import QualificationQuestionDialog from "../components/matching/QualificationQuestionDialog";
-import { cn } from "@/lib/utils";
+import BottomNavigation from "../components/BottomNavigation";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-
+  
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [showApplyDialog, setShowApplyDialog] = useState(false);
@@ -131,51 +128,15 @@ const JobDetail: React.FC = () => {
           </div>
         )}
 
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="space-y-4"
-        >
-          <TabsList className="w-full">
-            <TabsTrigger value="info" className="flex-1">
-              공고 정보
-            </TabsTrigger>
-            {fromFavorites && (
-              <TabsTrigger value="analysis" className="flex-1">
-                맞춤형 분석
-              </TabsTrigger>
-            )}
-          </TabsList>
-
-          <TabsContent value="info" className="space-y-4">
-            <JobInfo job={job} />
-            <JobDescription job={job} />
-          </TabsContent>
-
-          {fromFavorites && (
-            <TabsContent value="analysis">
-              {hasCompletedQuestionnaire ? (
-                <MatchingAnalysis
-                  analysis={getMockMatchAnalysis(id as string)}
-                  onBack={() => setActiveTab("info")}
-                />
-              ) : (
-                <div className="text-center py-12">
-                  <div className="blur-sm mb-6">
-                    <MatchingScoreSection score={0} />
-                  </div>
-                  <Button
-                    onClick={handleStartAnalysis}
-                    className="text-blue-500 border-blue-500 hover:bg-blue-50"
-                    variant="outline"
-                  >
-                    나와 적합한 공고인지 알아봐요
-                  </Button>
-                </div>
-              )}
-            </TabsContent>
-          )}
-        </Tabs>
+        <JobTabs
+          job={job}
+          fromFavorites={fromFavorites}
+          activeTab={activeTab}
+          hasCompletedQuestionnaire={hasCompletedQuestionnaire}
+          matchAnalysis={getMockMatchAnalysis(id as string)}
+          onTabChange={setActiveTab}
+          onStartAnalysis={handleStartAnalysis}
+        />
 
         <QualificationQuestionDialog
           open={showQualificationDialog}
@@ -183,28 +144,11 @@ const JobDetail: React.FC = () => {
           onComplete={handleQuestionnaireComplete}
         />
 
-        <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleToggleFavorite}
-            className={cn(
-              "rounded-full transition-colors",
-              job?.isFavorite 
-                ? "bg-[#FFE376] text-black" 
-                : "text-gray-500 hover:bg-[#FFE376] hover:text-black"
-            )}
-          >
-            <Star fill={job?.isFavorite ? "currentColor" : "none"} />
-          </Button>
-          <Button
-            className="flex-1 py-3 text-lg font-medium bg-[#FFE376] hover:bg-[#FFE376] text-black"
-            onClick={() => setShowApplyDialog(true)}
-          >
-            <Briefcase className="ml-2" />
-            지원하기
-          </Button>
-        </div>
+        <JobActions
+          isFavorite={job.isFavorite}
+          onToggleFavorite={handleToggleFavorite}
+          onApplyClick={() => setShowApplyDialog(true)}
+        />
       </main>
 
       <ApplyDialog
