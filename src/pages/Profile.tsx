@@ -142,7 +142,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <Header title="자기소개서" />
+      <Header title="내 정보" />
 
       {/* Main Content */}
       <main className="px-4 py-6">
