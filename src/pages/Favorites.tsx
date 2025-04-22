@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 import { Star } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Job } from "../types/job";
@@ -14,14 +15,26 @@ const Favorites = () => {
   const [favoriteJobs, setFavoriteJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [jobScores, setJobScores] = useState<Record<string | number, number>>(
-    {}
-  );
+  const [jobScores, setJobScores] = useState<Record<string | number, number>>({});
   const [refreshing, setRefreshing] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadFavoriteJobs();
+    
+    // Add event listener for storage changes
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
+  
+  const handleStorageChange = (e: StorageEvent) => {
+    if (e.key === 'favoriteJobs') {
+      loadFavoriteJobs();
+    }
+  };
 
   const loadFavoriteJobs = async () => {
     try {
@@ -50,14 +63,13 @@ const Favorites = () => {
     }, 1000);
   };
 
-  const handleToggleFavorite = (jobId: string | number) => {
-    toggleFavoriteJob(jobId);
-    setFavoriteJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-    setJobScores((prevScores) => {
-      const newScores = { ...prevScores };
-      delete newScores[jobId];
-      return newScores;
-    });
+  const handleToggleFavorite = async (jobId: string | number) => {
+    await toggleFavoriteJob(jobId);
+    loadFavoriteJobs(); // Reload favorites after toggling
+  };
+  
+  const handleJobClick = (jobId: string | number) => {
+    navigate(`/job/${jobId}`, { state: { fromFavorites: true } });
   };
 
   const filteredJobs = searchQuery
@@ -77,6 +89,7 @@ const Favorites = () => {
       <Header
         title="관심 공고"
         refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
 
       <main className="px-4 py-2">
@@ -88,27 +101,31 @@ const Favorites = () => {
           <div>
             {filteredJobs.map((job) => (
               <div key={job.id} className="mb-3 relative">
-                <Link to={`/job/${job.id}`} state={{ fromFavorites: true }}>
-                  <div className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow p-3 pl-12">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{job.title}</h3>
-                        <p className="text-gray-600 text-sm">{job.company}</p>
-                        {job.deadline && (
-                          <p className="text-gray-500 text-xs mt-1">
-                            ~{job.deadline}
-                          </p>
-                        )}
-                      </div>
-                      <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
-                        매칭점수 {jobScores[job.id]}점
-                      </div>
+                <div 
+                  onClick={() => handleJobClick(job.id)}
+                  className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow p-3 pl-12 cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">{job.title}</h3>
+                      <p className="text-gray-600 text-sm">{job.company}</p>
+                      {job.deadline && (
+                        <p className="text-gray-500 text-xs mt-1">
+                          ~{job.deadline}
+                        </p>
+                      )}
+                    </div>
+                    <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
+                      매칭점수 {jobScores[job.id]}점
                     </div>
                   </div>
-                </Link>
+                </div>
                 <button
                   className="absolute top-1/2 -translate-y-1/2 left-3"
-                  onClick={() => handleToggleFavorite(job.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleFavorite(job.id);
+                  }}
                   aria-label="관심 공고에서 제거"
                 >
                   <Star

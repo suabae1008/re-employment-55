@@ -59,8 +59,8 @@ const Index = () => {
 
   const handleFavoriteToggle = async (jobId: string | number) => {
     await toggleFavoriteJob(jobId);
-    // Invalidate and refetch to ensure the UI reflects the current state
-    await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    window.dispatchEvent(new Event('storage'));
+    queryClient.invalidateQueries({ queryKey: ["jobs"] });
     refetch();
   };
 
