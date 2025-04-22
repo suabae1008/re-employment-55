@@ -111,7 +111,14 @@ export const getRecommendedJobs = async (userId: number): Promise<Job[]> => {
 // Get a job by ID
 export const getJobById = async (id: string | number): Promise<Job | null> => {
   const allJobs = await fetchJobs();
+  const storedFavorites = localStorage.getItem('favoriteJobs');
+  const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
   const job = allJobs.find(job => job.id.toString() === id.toString());
+  
+  if (job) {
+    job.isFavorite = favorites.some((fav: Job) => fav.id.toString() === id.toString());
+  }
+  
   return job || null;
 };
 
