@@ -117,28 +117,39 @@ export const getJobById = async (id: string | number): Promise<Job | null> => {
 
 // Toggle favorite status
 export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
-  const updatedJobs = allJobs.map(job =>
-    job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
-  );
+  const favoriteJobs = getFavoriteJobIds();
+  const jobIdStr = jobId.toString();
   
-  // Store updated jobs in localStorage to persist favorites
-  const favorites = updatedJobs.filter(job => job.isFavorite);
-  localStorage.setItem('favoriteJobs', JSON.stringify(favorites));
+  if (favoriteJobs.includes(jobIdStr)) {
+    // Remove from favorites
+    const updatedFavorites = favoriteJobs.filter(id => id !== jobIdStr);
+    localStorage.setItem('favoriteJobIds', JSON.stringify(updatedFavorites));
+  } else {
+    // Add to favorites
+    favoriteJobs.push(jobIdStr);
+    localStorage.setItem('favoriteJobIds', JSON.stringify(favoriteJobs));
+  }
   
-  return updatedJobs;
+  return getFavoriteJobs();
+};
+
+// Get favorite job IDs from localStorage
+export const getFavoriteJobIds = (): string[] => {
+  const stored = localStorage.getItem('favoriteJobIds');
+  return stored ? JSON.parse(stored) : [];
+};
+
+// Check if a job is favorite
+export const isJobFavorite = (jobId: string | number): boolean => {
+  const favoriteJobs = getFavoriteJobIds();
+  return favoriteJobs.includes(jobId.toString());
 };
 
 // Get favorite jobs
 export const getFavoriteJobs = async (): Promise<Job[]> => {
   const allJobs = await fetchJobs();
-  
-  // Get stored favorites from localStorage
-  const storedFavorites = localStorage.getItem('favoriteJobs');
-  const favoriteIds = storedFavorites ? JSON.parse(storedFavorites).map((job: Job) => job.id.toString()) : [];
-  
-  // Mark jobs as favorite if they're in the stored favorites
-  return allJobs.filter(job => favoriteIds.includes(job.id.toString()));
+  const favoriteJobIds = getFavoriteJobIds();
+  return allJobs.filter(job => favoriteJobIds.includes(job.id.toString()));
 };
 
 // Fetch jobs by category
