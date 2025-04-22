@@ -10,23 +10,23 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
   const rotationAngle = -90 + (score / 100) * 180;
   
   return (
-    <div className="relative w-40 h-20">
+    <div className="relative w-40 h-20 flex flex-col items-center">
       {/* Semicircle gauge background */}
       <div className="absolute inset-0">
         <svg viewBox="0 0 100 50" className="w-full h-full">
-          {/* Red section */}
+          {/* Yellow section */}
           <path
             d="M 10 50 A 40 40 0 0 1 50 10"
             fill="none"
-            stroke="#FCA5A5"
+            stroke="#FFE376"
             strokeWidth="12"
             strokeLinecap="round"
           />
-          {/* Yellow section */}
+          {/* Blue section */}
           <path
             d="M 50 10 A 40 40 0 0 1 90 50"
             fill="none"
-            stroke="#FDE047"
+            stroke="#4B9FF8"
             strokeWidth="12"
             strokeLinecap="round"
           />
@@ -46,9 +46,9 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
         </svg>
       </div>
       
-      {/* Score text */}
-      <div className="absolute -bottom-6 left-0 right-0 text-center">
-        매치 점수 {score}점
+      {/* Score text - now centered */}
+      <div className="absolute bottom-0 left-0 right-0 text-center text-sm">
+        {score}점
       </div>
     </div>
   );
