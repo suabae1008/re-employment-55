@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Star } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Job } from "../types/job";
@@ -18,6 +18,12 @@ const Favorites = () => {
     {}
   );
   const [refreshing, setRefreshing] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/', { state: { activeTab: 'all' } });
+  };
 
   useEffect(() => {
     loadFavoriteJobs();
@@ -77,6 +83,7 @@ const Favorites = () => {
       <Header
         title="관심 공고"
         refreshing={refreshing}
+        onBack={handleBack}
       />
 
       <main className="px-4 py-2">
