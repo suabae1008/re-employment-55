@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import BottomNavigation from "../components/BottomNavigation";
 import JobCard from "../components/JobCard";
 import JobFilters from "../components/JobFilters";
-import { useQuery } from "@tanstack/react-query";
-import { fetchJobs } from "../services/jobService";
+import { fetchJobs, toggleFavoriteJob } from "../services/jobService";
 import RecommendedJobsSection from "../components/RecommendedJobsSection";
-import JobCardList from "../components/JobCardList";
-import { toast } from "sonner";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<"recommended" | "all">("recommended");
   const [userName, setUserName] = useState<string>("김현숙");
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
@@ -57,6 +56,10 @@ const Index = () => {
       (filters.jobType === "all" || job.category === filters.jobType) &&
       (filters.region === "all" || (job.location && job.location.includes(filters.region)))
   );
+
+  const handleFavoriteToggle = async (jobId: string | number) => {
+    await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+  };
 
   return (
     <div className="bg-white min-h-screen">
@@ -132,7 +135,6 @@ const Index = () => {
           <div className="mb-6">
             <JobFilters onFilterChange={handleFilterChange} />
             
-            {/* Updated text styling and positioning */}
             <div className="text-2xl font-bold text-gray-900 mb-4 mt-4">
               이 공고, 놓치지 마세요!
             </div>
@@ -148,7 +150,7 @@ const Index = () => {
                   deadline={job.deadline}
                   isFavorite={job.isFavorite}
                   onClick={() => handleJobCardClick(job.id)}
-                  onFavoriteClick={() => {/* TODO: Implement favorite toggle */}}
+                  onFavoriteClick={handleFavoriteToggle}
                 />
               ))}
               {isLoading && <div>로딩중...</div>}

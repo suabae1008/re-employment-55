@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { toggleFavoriteJob } from '@/services/jobService';
 
 interface JobCardProps {
   id: string | number;
@@ -13,10 +13,11 @@ interface JobCardProps {
   deadline?: string;
   isFavorite?: boolean;
   onClick?: () => void;
-  onFavoriteClick?: () => void;
+  onFavoriteClick?: (id: string | number) => void;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
+  id,
   title,
   company,
   location,
@@ -27,10 +28,10 @@ const JobCard: React.FC<JobCardProps> = ({
   onClick,
   onFavoriteClick
 }) => {
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    onFavoriteClick?.();
-    toast(isFavorite ? '관심 공고���서 제거되었습니다.' : '관심 공고에 추가되었습니다.');
+    await toggleFavoriteJob(id);
+    onFavoriteClick?.(id);
   };
 
   const getDeadlineText = (deadline: string | undefined) => {
