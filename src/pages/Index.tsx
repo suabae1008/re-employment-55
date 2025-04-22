@@ -143,12 +143,7 @@ const Index = () => {
               {filteredJobs.map((job) => (
                 <JobCard
                   key={job.id}
-                  id={job.id}
-                  title={job.title}
-                  company={job.company}
-                  highlight={job.highlight}
-                  deadline={job.deadline}
-                  isFavorite={job.isFavorite}
+                  {...job}
                   onClick={() => handleJobCardClick(job.id)}
                   onFavoriteClick={handleFavoriteToggle}
                 />
