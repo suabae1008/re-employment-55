@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Briefcase, Star } from "lucide-react";
@@ -149,13 +148,6 @@ const JobDetail: React.FC = () => {
           </TabsList>
 
           <TabsContent value="info" className="space-y-4">
-            {fromFavorites && (
-              <MatchingScoreSection 
-                score={hasCompletedQuestionnaire ? matchScore : undefined}
-                isLoading={!hasCompletedQuestionnaire}
-                onStartAnalysis={handleStartAnalysis}
-              />
-            )}
             <JobInfo job={job} />
             <JobDescription job={job} />
           </TabsContent>
@@ -169,7 +161,9 @@ const JobDetail: React.FC = () => {
                 />
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 mb-4">맞춤형 분석을 진행해주세요</p>
+                  <div className="blur-sm mb-6">
+                    <MatchingScoreSection score={0} />
+                  </div>
                   <Button
                     onClick={handleStartAnalysis}
                     className="text-blue-500 border-blue-500 hover:bg-blue-50"

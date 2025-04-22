@@ -108,7 +108,7 @@ const Favorites = () => {
                         )}
                       </div>
                       <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
-                        매칭점수 준비중
+                        {jobScores[job.id] ? `매칭점수 ${jobScores[job.id]}점` : '매칭점수 준비중'}
                       </div>
                     </div>
                   </div>
