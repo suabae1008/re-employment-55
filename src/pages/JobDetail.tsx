@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Briefcase, Star } from "lucide-react";
@@ -12,6 +13,7 @@ import JobHeader from "../components/job/JobHeader";
 import JobInfo from "../components/job/JobInfo";
 import JobDescription from "../components/job/JobDescription";
 import ApplyDialog from "../components/job/ApplyDialog";
+import { cn } from "@/lib/utils";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -152,11 +154,12 @@ const JobDetail: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={handleToggleFavorite}
-            className={`text-gray-500 hover:bg-[#FFE376] ${
+            className={cn(
+              "rounded-full transition-colors",
               job?.isFavorite 
                 ? "bg-[#FFE376] text-black" 
-                : "hover:bg-[#FFE376]"
-            }`}
+                : "text-gray-500 hover:bg-[#FFE376] hover:text-black"
+            )}
           >
             <Star fill={job?.isFavorite ? "currentColor" : "none"} />
           </Button>
