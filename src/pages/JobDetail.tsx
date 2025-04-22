@@ -12,6 +12,7 @@ import JobHeader from "../components/job/JobHeader";
 import JobInfo from "../components/job/JobInfo";
 import JobDescription from "../components/job/JobDescription";
 import ApplyDialog from "../components/job/ApplyDialog";
+import cn from "classnames";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -152,13 +153,17 @@ const JobDetail: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={handleToggleFavorite}
-            className={`text-gray-500 hover:bg-[#FFE376] ${
-              job?.isFavorite 
-                ? "bg-[#FFE376] text-black" 
-                : "hover:bg-[#FFE376]"
-            }`}
+            className={cn(
+              "w-12 h-12 rounded-full transition-colors",
+              job?.isFavorite ? "bg-[#FFE376]" : "hover:bg-gray-100"
+            )}
           >
-            <Star fill={job?.isFavorite ? "currentColor" : "none"} />
+            <Star
+              className={cn(
+                "transition-colors",
+                job?.isFavorite ? "text-black" : "text-gray-500"
+              )}
+            />
           </Button>
           <Button
             className="flex-1 py-3 text-lg font-medium bg-[#FFE376] hover:bg-[#FFE376] text-black"
