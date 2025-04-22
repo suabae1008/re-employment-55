@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toggleFavoriteJob } from '@/services/jobService';
+import { toast } from 'sonner';
 
 interface JobCardProps {
   id: string | number;
@@ -44,8 +44,10 @@ const JobCard: React.FC<JobCardProps> = ({
       if (onFavoriteClick) {
         onFavoriteClick(id);
       }
+      toast(newState ? "관심 공고에 추가되었습니다" : "관심 공고에서 제거되었습니다");
     } catch (error) {
       console.error('Failed to toggle favorite:', error);
+      toast.error("관심 공고 변경에 실패했습니다");
     }
   };
 
