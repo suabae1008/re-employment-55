@@ -69,17 +69,8 @@ export const fetchJobs = async (): Promise<Job[]> => {
       highlight: 'D-30'
     };
 
-    // Get favorite jobs from localStorage
-    const favoritesFromStorage = localStorage.getItem('favoriteJobs');
-    const favorites = favoritesFromStorage ? JSON.parse(favoritesFromStorage) : [];
-    const favoriteIds = favorites.map((fav: Job) => fav.id.toString());
-
-    // Mark jobs as favorites if they are in the favorites list
-    const allJobs = dbJobs ? [sampleJob, ...dbJobs] : [sampleJob];
-    return allJobs.map(job => ({
-      ...job,
-      isFavorite: favoriteIds.includes(job.id.toString())
-    }));
+    if (!dbJobs) return [sampleJob];
+    return [sampleJob, ...dbJobs];
   } catch (error) {
     console.error('Error fetching jobs from Supabase:', error);
     return [];
@@ -126,39 +117,28 @@ export const getJobById = async (id: string | number): Promise<Job | null> => {
 
 // Toggle favorite status
 export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
-  const storedFavoritesString = localStorage.getItem('favoriteJobs');
-  let favorites: Job[] = storedFavoritesString ? JSON.parse(storedFavoritesString) : [];
+  const allJobs = await fetchJobs();
+  const updatedJobs = allJobs.map(job =>
+    job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
+  );
   
-  // Check if job is already in favorites
-  const jobIndex = favorites.findIndex(job => job.id.toString() === jobId.toString());
-  
-  if (jobIndex === -1) {
-    // If not in favorites, fetch the job and add it
-    const allJobs = await fetchJobs();
-    const jobToAdd = allJobs.find(job => job.id.toString() === jobId.toString());
-    if (jobToAdd) {
-      favorites.push({ ...jobToAdd, isFavorite: true });
-    }
-  } else {
-    // If already in favorites, remove it
-    favorites.splice(jobIndex, 1);
-  }
-  
-  // Store updated favorites
+  // Store updated jobs in localStorage to persist favorites
+  const favorites = updatedJobs.filter(job => job.isFavorite);
   localStorage.setItem('favoriteJobs', JSON.stringify(favorites));
-  return favorites;
+  
+  return updatedJobs;
 };
 
 // Get favorite jobs
 export const getFavoriteJobs = async (): Promise<Job[]> => {
-  const storedFavoritesString = localStorage.getItem('favoriteJobs');
-  const favorites: Job[] = storedFavoritesString ? JSON.parse(storedFavoritesString) : [];
+  const allJobs = await fetchJobs();
   
-  // Ensure all favorite jobs have isFavorite flag set to true
-  return favorites.map(job => ({
-    ...job,
-    isFavorite: true
-  }));
+  // Get stored favorites from localStorage
+  const storedFavorites = localStorage.getItem('favoriteJobs');
+  const favoriteIds = storedFavorites ? JSON.parse(storedFavorites).map((job: Job) => job.id.toString()) : [];
+  
+  // Mark jobs as favorite if they're in the stored favorites
+  return allJobs.filter(job => favoriteIds.includes(job.id.toString()));
 };
 
 // Fetch jobs by category
