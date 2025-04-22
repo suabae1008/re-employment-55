@@ -5,7 +5,6 @@ import { ArrowLeft, Star } from 'lucide-react';
 import { Job } from '../../components/JobList';
 import { toggleFavoriteJob, isJobFavorite } from '../../services/jobService';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
 
 interface JobHeaderProps {
   job: Job;
@@ -28,14 +27,8 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
     try {
       await toggleFavoriteJob(job.id);
       setIsFavorite(!isFavorite);
-      toast(
-        isFavorite
-          ? "관심 공고에서 제거되었습니다"
-          : "관심 공고에 추가되었습니다"
-      );
     } catch (error) {
       console.error("관심 공고 토글 실패:", error);
-      toast("요청 처리 중 오류가 발생했습니다");
     }
   };
 
@@ -66,3 +59,4 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
 };
 
 export default JobHeader;
+
