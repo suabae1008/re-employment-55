@@ -9,19 +9,44 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import MatchScoreGauge from "../MatchScoreGauge";
+import { Button } from "../ui/button";
 
 interface MatchingScoreSectionProps {
-  score: number;
+  score?: number;
+  isLoading?: boolean;
+  onStartAnalysis?: () => void;
 }
 
-const MatchingScoreSection: React.FC<MatchingScoreSectionProps> = ({ score }) => {
+const MatchingScoreSection: React.FC<MatchingScoreSectionProps> = ({ 
+  score,
+  isLoading = false,
+  onStartAnalysis
+}) => {
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="flex flex-col items-center text-center">
+          <div className="blur-sm">
+            <MatchScoreGauge score={0} />
+          </div>
+          <Button
+            variant="outline"
+            onClick={onStartAnalysis}
+            className="mt-4 text-blue-500 border-blue-500 hover:bg-blue-50"
+          >
+            나와 적합한 공고인지 알아봐요
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm">
       <div className="flex flex-col items-center text-center">
-        <MatchScoreGauge score={score} />
-        
+        <MatchScoreGauge score={score || 0} />
         <div className="flex items-center gap-2 mt-2">
-          <h2 className="text-lg font-bold">매치점수 {score.toFixed(0)}점</h2>
+          <h2 className="text-lg font-bold">매치점수 {score}점</h2>
           <Dialog>
             <DialogTrigger>
               <Info className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />

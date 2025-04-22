@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Briefcase, Star } from "lucide-react";
@@ -26,6 +25,8 @@ const JobDetail: React.FC = () => {
   const [matchScore, setMatchScore] = useState(0);
   const [activeTab, setActiveTab] = useState("info");
   const fromFavorites = location.state?.fromFavorites || false;
+  const [showQualificationDialog, setShowQualificationDialog] = useState(false);
+  const [hasCompletedQuestionnaire, setHasCompletedQuestionnaire] = useState(false);
 
   useEffect(() => {
     const loadJob = async () => {
@@ -71,6 +72,16 @@ const JobDetail: React.FC = () => {
         },
       });
     }
+  };
+
+  const handleStartAnalysis = () => {
+    setShowQualificationDialog(true);
+  };
+
+  const handleQuestionnaireComplete = (answers: boolean[]) => {
+    setHasCompletedQuestionnaire(true);
+    const analysis = getMockMatchAnalysis(id as string);
+    setMatchScore(analysis.totalScore);
   };
 
   if (loading) {
@@ -135,19 +146,45 @@ const JobDetail: React.FC = () => {
           </TabsList>
 
           <TabsContent value="info" className="space-y-4">
+            {fromFavorites && (
+              <MatchingScoreSection 
+                score={hasCompletedQuestionnaire ? matchScore : undefined}
+                isLoading={!hasCompletedQuestionnaire}
+                onStartAnalysis={handleStartAnalysis}
+              />
+            )}
             <JobInfo job={job} />
             <JobDescription job={job} />
           </TabsContent>
 
           {fromFavorites && (
             <TabsContent value="analysis">
-              <MatchingAnalysis
-                analysis={getMockMatchAnalysis(id as string)}
-                onBack={() => setActiveTab("info")}
-              />
+              {hasCompletedQuestionnaire ? (
+                <MatchingAnalysis
+                  analysis={getMockMatchAnalysis(id as string)}
+                  onBack={() => setActiveTab("info")}
+                />
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 mb-4">맞춤형 분석을 진행해주세요</p>
+                  <Button
+                    onClick={handleStartAnalysis}
+                    className="text-blue-500 border-blue-500 hover:bg-blue-50"
+                    variant="outline"
+                  >
+                    나와 적합한 공고인지 알아봐요
+                  </Button>
+                </div>
+              )}
             </TabsContent>
           )}
         </Tabs>
+
+        <QualificationQuestionDialog
+          open={showQualificationDialog}
+          onOpenChange={setShowQualificationDialog}
+          onComplete={handleQuestionnaireComplete}
+        />
 
         <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-white border-t border-gray-100 flex gap-2">
           <Button

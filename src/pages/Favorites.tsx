@@ -107,8 +107,8 @@ const Favorites = () => {
                           </p>
                         )}
                       </div>
-                      <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
-                        매칭점수 {jobScores[job.id]}점
+                      <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
+                        매칭점수 준비중
                       </div>
                     </div>
                   </div>
