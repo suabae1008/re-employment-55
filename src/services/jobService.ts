@@ -3,6 +3,9 @@ import { Job } from '@/types/job';
 import { EducationProgram } from '@/types/job';
 import { fetchJobsFromDB } from './supabaseClient';
 
+// Define API endpoints
+const EDUCATION_API = 'https://api.example.com/educations'; // Using a placeholder URL
+
 // Convert DB job entry to our Job format
 const convertDBJobToJobFormat = (dbJob: any): Job => {
   const locationMatch = dbJob.work_location?.match(/서울특별시\s*([^\s]+구)/);
@@ -61,8 +64,13 @@ export const getJobsByType = async (type: string): Promise<Job[]> => {
 
 // Get education data from backend API
 export const getEducationData = async (): Promise<EducationProgram[]> => {
-  const res = await axios.get<EducationProgram[]>(EDUCATION_API);
-  return res.data;
+  try {
+    const res = await axios.get<EducationProgram[]>(EDUCATION_API);
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching education data:', error);
+    return [];
+  }
 };
 
 // Get recommendations for a user
