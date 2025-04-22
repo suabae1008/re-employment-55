@@ -9,7 +9,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: ["e23ce393-ab5c-4db7-bf4d-6a17d78624dc.lovableproject.com"],
+    allowedHosts: [
+      "e23ce393-ab5c-4db7-bf4d-6a17d78624dc.lovableproject.com",
+      "cef3844d-1dbd-4447-a5c0-2fbfb1f340ec.lovableproject.com"
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
