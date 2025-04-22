@@ -117,28 +117,41 @@ export const getJobById = async (id: string | number): Promise<Job | null> => {
 
 // Toggle favorite status
 export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
-  const updatedJobs = allJobs.map(job =>
-    job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
-  );
+  const storedFavorites = localStorage.getItem('favoriteJobs');
+  let favorites: Job[] = storedFavorites ? JSON.parse(storedFavorites) : [];
   
-  // Store updated jobs in localStorage to persist favorites
-  const favorites = updatedJobs.filter(job => job.isFavorite);
+  // Check if job is already in favorites
+  const jobIndex = favorites.findIndex(job => job.id.toString() === jobId.toString());
+  
+  if (jobIndex === -1) {
+    // If not in favorites, fetch the job and add it
+    const allJobs = await fetchJobs();
+    const jobToAdd = allJobs.find(job => job.id.toString() === jobId.toString());
+    if (jobToAdd) {
+      favorites.push({ ...jobToAdd, isFavorite: true });
+    }
+  } else {
+    // If already in favorites, remove it
+    favorites.splice(jobIndex, 1);
+  }
+  
+  // Store updated favorites
   localStorage.setItem('favoriteJobs', JSON.stringify(favorites));
-  
-  return updatedJobs;
+  return favorites;
 };
 
 // Get favorite jobs
 export const getFavoriteJobs = async (): Promise<Job[]> => {
   const allJobs = await fetchJobs();
-  
-  // Get stored favorites from localStorage
   const storedFavorites = localStorage.getItem('favoriteJobs');
-  const favoriteIds = storedFavorites ? JSON.parse(storedFavorites).map((job: Job) => job.id.toString()) : [];
+  const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+  const favoriteIds = favorites.map((job: Job) => job.id.toString());
   
-  // Mark jobs as favorite if they're in the stored favorites
-  return allJobs.filter(job => favoriteIds.includes(job.id.toString()));
+  // Mark jobs as favorite if they're in stored favorites
+  return allJobs.map(job => ({
+    ...job,
+    isFavorite: favoriteIds.includes(job.id.toString())
+  }));
 };
 
 // Fetch jobs by category

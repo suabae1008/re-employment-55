@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -59,6 +58,7 @@ const Index = () => {
   );
 
   const handleFavoriteToggle = async (jobId: string | number) => {
+    await toggleFavoriteJob(jobId);
     // Invalidate and refetch to ensure the UI reflects the current state
     await queryClient.invalidateQueries({ queryKey: ["jobs"] });
     refetch();
