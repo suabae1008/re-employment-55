@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "../components/BottomNavigation";
@@ -35,7 +34,7 @@ const Index = () => {
     };
   }, []);
 
-  const { data: jobs, isLoading } = useQuery({
+  const { data: jobs = [], isLoading } = useQuery({
     queryKey: ["jobs"],
     queryFn: fetchJobs,
   });
@@ -53,13 +52,11 @@ const Index = () => {
     setFilters((prev) => ({ ...prev, [filterType]: value }));
   };
 
-  const filteredJobs = jobs
-    ? jobs.filter(
-        (job) =>
-          (filters.jobType === "all" || job.category === filters.jobType) &&
-          (filters.region === "all" || (job.location && job.location.includes(filters.region)))
-      )
-    : [];
+  const filteredJobs = jobs.filter(
+    (job) =>
+      (filters.jobType === "all" || job.category === filters.jobType) &&
+      (filters.region === "all" || (job.location && job.location.includes(filters.region)))
+  );
 
   return (
     <div className="bg-white min-h-screen">
@@ -139,20 +136,6 @@ const Index = () => {
               onJobCardClick={handleJobCardClick} 
               isLoading={isLoading} 
             />
-
-            <h2 className="text-[rgba(44,44,44,1)] text-2xl font-bold leading-loose mt-10">
-              이 공고, 놓치지 마세요!
-            </h2>
-            <div className="mt-4">
-              <JobCard
-                id="notice-1"
-                highlight="D-2"
-                title="방문간호사 모집 공고 (파트 타임)"
-                company="주식회사웰케어스테이션"
-                location="서울특별시 서초구"
-                category="간호"
-              />
-            </div>
           </div>
         )}
       </main>

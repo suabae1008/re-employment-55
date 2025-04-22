@@ -1,12 +1,7 @@
-// src/services/jobService.ts
-
 import axios from 'axios';
 import { Job } from '@/types/job';
 import { EducationProgram } from '@/types/job';
 import { fetchJobsFromDB } from './supabaseClient';
-
-const JOB_API = 'http://localhost:3001/api/jobs';
-const EDUCATION_API = 'http://localhost:3001/api/educations';
 
 // Convert DB job entry to our Job format
 const convertDBJobToJobFormat = (dbJob: any): Job => {
@@ -25,38 +20,27 @@ const convertDBJobToJobFormat = (dbJob: any): Job => {
     } catch (e) { }
   }
   return {
-    id: dbJob.id || dbJob.regist_no || dbJob.JO_REGIST_NO || '', // Add fallback for Seoul API
-    title: dbJob.job_title || dbJob.JO_SJ || '',
-    company: dbJob.company_name || dbJob.CMPNY_NM || '',
+    id: dbJob.id || dbJob.regist_no,
+    title: dbJob.job_title,
+    company: dbJob.company_name,
     location: location,
     deadline: deadline,
-    employmentType: dbJob.employment_type_name || dbJob.EMPLYM_STLE || '정규직',
-    category: dbJob.job_type_name || dbJob.EMPLYM_STLE || '일반',
+    employmentType: dbJob.employment_type_name || '정규직',
+    category: dbJob.job_type_name || '일반',
     isFavorite: false,
     description: dbJob.job_description || '',
     highlight: highlight,
   };
 };
 
-// Supabase 우선 전체 구직 공고 불러오기 (fetchJobs)
+// Fetch all jobs from Supabase TB_JOBS table
 export const fetchJobs = async (): Promise<Job[]> => {
   try {
-
-    const res = await axios.get<Job[]>(JOB_API);
-    return res.data.map(job => ({
-      ...job,
-      category: job.employment_type || '기타',
-      location: job.location || job.work_address || '서울',
-      deadline: job.receipt_close || '상시채용',
-      employmentType: job.employment_type || '정규직',
-      isFavorite: false,
-      description: job.description || '',
-      company: job.company || '',
-      title: job.title || '',
-      id: job.id || 0,
-    }));
+    const dbJobs = await fetchJobsFromDB();
+    if (!dbJobs) return [];
+    return dbJobs.map(convertDBJobToJobFormat);
   } catch (error) {
-    console.error('Supabase/백엔드 구직 공고 로드 실패:', error);
+    console.error('Error fetching jobs from Supabase:', error);
     return [];
   }
 };
