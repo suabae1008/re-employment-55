@@ -1,119 +1,78 @@
 
 import React from 'react';
-import { MapPin, Calendar, Briefcase, Star } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Star } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 interface JobCardProps {
-  id?: string | number;
+  id: string | number;
   title: string;
   company: string;
-  location?: string;
-  imageUrl?: string;
-  category?: string;
   highlight?: string;
+  deadline?: string;
+  isFavorite?: boolean;
   onClick?: () => void;
+  onFavoriteClick?: () => void;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
-  id,
   title,
   company,
-  location,
-  imageUrl,
-  category,
   highlight,
+  deadline,
+  isFavorite = false,
   onClick,
+  onFavoriteClick
 }) => {
-  const navigate = useNavigate();
-  
-  // Generate a pastel background color based on the company name
-  const generateBackgroundColor = (name: string) => {
-    const colors = [
-      'bg-blue-50', 'bg-indigo-50', 'bg-purple-50', 
-      'bg-pink-50', 'bg-red-50', 'bg-orange-50',
-      'bg-amber-50', 'bg-yellow-50', 'bg-lime-50',
-      'bg-green-50', 'bg-emerald-50', 'bg-teal-50',
-      'bg-cyan-50', 'bg-sky-50'
-    ];
-    
-    // Create a simple hash from the company name
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = (hash + name.charCodeAt(i)) % colors.length;
-    }
-    
-    return colors[hash];
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onFavoriteClick?.();
   };
-  
-  const bgColor = generateBackgroundColor(company);
-  
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick();
-    } else if (id) {
-      navigate(`/job/${id}`);
-    }
-  };
-  
-  const cardContent = (
-    <>
-      <div className={`p-5 ${imageUrl ? '' : bgColor} rounded-t-lg`}>
-        {imageUrl ? (
-          <div className="w-full h-32 overflow-hidden rounded-t-lg mb-3">
-            <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="flex justify-between items-start">
-            <h3 className="font-bold text-lg line-clamp-2">{title}</h3>
-            {highlight && (
-              <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ml-2"
-                   style={{ 
-                     color: highlight.includes("D-") && parseInt(highlight.replace("D-", "")) <= 7 
-                       ? "#ea384c" : "#0EA5E9" 
-                   }}
-              >
-                {highlight}
-              </div>
-            )}
-          </div>
-        )}
-        <div className="space-y-2 mt-2">
-          <div className="text-gray-500 font-medium">{company}</div>
-          
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            {category && (
-              <div className="inline-flex items-center bg-app-light-blue text-app-blue px-2 py-1 rounded-full text-xs">
-                {category}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="bg-white p-3 border-t border-gray-100 rounded-b-lg">
-        <div className="flex flex-col gap-1.5">
-          {location && (
-            <div className="flex items-center text-gray-500 text-xs">
-              <MapPin size={14} className="mr-1 flex-shrink-0" />
-              <span>{location}</span>
-            </div>
-          )}
-          <div className="flex items-center text-gray-500 text-xs">
-            <Calendar size={14} className="mr-1 flex-shrink-0" />
-            <span>마감 {new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
-          </div>
-        </div>
-      </div>
-    </>
-  );
 
   return (
-    <div 
-      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer animate-fade-in"
-      onClick={handleCardClick}
+    <article 
+      onClick={onClick}
+      className="relative bg-white border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:shadow transition"
     >
-      {cardContent}
-    </div>
+      <button
+        onClick={handleFavoriteClick}
+        className="absolute top-4 right-4 hover:scale-110 transition"
+      >
+        <Star
+          size={24}
+          className={cn(
+            "transition-colors",
+            isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+          )}
+        />
+      </button>
+
+      <div className="flex justify-between items-start pr-8">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+            {title}
+          </h3>
+          <p className="text-gray-600 font-medium">
+            {company}
+          </p>
+        </div>
+        {highlight && (
+          <span 
+            className={cn(
+              "text-base font-bold",
+              highlight.includes("D-") ? "text-[#ea384c]" : "text-[#0EA5E9]"
+            )}
+          >
+            {highlight}
+          </span>
+        )}
+      </div>
+
+      {deadline && (
+        <div className="mt-2 text-sm text-gray-400">
+          마감일: {deadline}
+        </div>
+      )}
+    </article>
   );
 };
 

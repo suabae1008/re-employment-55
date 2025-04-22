@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "../components/BottomNavigation";
@@ -130,12 +131,31 @@ const Index = () => {
 
         {activeTab === "all" && (
           <div className="mb-6">
+            <div className="text-lg font-bold text-gray-900 mb-4">
+              이 공고, 놓치지 마세요!
+            </div>
             <JobFilters onFilterChange={handleFilterChange} />
-            <JobCardList 
-              jobs={filteredJobs} 
-              onJobCardClick={handleJobCardClick} 
-              isLoading={isLoading} 
-            />
+            <div className="mt-4 space-y-4">
+              {filteredJobs.map((job) => (
+                <JobCard
+                  key={job.id}
+                  id={job.id}
+                  title={job.title}
+                  company={job.company}
+                  highlight={job.highlight}
+                  deadline={job.deadline}
+                  isFavorite={job.isFavorite}
+                  onClick={() => handleJobCardClick(job.id)}
+                  onFavoriteClick={() => {/* TODO: Implement favorite toggle */}}
+                />
+              ))}
+              {isLoading && <div>로딩중...</div>}
+              {!isLoading && filteredJobs.length === 0 && (
+                <div className="text-center text-gray-500">
+                  표시할 공고가 없습니다.
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
