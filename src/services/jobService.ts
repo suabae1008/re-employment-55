@@ -145,7 +145,7 @@ export const getFavoriteJobs = async (): Promise<Job[]> => {
   const storedFavorites = localStorage.getItem('favoriteJobs');
   const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
   
-  return favorites.filter((job: Job) => job.isFavorite);
+  return favorites;
 };
 
 // Fetch jobs by category
