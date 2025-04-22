@@ -32,6 +32,23 @@ const JobCard: React.FC<JobCardProps> = ({
     onFavoriteClick?.();
   };
 
+  const getDeadlineText = (deadline: string | undefined) => {
+    if (!deadline || deadline === "상시채용") return "";
+    try {
+      const date = new Date(deadline);
+      if (!isNaN(date.getTime())) {
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const weekDayNames = ["일", "월", "화", "수", "목", "금", "토"];
+        const weekDay = weekDayNames[date.getDay()];
+        return `~${month}/${day}(${weekDay})`;
+      }
+    } catch {
+      return "";
+    }
+    return "";
+  };
+
   return (
     <article 
       onClick={onClick}
@@ -39,7 +56,7 @@ const JobCard: React.FC<JobCardProps> = ({
     >
       <button
         onClick={handleFavoriteClick}
-        className="absolute top-4 right-4 hover:scale-110 transition"
+        className="absolute top-4 left-4 hover:scale-110 transition"
       >
         <Star
           size={24}
@@ -50,7 +67,7 @@ const JobCard: React.FC<JobCardProps> = ({
         />
       </button>
 
-      <div className="flex justify-between items-start pr-8">
+      <div className="flex justify-between items-start pl-8">
         <div>
           <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
             {title}
@@ -69,23 +86,24 @@ const JobCard: React.FC<JobCardProps> = ({
             </span>
           )}
         </div>
-        {highlight && (
-          <span 
-            className={cn(
-              "text-base font-bold",
-              highlight.includes("D-") ? "text-[#ea384c]" : "text-[#0EA5E9]"
-            )}
-          >
-            {highlight}
-          </span>
-        )}
-      </div>
-
-      {deadline && (
-        <div className="mt-2 text-sm text-gray-400">
-          마감일: {deadline}
+        <div className="flex flex-col items-end">
+          {highlight && (
+            <span 
+              className={cn(
+                "text-base font-bold",
+                highlight.includes("D-") ? "text-[#ea384c]" : "text-[#0EA5E9]"
+              )}
+            >
+              {highlight}
+            </span>
+          )}
+          {deadline && deadline !== "상시채용" && (
+            <span className="text-xs text-gray-400 mt-1">
+              {getDeadlineText(deadline)}
+            </span>
+          )}
         </div>
-      )}
+      </div>
     </article>
   );
 };
