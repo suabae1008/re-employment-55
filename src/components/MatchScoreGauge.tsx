@@ -7,7 +7,7 @@ interface MatchScoreGaugeProps {
 
 const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
   // Calculate rotation angle based on score (0-100)
-  // 0 score = -90 degrees, 100 score = 90 degrees
+  // 0 score = -90 degrees (left), 100 score = 90 degrees (right)
   const rotationAngle = (score / 100) * 180 - 90;
   
   // Determine color zones
@@ -51,6 +51,11 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
       >
         {/* Needle base circle */}
         <div className="absolute top-0 left-1/2 w-4 h-4 rounded-full bg-gray-700 transform -translate-x-1/2 -translate-y-1/2" />
+      </div>
+
+      {/* Score display */}
+      <div className="absolute bottom-0 left-0 right-0 text-center font-medium">
+        매칭점수 {score}점
       </div>
     </div>
   );

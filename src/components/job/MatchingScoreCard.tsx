@@ -17,7 +17,7 @@ const MatchingScoreCard: React.FC<MatchingScoreCardProps> = ({
     <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
       <div className="text-center mb-2">
         <div className="mb-3 flex items-center justify-center">
-          <h3 className="text-lg font-semibold">나와 적합한 공고인지 알아봤어요</h3>
+          <h3 className="text-lg font-semibold">맞춤형 분석</h3>
           <div className="text-orange-500 ml-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
