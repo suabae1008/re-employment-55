@@ -1,17 +1,19 @@
-
-import React from 'react';
-import { MapPin, Calendar, Briefcase, Star } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Star } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { toggleFavoriteJob, isJobFavorite } from '@/services/jobService';
 
 interface JobCardProps {
-  id?: string | number;
+  id: string | number;
   title: string;
   company: string;
   location?: string;
-  imageUrl?: string;
   category?: string;
   highlight?: string;
+  deadline?: string;
+  isFavorite?: boolean;
   onClick?: () => void;
+  onFavoriteClick?: (id: string | number) => void;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -19,97 +21,96 @@ const JobCard: React.FC<JobCardProps> = ({
   title,
   company,
   location,
-  imageUrl,
   category,
   highlight,
+  deadline,
+  isFavorite = false,
   onClick,
+  onFavoriteClick
 }) => {
-  const navigate = useNavigate();
-  
-  // Generate a pastel background color based on the company name
-  const generateBackgroundColor = (name: string) => {
-    const colors = [
-      'bg-blue-50', 'bg-indigo-50', 'bg-purple-50', 
-      'bg-pink-50', 'bg-red-50', 'bg-orange-50',
-      'bg-amber-50', 'bg-yellow-50', 'bg-lime-50',
-      'bg-green-50', 'bg-emerald-50', 'bg-teal-50',
-      'bg-cyan-50', 'bg-sky-50'
-    ];
-    
-    // Create a simple hash from the company name
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = (hash + name.charCodeAt(i)) % colors.length;
-    }
-    
-    return colors[hash];
-  };
-  
-  const bgColor = generateBackgroundColor(company);
-  
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick();
-    } else if (id) {
-      navigate(`/job/${id}`);
+  const [isFavoriteState, setIsFavoriteState] = useState(isFavorite);
+
+  useEffect(() => {
+    setIsFavoriteState(isJobFavorite(id));
+  }, [id]);
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleFavoriteJob(id);
+    setIsFavoriteState(prev => !prev);
+    if (onFavoriteClick) {
+      onFavoriteClick(id);
     }
   };
-  
-  const cardContent = (
-    <>
-      <div className={`p-5 ${imageUrl ? '' : bgColor} rounded-t-lg`}>
-        {imageUrl ? (
-          <div className="w-full h-32 overflow-hidden rounded-t-lg mb-3">
-            <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="h-12 flex items-center">
-            <Briefcase className="text-gray-500 mr-2" size={18} />
-            <span className="text-gray-700 font-medium">{company}</span>
-          </div>
-        )}
-        <div className="space-y-2">
-          <h3 className="font-bold text-lg line-clamp-2">{title}</h3>
-          
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            {category && (
-              <div className="inline-flex items-center bg-app-light-blue text-app-blue px-2 py-1 rounded-full text-xs">
-                {category}
-              </div>
-            )}
-            {highlight && (
-              <div className="inline-flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
-                {highlight}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="bg-white p-3 border-t border-gray-100 rounded-b-lg">
-        <div className="flex flex-col gap-1.5">
-          {location && (
-            <div className="flex items-center text-gray-500 text-xs">
-              <MapPin size={14} className="mr-1 flex-shrink-0" />
-              <span>{location}</span>
-            </div>
-          )}
-          <div className="flex items-center text-gray-500 text-xs">
-            <Calendar size={14} className="mr-1 flex-shrink-0" />
-            <span>마감 {new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+
+  const getDeadlineText = (deadline: string | undefined) => {
+    if (!deadline || deadline === "상시채용") return "";
+    try {
+      const date = new Date(deadline);
+      if (!isNaN(date.getTime())) {
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const weekDayNames = ["일", "월", "화", "수", "목", "금", "토"];
+        const weekDay = weekDayNames[date.getDay()];
+        return `~${month}/${day}(${weekDay})`;
+      }
+    } catch {
+      return "";
+    }
+    return "";
+  };
 
   return (
-    <div 
-      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer animate-fade-in"
-      onClick={handleCardClick}
+    <article 
+      onClick={onClick}
+      className="relative bg-white border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:shadow transition"
     >
-      {cardContent}
-    </div>
+      <button
+        onClick={handleFavoriteClick}
+        className="absolute top-4 left-4 hover:scale-110 transition"
+      >
+        <Star
+          size={24}
+          className={cn(
+            "transition-colors",
+            isFavoriteState ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+          )}
+        />
+      </button>
+
+      <div className="flex justify-between items-start pl-8">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+            {title}
+          </h3>
+          <p className="text-gray-600 font-medium">
+            {company}
+          </p>
+          {category && (
+            <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded mt-2">
+              {category}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col items-end">
+          {highlight && (
+            <span 
+              className={cn(
+                "text-base font-bold",
+                highlight.includes("D-") ? "text-[#ea384c]" : "text-[#0EA5E9]"
+              )}
+            >
+              {highlight}
+            </span>
+          )}
+          {deadline && deadline !== "상시채용" && (
+            <span className="text-xs text-gray-400 mt-1">
+              {getDeadlineText(deadline)}
+            </span>
+          )}
+        </div>
+      </div>
+    </article>
   );
 };
 

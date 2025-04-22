@@ -1,7 +1,8 @@
+
 // src/types/job.ts
 
 export interface Job {
-  id: number;
+  id: number | string;
   company: string;
   title: string;
   employment_type?: string;

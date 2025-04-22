@@ -1,12 +1,10 @@
-// src/services/jobService.ts
-
 import axios from 'axios';
 import { Job } from '@/types/job';
 import { EducationProgram } from '@/types/job';
 import { fetchJobsFromDB } from './supabaseClient';
 
-const JOB_API = 'http://localhost:3001/api/jobs';
-const EDUCATION_API = 'http://localhost:3001/api/educations';
+// Define API endpoints
+const EDUCATION_API = 'https://api.example.com/educations'; // Using a placeholder URL
 
 // Convert DB job entry to our Job format
 const convertDBJobToJobFormat = (dbJob: any): Job => {
@@ -25,38 +23,56 @@ const convertDBJobToJobFormat = (dbJob: any): Job => {
     } catch (e) { }
   }
   return {
-    id: dbJob.id || dbJob.regist_no || dbJob.JO_REGIST_NO || '', // Add fallback for Seoul API
-    title: dbJob.job_title || dbJob.JO_SJ || '',
-    company: dbJob.company_name || dbJob.CMPNY_NM || '',
+    id: dbJob.id || dbJob.regist_no,
+    title: dbJob.job_title,
+    company: dbJob.company_name,
     location: location,
     deadline: deadline,
-    employmentType: dbJob.employment_type_name || dbJob.EMPLYM_STLE || '정규직',
-    category: dbJob.job_type_name || dbJob.EMPLYM_STLE || '일반',
+    employmentType: dbJob.employment_type_name || '정규직',
+    category: dbJob.job_type_name || '일반',
     isFavorite: false,
     description: dbJob.job_description || '',
     highlight: highlight,
   };
 };
 
-// Supabase 우선 전체 구직 공고 불러오기 (fetchJobs)
+// Fetch all jobs from Supabase TB_JOBS table
 export const fetchJobs = async (): Promise<Job[]> => {
   try {
+    const dbJobs = await fetchJobsFromDB();
+    
+    // Add sample visiting nurse job posting
+    const sampleJob: Job = {
+      id: 'VN001',
+      title: '방문간호사 모집 (파트타임)',
+      company: '주식회사 웰케어스테이션',
+      location: '서울 강남구',
+      category: '파트타임',
+      employmentType: '시간제',
+      deadline: '2025-05-22',
+      description: `[주요업무]
+- 재가환자 방문간호 서비스 제공
+- 환자 건강상태 체크 및 기록
+- 투약 관리 및 처치
 
-    const res = await axios.get<Job[]>(JOB_API);
-    return res.data.map(job => ({
-      ...job,
-      category: job.employment_type || '기타',
-      location: job.location || job.work_address || '서울',
-      deadline: job.receipt_close || '상시채용',
-      employmentType: job.employment_type || '정규직',
+[자격요건]
+- 간호사 면허 소지자 (필수)
+- 방문간호 경력 1년 이상
+- 운전 가능자 우대
+
+[근무조건]
+- 근무시간: 주 3일 (월,수,금) / 9:00-15:00
+- 급여: 시급 25,000원
+- 교통비 별도 지급
+- 4대보험 가입`,
       isFavorite: false,
-      description: job.description || '',
-      company: job.company || '',
-      title: job.title || '',
-      id: job.id || 0,
-    }));
+      highlight: 'D-30'
+    };
+
+    if (!dbJobs) return [sampleJob];
+    return [sampleJob, ...dbJobs];
   } catch (error) {
-    console.error('Supabase/백엔드 구직 공고 로드 실패:', error);
+    console.error('Error fetching jobs from Supabase:', error);
     return [];
   }
 };
@@ -77,8 +93,13 @@ export const getJobsByType = async (type: string): Promise<Job[]> => {
 
 // Get education data from backend API
 export const getEducationData = async (): Promise<EducationProgram[]> => {
-  const res = await axios.get<EducationProgram[]>(EDUCATION_API);
-  return res.data;
+  try {
+    const res = await axios.get<EducationProgram[]>(EDUCATION_API);
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching education data:', error);
+    return [];
+  }
 };
 
 // Get recommendations for a user
@@ -94,19 +115,41 @@ export const getJobById = async (id: string | number): Promise<Job | null> => {
   return job || null;
 };
 
-// Toggle favorite status for a job (client-side only for now)
+// Toggle favorite status
 export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
-  const updatedJobs = allJobs.map(job =>
-    job.id.toString() === jobId.toString() ? { ...job, isFavorite: !job.isFavorite } : job
-  );
-  return updatedJobs;
+  const favoriteJobs = getFavoriteJobIds();
+  const jobIdStr = jobId.toString();
+  
+  if (favoriteJobs.includes(jobIdStr)) {
+    // Remove from favorites
+    const updatedFavorites = favoriteJobs.filter(id => id !== jobIdStr);
+    localStorage.setItem('favoriteJobIds', JSON.stringify(updatedFavorites));
+  } else {
+    // Add to favorites
+    favoriteJobs.push(jobIdStr);
+    localStorage.setItem('favoriteJobIds', JSON.stringify(favoriteJobs));
+  }
+  
+  return getFavoriteJobs();
 };
 
-// Get only favorite jobs (client-side filtering)
+// Get favorite job IDs from localStorage
+export const getFavoriteJobIds = (): string[] => {
+  const stored = localStorage.getItem('favoriteJobIds');
+  return stored ? JSON.parse(stored) : [];
+};
+
+// Check if a job is favorite
+export const isJobFavorite = (jobId: string | number): boolean => {
+  const favoriteJobs = getFavoriteJobIds();
+  return favoriteJobs.includes(jobId.toString());
+};
+
+// Get favorite jobs
 export const getFavoriteJobs = async (): Promise<Job[]> => {
   const allJobs = await fetchJobs();
-  return allJobs.filter(job => job.isFavorite);
+  const favoriteJobIds = getFavoriteJobIds();
+  return allJobs.filter(job => favoriteJobIds.includes(job.id.toString()));
 };
 
 // Fetch jobs by category

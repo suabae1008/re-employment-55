@@ -93,7 +93,7 @@ const JobDetail: React.FC = () => {
           <Link to="/" className="mr-4">
             <ArrowLeft size={24} />
           </Link>
-          <h1 className="text-xl font-bold">공고를 찾을 수 없습니다</h1>
+          <h1 className="text-xl font-bold">전체 공고</h1>
         </div>
         <p className="text-center mt-12">요청하신 공고를 찾을 수 없습니다.</p>
         <div className="text-center mt-6">
