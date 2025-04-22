@@ -12,6 +12,7 @@ interface JobTabsProps {
   fromFavorites: boolean;
   activeTab: string;
   hasCompletedQuestionnaire: boolean;
+  isAnalysisReady: boolean;
   matchAnalysis: MatchAnalysis;
   onTabChange: (value: string) => void;
   onStartAnalysis: () => void;
@@ -22,6 +23,7 @@ const JobTabs: React.FC<JobTabsProps> = ({
   fromFavorites,
   activeTab,
   hasCompletedQuestionnaire,
+  isAnalysisReady,
   matchAnalysis,
   onTabChange,
   onStartAnalysis,
@@ -48,6 +50,7 @@ const JobTabs: React.FC<JobTabsProps> = ({
         <TabsContent value="analysis">
           <JobAnalysisTab
             hasCompletedQuestionnaire={hasCompletedQuestionnaire}
+            isAnalysisReady={isAnalysisReady}
             matchAnalysis={matchAnalysis}
             onStartAnalysis={onStartAnalysis}
             onBack={() => onTabChange("info")}

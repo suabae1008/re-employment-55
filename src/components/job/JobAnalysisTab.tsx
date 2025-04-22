@@ -7,6 +7,7 @@ import { MatchAnalysis } from "../../services/matchingService";
 
 interface JobAnalysisTabProps {
   hasCompletedQuestionnaire: boolean;
+  isAnalysisReady: boolean;
   matchAnalysis: MatchAnalysis;
   onStartAnalysis: () => void;
   onBack: () => void;
@@ -14,18 +15,22 @@ interface JobAnalysisTabProps {
 
 const JobAnalysisTab: React.FC<JobAnalysisTabProps> = ({
   hasCompletedQuestionnaire,
+  isAnalysisReady,
   matchAnalysis,
   onStartAnalysis,
   onBack,
 }) => {
-  if (hasCompletedQuestionnaire) {
+  if (hasCompletedQuestionnaire || isAnalysisReady) {
     return <MatchingAnalysis analysis={matchAnalysis} onBack={onBack} />;
   }
 
   return (
     <div className="text-center py-12">
-      <div className="blur-sm mb-6">
-        <MatchingScoreSection score={0} />
+      <div className="mb-6">
+        <MatchingScoreSection 
+          isLoading={true}
+          onStartAnalysis={onStartAnalysis}
+        />
       </div>
       <Button
         onClick={onStartAnalysis}

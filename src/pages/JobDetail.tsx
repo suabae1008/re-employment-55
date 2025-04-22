@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -26,6 +25,7 @@ const JobDetail: React.FC = () => {
   const fromFavorites = location.state?.fromFavorites || false;
   const [showQualificationDialog, setShowQualificationDialog] = useState(false);
   const [hasCompletedQuestionnaire, setHasCompletedQuestionnaire] = useState(false);
+  const [isAnalysisReady, setIsAnalysisReady] = useState(false);
 
   useEffect(() => {
     const loadJob = async () => {
@@ -38,6 +38,7 @@ const JobDetail: React.FC = () => {
         if (fromFavorites) {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
+          setIsAnalysisReady(id.toString().length % 2 === 0);
         }
       } catch (err) {
         console.error("공고 불러오기 실패:", err);
@@ -133,6 +134,7 @@ const JobDetail: React.FC = () => {
           fromFavorites={fromFavorites}
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
+          isAnalysisReady={isAnalysisReady}
           matchAnalysis={getMockMatchAnalysis(id as string)}
           onTabChange={setActiveTab}
           onStartAnalysis={handleStartAnalysis}
