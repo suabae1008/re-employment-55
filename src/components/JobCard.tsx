@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -38,7 +37,8 @@ const JobCard: React.FC<JobCardProps> = ({
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await toggleFavoriteJob(id);
-    setIsFavoriteState(prev => !prev);
+    const newState = !isFavoriteState;
+    setIsFavoriteState(newState);
     if (onFavoriteClick) {
       onFavoriteClick(id);
     }

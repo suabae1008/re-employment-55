@@ -142,16 +142,10 @@ export const toggleFavoriteJob = async (jobId: string | number): Promise<Job[]> 
 
 // Get favorite jobs
 export const getFavoriteJobs = async (): Promise<Job[]> => {
-  const allJobs = await fetchJobs();
   const storedFavorites = localStorage.getItem('favoriteJobs');
   const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
-  const favoriteIds = favorites.map((job: Job) => job.id.toString());
   
-  // Mark jobs as favorite if they're in stored favorites
-  return allJobs.map(job => ({
-    ...job,
-    isFavorite: favoriteIds.includes(job.id.toString())
-  }));
+  return favorites.filter((job: Job) => job.isFavorite);
 };
 
 // Fetch jobs by category
