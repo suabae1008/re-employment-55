@@ -13,7 +13,7 @@ export interface Job {
 
 export interface EducationProgram {
   id: number;
-  title: string;
+  edc_nm: string;
   provider: string;
   edc_begin_de_dt: string;
   edc_end_de_dt: string;
