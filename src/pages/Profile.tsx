@@ -25,7 +25,7 @@ interface ProfileData {
   desiredJob: string;
   desiredLocation: string;
   desiredWorkingHours: string;
-  desiredSalary: string;
+  personality: string;
 }
 
 const Profile = () => {
@@ -38,7 +38,7 @@ const Profile = () => {
     desiredJob: "바리스타",
     desiredLocation: "서울시",
     desiredWorkingHours: "평일 가능",
-    personality: "차분함",
+    personality: "차분함"
   });
 
   // 전체 섹션 편집 상태 관리
@@ -117,7 +117,7 @@ const Profile = () => {
       desiredJob: tempProfile.desiredJob,
       desiredLocation: tempProfile.desiredLocation,
       desiredWorkingHours: tempProfile.desiredWorkingHours,
-      desiredSalary: tempProfile.desiredSalary,
+      personality: tempProfile.personality,
     };
 
     setProfile(updatedProfile);
@@ -190,7 +190,7 @@ const Profile = () => {
               "희망 근무 가능 시간",
               profile.desiredWorkingHours
             )}
-            {renderProfileField("성향", profile.personality)}
+            {renderProfileField("나의 성향", profile.personality)}
           </div>
         </div>
       </main>
@@ -315,12 +315,12 @@ const Profile = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="desiredSalary">희망 급여</Label>
+              <Label htmlFor="personality">나의 성향</Label>
               <Input
-                id="desiredSalary"
-                value={tempProfile.desiredSalary}
+                id="personality"
+                value={tempProfile.personality}
                 onChange={(e) =>
-                  handleInputChange("desiredSalary", e.target.value)
+                  handleInputChange("personality", e.target.value)
                 }
               />
             </div>
