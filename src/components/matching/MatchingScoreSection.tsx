@@ -21,7 +21,7 @@ const MatchingScoreSection: React.FC<MatchingScoreSectionProps> = ({ score }) =>
         <MatchScoreGauge score={score} />
         
         <div className="flex items-center gap-2 mt-2">
-          <h2 className="text-lg font-bold">{score.toFixed(0)}점 매칭</h2>
+          <h2 className="text-lg font-bold">매치점수 {score.toFixed(0)}점</h2>
           <Dialog>
             <DialogTrigger>
               <Info className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
