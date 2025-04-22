@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "../components/BottomNavigation";
@@ -131,10 +130,13 @@ const Index = () => {
 
         {activeTab === "all" && (
           <div className="mb-6">
-            <div className="text-lg font-bold text-gray-900 mb-4">
+            <JobFilters onFilterChange={handleFilterChange} />
+            
+            {/* Updated text styling and positioning */}
+            <div className="text-2xl font-bold text-gray-900 mb-4 mt-4">
               이 공고, 놓치지 마세요!
             </div>
-            <JobFilters onFilterChange={handleFilterChange} />
+            
             <div className="mt-4 space-y-4">
               {filteredJobs.map((job) => (
                 <JobCard
