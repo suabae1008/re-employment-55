@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface JobCardProps {
   id: string | number;
@@ -30,6 +30,7 @@ const JobCard: React.FC<JobCardProps> = ({
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onFavoriteClick?.();
+    toast(isFavorite ? '관심 공고���서 제거되었습니다.' : '관심 공고에 추가되었습니다.');
   };
 
   const getDeadlineText = (deadline: string | undefined) => {
