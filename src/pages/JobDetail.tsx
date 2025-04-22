@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Briefcase, Star } from "lucide-react";
@@ -12,6 +13,8 @@ import JobHeader from "../components/job/JobHeader";
 import JobInfo from "../components/job/JobInfo";
 import JobDescription from "../components/job/JobDescription";
 import ApplyDialog from "../components/job/ApplyDialog";
+import MatchingScoreSection from "../components/matching/MatchingScoreSection";
+import QualificationQuestionDialog from "../components/matching/QualificationQuestionDialog";
 import { cn } from "@/lib/utils";
 
 const JobDetail: React.FC = () => {
