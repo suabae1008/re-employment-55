@@ -14,7 +14,7 @@ const Favorites = () => {
   const [favoriteJobs, setFavoriteJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [jobScores, setJobScores] = useState<Record<string | number, number>>(
+  const [jobScores, setJobScores] = useState<Record<string | number, number | string>>(
     {}
   );
   const [refreshing, setRefreshing] = useState(false);
@@ -35,10 +35,16 @@ const Favorites = () => {
       const favorites = await getFavoriteJobs();
       setFavoriteJobs(favorites);
 
-      const scores: Record<string | number, number> = {};
+      const scores: Record<string | number, number | string> = {};
       favorites.forEach((job) => {
-        const analysis = getMockMatchAnalysis(job.id.toString());
-        scores[job.id] = analysis.totalScore;
+        if (job.matchingStatus === 'completed') {
+          scores[job.id] = job.matchScore || 0;
+        } else if (job.matchingStatus === 'pending') {
+          scores[job.id] = '준비중';
+        } else {
+          const analysis = getMockMatchAnalysis(job.id.toString());
+          scores[job.id] = analysis.totalScore;
+        }
       });
       setJobScores(scores);
     } catch (error) {
@@ -64,6 +70,22 @@ const Favorites = () => {
       delete newScores[jobId];
       return newScores;
     });
+  };
+
+  const renderMatchScoreSection = (job: Job, score: number | string) => {
+    if (job.matchingStatus === 'pending') {
+      return (
+        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
+          매칭점수 준비중
+        </span>
+      );
+    }
+    
+    return (
+      <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
+        매칭점수 {score}점
+      </span>
+    );
   };
 
   const filteredJobs = searchQuery
@@ -95,7 +117,13 @@ const Favorites = () => {
           <div>
             {filteredJobs.map((job) => (
               <div key={job.id} className="mb-3 relative">
-                <Link to={`/job/${job.id}`} state={{ fromFavorites: true }}>
+                <Link 
+                  to={`/job/${job.id}`} 
+                  state={{ 
+                    fromFavorites: true, 
+                    isAnalysisReady: job.matchingStatus === 'completed' 
+                  }}
+                >
                   <div className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow p-3 pl-12">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -107,9 +135,7 @@ const Favorites = () => {
                           </p>
                         )}
                       </div>
-                      <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap">
-                        {jobScores[job.id] ? `매칭점수 ${jobScores[job.id]}점` : '매칭점수 준비중'}
-                      </div>
+                      {renderMatchScoreSection(job, jobScores[job.id] || 0)}
                     </div>
                   </div>
                 </Link>
@@ -132,10 +158,6 @@ const Favorites = () => {
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500">저장된 관심 공고가 없습니다.</p>
-            <p className="text-gray-500 mt-2">
-              홈 또는 지원소개서 페이지에서 별표 아이콘을 클릭하여 관심 공고로
-              등록해보세요.
-            </p>
           </div>
         )}
       </main>
