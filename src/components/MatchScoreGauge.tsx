@@ -45,11 +45,6 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
           <circle cx="50" cy="50" r="4" fill="#374151" />
         </svg>
       </div>
-      
-      {/* Score text - centered */}
-      <div className="absolute bottom-0 left-0 right-0 text-center text-sm">
-        {score}점
-      </div>
     </div>
   );
 };
