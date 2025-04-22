@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Mic, MicOff, Plus, Edit2, RefreshCw, Volume2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Mic,
+  MicOff,
+  Plus,
+  Edit2,
+  RefreshCw,
+  Volume2,
+} from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Badge, BadgeVariant } from "@/components/ui/badge";
 import BottomNavigation from "../components/BottomNavigation";
-import { useSpeechSynthesis } from 'react-speech-kit';
+import { useSpeechSynthesis } from "react-speech-kit";
 
 interface Keyword {
   id: string;
@@ -234,7 +242,7 @@ const CoverLetterAIForm = () => {
     "관련 경험 또는 유사 활동을 말씀해주세요.",
     "직무 관련 강점에 대해 말씀해주세요.",
   ];
-  
+
   const handleSpeak = (text: string) => {
     if (speaking) {
       cancel();
@@ -298,7 +306,9 @@ const CoverLetterAIForm = () => {
               variant="outline"
               size="icon"
               className="h-6 w-6 rounded-md bg-white border border-gray-200 hover:bg-gray-100"
-              onClick={() => handleSpeak("강조하고 싶은 단어를 선택해주세요. 최대 3개")}
+              onClick={() =>
+                handleSpeak("강조하고 싶은 단어를 선택해주세요. 최대 3개")
+              }
             >
               <Volume2 size={14} className="text-blue-500" />
             </Button>

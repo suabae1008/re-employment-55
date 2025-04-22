@@ -41,7 +41,11 @@ const Index = () => {
     }
   }, [location.state]);
 
-  const { data: jobs = [], isLoading, refetch } = useQuery({
+  const {
+    data: jobs = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["jobs"],
     queryFn: fetchJobs,
   });
@@ -55,14 +59,18 @@ const Index = () => {
     region: "all",
   });
 
-  const handleFilterChange = (filterType: "jobType" | "region", value: string) => {
+  const handleFilterChange = (
+    filterType: "jobType" | "region",
+    value: string
+  ) => {
     setFilters((prev) => ({ ...prev, [filterType]: value }));
   };
 
   const filteredJobs = jobs.filter(
     (job) =>
       (filters.jobType === "all" || job.category === filters.jobType) &&
-      (filters.region === "all" || (job.location && job.location.includes(filters.region)))
+      (filters.region === "all" ||
+        (job.location && job.location.includes(filters.region)))
   );
 
   const handleFavoriteToggle = async (jobId: string | number) => {
@@ -95,7 +103,7 @@ const Index = () => {
         <div className="flex mt-6 w-full gap-3 mb-1">
           <button
             onClick={() => setActiveTab("recommended")}
-            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-xl font-bold ${
+            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-m md:text-base font-bold overflow-hidden ${
               activeTab === "recommended"
                 ? "bg-app-blue text-white"
                 : "bg-white text-gray-600 border-2 border-gray-300"
@@ -108,11 +116,13 @@ const Index = () => {
                   : "/buttons/recommend-active.svg"
               }
             />
-            <span className="self-stretch my-auto">추천 구직 공고</span>
+            <span className="self-stretch my-auto whitespace-nowrap truncate">
+              추천 구직 공고
+            </span>
           </button>
           <button
             onClick={() => setActiveTab("all")}
-            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-xl font-bold ${
+            className={`flex flex-1 h-10 px-3 py-1 items-center gap-2 justify-start rounded-full text-m md:text-base font-bold overflow-hidden ${
               activeTab === "all"
                 ? "bg-app-blue text-white"
                 : "bg-white text-gray-600 border-2 border-gray-300"
@@ -121,33 +131,35 @@ const Index = () => {
             <img
               src={
                 activeTab === "all"
-                  ? "/buttons/building-active.svg"
+                  ? "/buttons/building.svg"
                   : "/buttons/building-active.svg"
               }
               className="w-5 h-5 object-contain"
               alt="All jobs icon"
             />
-            <span className="self-stretch my-auto">전체 구직 공고</span>
+            <span className="self-stretch my-auto whitespace-nowrap truncate">
+              전체 구직 공고
+            </span>
           </button>
         </div>
       </header>
 
       <main className="px-5">
         {activeTab === "recommended" && (
-          <RecommendedJobsSection 
-            userName={userName} 
-            onJobCardClick={handleJobCardClick} 
+          <RecommendedJobsSection
+            userName={userName}
+            onJobCardClick={handleJobCardClick}
           />
         )}
 
         {activeTab === "all" && (
           <div className="mb-6">
             <JobFilters onFilterChange={handleFilterChange} />
-            
+
             <div className="text-2xl font-bold text-gray-900 mb-4 mt-4">
               이 공고, 놓치지 마세요!
             </div>
-            
+
             <div className="mt-4 space-y-4">
               {filteredJobs.map((job) => (
                 <JobCard

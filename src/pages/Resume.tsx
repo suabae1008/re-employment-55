@@ -72,7 +72,18 @@ const Resume = () => {
       {/* Header */}
       <Header title="이력서" />
 
-      <main className="mt-[35px]">
+      <main className="px-4 py-6">
+        <section className=" bg-white px-4 py-6 flex flex-col items-start text-left mb-6 rounded-lg shadow-sm">
+          <p className="text-xl font-bold leading-relaxed text-gray-900">
+            더 성장하는 나, <br />
+            나의 관심 직무는
+          </p>
+          <div className="mt-2 flex flex-wrap justify-end gap-2 text-app-blue font-bold text-2xl">
+            <span>#의료</span>
+            <span>#간호</span>
+            <span>#요양</span>
+          </div>
+        </section>
         {showEmptyState ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-gray-500 mb-10">작성된 이력서가 없습니다.</p>
