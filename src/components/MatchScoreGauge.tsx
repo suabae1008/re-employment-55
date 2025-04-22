@@ -18,7 +18,7 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
   };
 
   return (
-    <div className="relative w-40 h-32 mx-auto">
+    <div className="relative w-40 h-24 mx-auto">
       {/* Semicircle gauge background */}
       <div className="relative w-full h-20 overflow-hidden">
         <div className="absolute w-full h-40 rounded-full overflow-hidden">
@@ -51,11 +51,6 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
       >
         {/* Needle base circle */}
         <div className="absolute top-0 left-1/2 w-4 h-4 rounded-full bg-gray-700 transform -translate-x-1/2 -translate-y-1/2" />
-      </div>
-      
-      {/* Score display */}
-      <div className="absolute bottom-0 left-0 right-0 text-center">
-        <span className="text-lg font-medium">매칭 점수 {score}점</span>
       </div>
     </div>
   );
