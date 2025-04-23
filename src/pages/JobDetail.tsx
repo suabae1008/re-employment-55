@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -22,6 +23,7 @@ const JobDetail: React.FC = () => {
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [matchScore, setMatchScore] = useState(0);
   const [activeTab, setActiveTab] = useState("info");
+  // fromFavorites는 이제 URL 파라미터나 상태로 전달되는 값만 참조하고, 실제 UI 렌더링은 job.isFavorite 기준으로 함
   const fromFavorites = location.state?.fromFavorites || false;
   const [showQualificationDialog, setShowQualificationDialog] = useState(false);
   const [hasCompletedQuestionnaire, setHasCompletedQuestionnaire] = useState(false);
@@ -35,12 +37,13 @@ const JobDetail: React.FC = () => {
         const fetchedJob = await getJobById(id);
         setJob(fetchedJob);
 
-        if (fromFavorites) {
+        // 직접 URL 접근과 내부 링크 접근 모두에서 isFavorite이 true인 경우 분석 정보 로드
+        if (fetchedJob && fetchedJob.isFavorite) {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
           
-          // Always show analysis for the specific job VN001 and for 은빛재가복지센터
-          if (fetchedJob && (fetchedJob.company === "은빛재가복지센터" || id === "VN001")) {
+          // 특정 공고는 항상 분석 데이터 준비
+          if (fetchedJob.company === "은빛재가복지센터" || id === "VN001") {
             setIsAnalysisReady(true);
           } else if (location.state?.isAnalysisReady) {
             setIsAnalysisReady(true);
@@ -48,7 +51,7 @@ const JobDetail: React.FC = () => {
             setIsAnalysisReady(id.toString().length % 2 === 0);
           }
         } else {
-          // Even if not from favorites, show analysis for specific jobs
+          // 즐겨찾기 아닌 경우에도 특정 공고는 분석 표시
           if (id === "VN001" || (fetchedJob && fetchedJob.company === "은빛재가복지센터")) {
             const analysis = getMockMatchAnalysis(id);
             setMatchScore(analysis.totalScore);
@@ -63,7 +66,15 @@ const JobDetail: React.FC = () => {
     };
 
     loadJob();
-  }, [id, fromFavorites, location.state]);
+  }, [id, location.state]);
+
+  // 사용자가 탭을 변경할 때마다 URL을 업데이트하여 공유 시 동일한 탭으로 접근하도록 설정
+  useEffect(() => {
+    if (job?.isFavorite && activeTab === "info") {
+      // 즐겨찾기된 공고는 기본적으로 analysis 탭이 있을 수 있도록 준비
+      setActiveTab("info");
+    }
+  }, [job?.isFavorite]);
 
   const handleToggleFavorite = async () => {
     if (!job) return;
@@ -146,7 +157,7 @@ const JobDetail: React.FC = () => {
 
         <JobTabs
           job={job}
-          fromFavorites={job.isFavorite === true}
+          fromFavorites={job.isFavorite}
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
           isAnalysisReady={isAnalysisReady}
