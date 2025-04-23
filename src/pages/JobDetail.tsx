@@ -131,7 +131,7 @@ const JobDetail: React.FC = () => {
       <JobHeader job={job} />
 
       <main className="px-4 py-6">
-        {fromFavorites && (
+        {job.isFavorite && (
           <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
             <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
               맞춤형 공고 분석
@@ -146,7 +146,7 @@ const JobDetail: React.FC = () => {
 
         <JobTabs
           job={job}
-          fromFavorites={fromFavorites}
+          fromFavorites={job.isFavorite === true}
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
           isAnalysisReady={isAnalysisReady}
