@@ -34,9 +34,11 @@ const JobTabs: React.FC<JobTabsProps> = ({
         <TabsTrigger value="info" className="flex-1">
           공고 정보
         </TabsTrigger>
-        <TabsTrigger value="analysis" className="flex-1">
-          맞춤형 분석
-        </TabsTrigger>
+        {fromFavorites && (
+          <TabsTrigger value="analysis" className="flex-1">
+            맞춤형 분석
+          </TabsTrigger>
+        )}
       </TabsList>
 
       <TabsContent value="info" className="space-y-4">
@@ -44,17 +46,20 @@ const JobTabs: React.FC<JobTabsProps> = ({
         <JobDescription job={job} />
       </TabsContent>
 
-      <TabsContent value="analysis">
-        <JobAnalysisTab
-          hasCompletedQuestionnaire={hasCompletedQuestionnaire}
-          isAnalysisReady={isAnalysisReady}
-          matchAnalysis={matchAnalysis}
-          onStartAnalysis={onStartAnalysis}
-          onBack={() => onTabChange("info")}
-        />
-      </TabsContent>
+      {fromFavorites && (
+        <TabsContent value="analysis">
+          <JobAnalysisTab
+            hasCompletedQuestionnaire={hasCompletedQuestionnaire}
+            isAnalysisReady={isAnalysisReady}
+            matchAnalysis={matchAnalysis}
+            onStartAnalysis={onStartAnalysis}
+            onBack={() => onTabChange("info")}
+          />
+        </TabsContent>
+      )}
     </Tabs>
   );
 };
 
 export default JobTabs;
+

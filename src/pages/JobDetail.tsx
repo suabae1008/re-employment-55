@@ -146,7 +146,7 @@ const JobDetail: React.FC = () => {
 
         <JobTabs
           job={job}
-          fromFavorites={true} /* Set to true to always enable matching analysis functionality */
+          fromFavorites={fromFavorites}
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
           isAnalysisReady={isAnalysisReady}
