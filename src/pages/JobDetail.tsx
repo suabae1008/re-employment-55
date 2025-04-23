@@ -39,12 +39,20 @@ const JobDetail: React.FC = () => {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
           
-          if (fetchedJob && fetchedJob.company === "은빛재가복지센터") {
+          // Always show analysis for the specific job VN001 and for 은빛재가복지센터
+          if (fetchedJob && (fetchedJob.company === "은빛재가복지센터" || id === "VN001")) {
             setIsAnalysisReady(true);
           } else if (location.state?.isAnalysisReady) {
             setIsAnalysisReady(true);
           } else {
             setIsAnalysisReady(id.toString().length % 2 === 0);
+          }
+        } else {
+          // Even if not from favorites, show analysis for specific jobs
+          if (id === "VN001" || (fetchedJob && fetchedJob.company === "은빛재가복지센터")) {
+            const analysis = getMockMatchAnalysis(id);
+            setMatchScore(analysis.totalScore);
+            setIsAnalysisReady(true);
           }
         }
       } catch (err) {
@@ -138,7 +146,7 @@ const JobDetail: React.FC = () => {
 
         <JobTabs
           job={job}
-          fromFavorites={fromFavorites}
+          fromFavorites={true} /* Set to true to always enable matching analysis functionality */
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
           isAnalysisReady={isAnalysisReady}
