@@ -25,7 +25,8 @@ const JobAnalysisTab: React.FC<JobAnalysisTabProps> = ({
   }
 
   return (
-    <div className="text-center py-12">
+    <div className="text-center py-8">
+      <h2 className="text-xl font-bold mb-6">나와 잘 맞는 공고인지 확인해보세요</h2>
       <div className="mb-6">
         <MatchingScoreSection 
           isLoading={true}
@@ -35,7 +36,7 @@ const JobAnalysisTab: React.FC<JobAnalysisTabProps> = ({
       </div>
       <Button
         onClick={onStartAnalysis}
-        className="text-blue-500 border-blue-500 hover:bg-blue-50"
+        className="text-blue-500 border-blue-500 hover:bg-blue-50 mt-4"
         variant="outline"
       >
         나와 적합한 공고인지 알아봐요

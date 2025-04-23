@@ -14,19 +14,27 @@ const MatchScoreGauge: React.FC<MatchScoreGaugeProps> = ({ score }) => {
       {/* Semicircle gauge background */}
       <div className="absolute inset-0">
         <svg viewBox="0 0 100 50" className="w-full h-full">
-          {/* Yellow section */}
+          {/* Left section (red/pink) */}
           <path
-            d="M 10 50 A 40 40 0 0 1 50 10"
+            d="M 10 50 A 40 40 0 0 1 30 15"
+            fill="none"
+            stroke="#FFB5B5"
+            strokeWidth="12"
+            strokeLinecap="round"
+          />
+          {/* Middle section (yellow) */}
+          <path
+            d="M 30 15 A 40 40 0 0 1 70 15"
             fill="none"
             stroke="#FFE376"
             strokeWidth="12"
             strokeLinecap="round"
           />
-          {/* Blue section */}
+          {/* Right section (green) */}
           <path
-            d="M 50 10 A 40 40 0 0 1 90 50"
+            d="M 70 15 A 40 40 0 0 1 90 50"
             fill="none"
-            stroke="#4B9FF8"
+            stroke="#9FE076"
             strokeWidth="12"
             strokeLinecap="round"
           />

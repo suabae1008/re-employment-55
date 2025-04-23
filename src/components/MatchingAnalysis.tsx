@@ -27,15 +27,19 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({
       <div className="space-y-6">
         <MatchingScoreSection score={analysis.totalScore} />
 
-        <QualificationsSection
-          title="자격 사항"
-          qualifications={analysis.requiredQualifications}
-        />
+        <div className="mt-8">
+          <h3 className="text-xl font-bold mb-4">이렇게 점수를 올려요</h3>
+          
+          <QualificationsSection
+            title="자격 사항"
+            qualifications={analysis.requiredQualifications}
+          />
 
-        <QualificationsSection
-          title="우대 사항"
-          qualifications={analysis.preferredQualifications}
-        />
+          <QualificationsSection
+            title="우대 사항"
+            qualifications={analysis.preferredQualifications}
+          />
+        </div>
 
         <ImprovementSection
           requiredQualifications={analysis.requiredQualifications}
@@ -47,4 +51,3 @@ const MatchingAnalysis: React.FC<MatchingAnalysisProps> = ({
 };
 
 export default MatchingAnalysis;
-
