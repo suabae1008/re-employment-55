@@ -26,6 +26,7 @@ const JobDetail: React.FC = () => {
   const [showQualificationDialog, setShowQualificationDialog] = useState(false);
   const [hasCompletedQuestionnaire, setHasCompletedQuestionnaire] = useState(false);
   const [isAnalysisReady, setIsAnalysisReady] = useState(false);
+  const [showAnalysisTab, setShowAnalysisTab] = useState(false);
 
   useEffect(() => {
     const loadJob = async () => {
@@ -35,25 +36,25 @@ const JobDetail: React.FC = () => {
         const fetchedJob = await getJobById(id);
         setJob(fetchedJob);
 
-        // 항상 isFavorite 상태에 따라 분석 정보 로드 (URL 접근 방식과 무관하게)
-        if (fetchedJob && fetchedJob.isFavorite) {
+        // Always compute showAnalysisTab based on job properties
+        const shouldShowAnalysis = fetchedJob?.isFavorite || 
+          fetchedJob?.company === "은빛재가복지센터" ||
+          id === "2" || 
+          id === "VN001";
+        
+        setShowAnalysisTab(shouldShowAnalysis);
+
+        if (shouldShowAnalysis) {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
           
-          // 특정 공고는 항상 분석 데이터 준비
-          if (fetchedJob.company === "은빛재가복지센터" || id === "VN001" || id === "2") {
+          // Special jobs are always analysis ready
+          if (fetchedJob?.company === "은빛재가복지센터" || id === "VN001" || id === "2") {
             setIsAnalysisReady(true);
           } else if (location.state?.isAnalysisReady) {
             setIsAnalysisReady(true);
           } else {
             setIsAnalysisReady(id.toString().length % 2 === 0);
-          }
-        } else {
-          // 즐겨찾기 아닌 경우에도 특정 공고는 분석 표시
-          if (id === "VN001" || id === "2" || (fetchedJob && fetchedJob.company === "은빛재가복지센터")) {
-            const analysis = getMockMatchAnalysis(id);
-            setMatchScore(analysis.totalScore);
-            setIsAnalysisReady(true);
           }
         }
       } catch (err) {
@@ -68,11 +69,16 @@ const JobDetail: React.FC = () => {
 
   // URL의 쿼리 파라미터에 따라 초기 탭 설정
   useEffect(() => {
-    // URL에 tab=analysis가 있거나 job이 favorite일 경우 analysis 탭을 기본으로 보여줄 수 있음
+    // Check if URL has tab=analysis parameter
     if (location.search.includes("tab=analysis")) {
       setActiveTab("analysis");
     }
-  }, [location.search]);
+    
+    // For specific job IDs, set analysis tab as default
+    if ((id === "2" || id === "VN001") && showAnalysisTab) {
+      setActiveTab("analysis");
+    }
+  }, [location.search, id, showAnalysisTab]);
 
   const handleToggleFavorite = async () => {
     if (!job) return;
@@ -81,6 +87,10 @@ const JobDetail: React.FC = () => {
       const updatedJob = updatedJobs.find((j) => j.id === job.id);
       if (updatedJob) {
         setJob(updatedJob);
+        setShowAnalysisTab(updatedJob.isFavorite || 
+          updatedJob.company === "은빛재가복지센터" || 
+          id === "2" || 
+          id === "VN001");
       }
     } catch (error) {
       console.error("관심 공고 토글 실패:", error);
@@ -106,6 +116,7 @@ const JobDetail: React.FC = () => {
     setHasCompletedQuestionnaire(true);
     const analysis = getMockMatchAnalysis(id as string);
     setMatchScore(analysis.totalScore);
+    setIsAnalysisReady(true);
   };
 
   if (loading) {
@@ -140,7 +151,7 @@ const JobDetail: React.FC = () => {
       <JobHeader job={job} />
 
       <main className="px-4 py-6">
-        {job.isFavorite && (
+        {showAnalysisTab && (
           <div className="bg-white rounded-lg p-6 mb-4 shadow-sm">
             <div className="inline-block bg-app-light-blue text-app-blue px-3 py-1 rounded-full text-xs mb-2">
               맞춤형 공고 분석
@@ -155,7 +166,7 @@ const JobDetail: React.FC = () => {
 
         <JobTabs
           job={job}
-          fromFavorites={job.isFavorite}
+          fromFavorites={showAnalysisTab}
           activeTab={activeTab}
           hasCompletedQuestionnaire={hasCompletedQuestionnaire}
           isAnalysisReady={isAnalysisReady}
