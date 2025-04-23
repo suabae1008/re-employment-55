@@ -11,6 +11,8 @@ There are several ways of editing your application.
 **Use Lovable**
 
 Simply visit the [Lovable Project](https://lovable.dev/projects/e23ce393-ab5c-4db7-bf4d-6a17d78624dc) and start prompting.
+_(*위에 링크는 예은님 re-employment 원본 러버블 링크입니다)_
+**여기가 연동된 러버블 링크입니다! 여기로 들어와주세요! [https://lovable.dev/projects/2e898d92-2081-4938-978d-89be7d0daff6]**
 
 Changes made via Lovable will be committed automatically to this repo.
 
