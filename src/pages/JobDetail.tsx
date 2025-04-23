@@ -28,6 +28,27 @@ const JobDetail: React.FC = () => {
   const [isAnalysisReady, setIsAnalysisReady] = useState(false);
   const [showAnalysisTab, setShowAnalysisTab] = useState(false);
 
+  // 특별히 분석 탭을 보여줄 공고 ID 목록
+  const specialJobIds = ["2", "VN001"];
+  // 특별히 분석 탭을 보여줄 회사명 목록
+  const specialCompanies = ["은빛재가복지센터"];
+
+  // 공고가 분석 탭을 보여줘야 하는지 확인하는 함수
+  const shouldShowAnalysis = (job: Job | null, jobId: string | undefined): boolean => {
+    if (!job || !jobId) return false;
+    
+    // 즐겨찾기된 공고인 경우
+    if (job.isFavorite) return true;
+    
+    // 특별 ID 목록에 포함된 경우
+    if (specialJobIds.includes(jobId)) return true;
+    
+    // 특별 회사 목록에 포함된 경우
+    if (specialCompanies.includes(job.company)) return true;
+    
+    return false;
+  };
+
   useEffect(() => {
     const loadJob = async () => {
       if (!id) return;
@@ -36,20 +57,19 @@ const JobDetail: React.FC = () => {
         const fetchedJob = await getJobById(id);
         setJob(fetchedJob);
 
-        // Always compute showAnalysisTab based on job properties
-        const shouldShowAnalysis = fetchedJob?.isFavorite || 
-          fetchedJob?.company === "은빛재가복지센터" ||
-          id === "2" || 
-          id === "VN001";
-        
-        setShowAnalysisTab(shouldShowAnalysis);
+        // 분석 탭 표시 여부 결정
+        const shouldShow = shouldShowAnalysis(fetchedJob, id);
+        setShowAnalysisTab(shouldShow);
 
-        if (shouldShowAnalysis) {
+        if (shouldShow) {
           const analysis = getMockMatchAnalysis(id);
           setMatchScore(analysis.totalScore);
           
-          // Special jobs are always analysis ready
-          if (fetchedJob?.company === "은빛재가복지센터" || id === "VN001" || id === "2") {
+          // 특별 공고는 항상 분석 준비 완료
+          const isSpecialJob = specialJobIds.includes(id) || 
+                               (fetchedJob && specialCompanies.includes(fetchedJob.company));
+          
+          if (isSpecialJob) {
             setIsAnalysisReady(true);
           } else if (location.state?.isAnalysisReady) {
             setIsAnalysisReady(true);
@@ -69,13 +89,13 @@ const JobDetail: React.FC = () => {
 
   // URL의 쿼리 파라미터에 따라 초기 탭 설정
   useEffect(() => {
-    // Check if URL has tab=analysis parameter
+    // URL에 tab=analysis 파라미터가 있는 경우
     if (location.search.includes("tab=analysis")) {
       setActiveTab("analysis");
     }
     
-    // For specific job IDs, set analysis tab as default
-    if ((id === "2" || id === "VN001") && showAnalysisTab) {
+    // 특별 공고 ID인 경우 분석 탭을 기본으로 설정
+    if (specialJobIds.includes(id || "") && showAnalysisTab) {
       setActiveTab("analysis");
     }
   }, [location.search, id, showAnalysisTab]);
@@ -87,10 +107,8 @@ const JobDetail: React.FC = () => {
       const updatedJob = updatedJobs.find((j) => j.id === job.id);
       if (updatedJob) {
         setJob(updatedJob);
-        setShowAnalysisTab(updatedJob.isFavorite || 
-          updatedJob.company === "은빛재가복지센터" || 
-          id === "2" || 
-          id === "VN001");
+        // 즐겨찾기 상태 변경 후 분석 탭 표시 여부 다시 계산
+        setShowAnalysisTab(shouldShowAnalysis(updatedJob, id));
       }
     } catch (error) {
       console.error("관심 공고 토글 실패:", error);

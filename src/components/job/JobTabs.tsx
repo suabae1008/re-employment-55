@@ -28,16 +28,13 @@ const JobTabs: React.FC<JobTabsProps> = ({
   onTabChange,
   onStartAnalysis,
 }) => {
-  // 분석 탭을 표시할지 여부는 상위 컴포넌트에서 계산된 fromFavorites 값을 사용
-  const showAnalysisTab = fromFavorites;
-  
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="space-y-4">
       <TabsList className="w-full">
         <TabsTrigger value="info" className="flex-1">
           공고 정보
         </TabsTrigger>
-        {showAnalysisTab && (
+        {fromFavorites && (
           <TabsTrigger value="analysis" className="flex-1">
             맞춤형 분석
           </TabsTrigger>
@@ -49,7 +46,7 @@ const JobTabs: React.FC<JobTabsProps> = ({
         <JobDescription job={job} />
       </TabsContent>
 
-      {showAnalysisTab && (
+      {fromFavorites && (
         <TabsContent value="analysis">
           <JobAnalysisTab
             hasCompletedQuestionnaire={hasCompletedQuestionnaire}
