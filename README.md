@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/e23ce393-ab5c-4db7-bf4d-6a17d78624dc
+**여기가 연동된 러버블 링크입니다! 여기로 들어와주세요! [https://lovable.dev/projects/2e898d92-2081-4938-978d-89be7d0daff6]**
 
 ## How can I edit this code?
 
