@@ -28,8 +28,8 @@ const JobTabs: React.FC<JobTabsProps> = ({
   onTabChange,
   onStartAnalysis,
 }) => {
-  // 즐겨찾기된 공고인 경우에만 분석 탭 표시 (URL로 직접 접근해도 즐겨찾기 상태에 따라 탭 표시 결정)
-  const showAnalysisTab = fromFavorites;
+  // 즐겨찾기된 공고인 경우에만 분석 탭 표시 (항상 job.isFavorite 값 사용)
+  const showAnalysisTab = fromFavorites === true;
   
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="space-y-4">
